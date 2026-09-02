@@ -1,38 +1,28 @@
-# frontend
+# Salman Saeed — Personal CV / Portfolio
 
-React + Vite + TypeScript UI for the multi-service demo. Static assets are served via nginx in production.
+Static personal brand page built with HTML, CSS, and JavaScript.
 
-## Setup
-
-```bash
-npm install
-cp .env.example .env
-```
-
-## Development
+## Local development
 
 ```bash
 npm run dev
 ```
 
-## Build
-
-```bash
-npm run build
-```
+Open [http://localhost:3000](http://localhost:3000).
 
 ## Docker
 
 ```bash
-docker build \
-  --build-arg VITE_API_URL=http://localhost:8080 \
-  --build-arg VITE_API_KEY=dev-api-key-change-me \
-  -t frontend .
+docker build -t frontend .
+docker run -p 3000:80 frontend
 ```
 
-## Environment variables
+## Structure
 
-| Variable | Description |
-|----------|-------------|
-| `VITE_API_URL` | Gateway base URL |
-| `VITE_API_KEY` | API key sent as `X-API-Key` header |
+```
+frontend/
+├── index.html          # Main CV page (default)
+├── css/styles.css      # Styles
+├── js/main.js          # Interactions & animations
+└── assets/             # Resume download & media
+```
