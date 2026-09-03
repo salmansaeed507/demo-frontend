@@ -1,68 +1,46 @@
-import { useEffect, useState } from "react";
-import { fetchLeads, fetchTickets, Lead, Ticket } from "./api/client";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import CustomerSupportLayout from "./customer-support/CustomerSupportLayout";
+import AdminLayout from "./customer-support/AdminLayout";
+import SupportHomePage from "./customer-support/SupportHomePage";
+import LoginPage from "./customer-support/pages/LoginPage";
+import ChatPage from "./customer-support/pages/ChatPage";
+import ProductsPage from "./customer-support/pages/ProductsPage";
+import CartPage from "./customer-support/pages/CartPage";
+import CheckoutPage from "./customer-support/pages/CheckoutPage";
+import OrderConfirmationPage from "./customer-support/pages/OrderConfirmationPage";
+import AdminOverviewPage from "./customer-support/pages/admin/AdminOverviewPage";
+import ConversationsPage from "./customer-support/pages/admin/ConversationsPage";
+import TicketsPage from "./customer-support/pages/admin/TicketsPage";
+import KnowledgeBasePage from "./customer-support/pages/admin/KnowledgeBasePage";
+import AnalyticsPage from "./customer-support/pages/admin/AnalyticsPage";
 
 function App() {
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [leads, setLeads] = useState<Lead[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const [ticketData, leadData] = await Promise.all([
-          fetchTickets(),
-          fetchLeads(),
-        ]);
-        setTickets(ticketData);
-        setLeads(leadData);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    load();
-  }, []);
-
-  if (loading) {
-    return <p className="status">Loading...</p>;
-  }
-
-  if (error) {
-    return <p className="error">Error: {error}</p>;
-  }
-
   return (
-    <main className="container">
-      <header>
-        <h1>Multi-Service Demo</h1>
-        <p>React frontend → API Gateway → backend services</p>
-      </header>
-
-      <section>
-        <h2>Customer Support Tickets</h2>
-        <ul>
-          {tickets.map((ticket) => (
-            <li key={ticket.id}>
-              #{ticket.id} — {ticket.subject} ({ticket.status})
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section>
-        <h2>Qualified Leads</h2>
-        <ul>
-          {leads.map((lead) => (
-            <li key={lead.id}>
-              #{lead.id} — {lead.name} — score {lead.score} ({lead.status})
-            </li>
-          ))}
-        </ul>
-      </section>
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/customer-support" element={<CustomerSupportLayout />}>
+          <Route index element={<SupportHomePage />} />
+          <Route path="products" element={<ProductsPage />} />
+          <Route path="cart" element={<CartPage />} />
+          <Route path="checkout" element={<CheckoutPage />} />
+          <Route
+            path="order-confirmation"
+            element={<OrderConfirmationPage />}
+          />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="chat" element={<ChatPage />} />
+          <Route path="admin" element={<AdminLayout />}>
+            <Route index element={<AdminOverviewPage />} />
+            <Route path="conversations" element={<ConversationsPage />} />
+            <Route path="tickets" element={<TicketsPage />} />
+            <Route path="knowledge-base" element={<KnowledgeBasePage />} />
+            <Route path="analytics" element={<AnalyticsPage />} />
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
