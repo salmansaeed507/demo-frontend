@@ -23,23 +23,23 @@ import { analytics, knowledgeDocs } from "./mock/admin";
 
 const tabs = [
   {
-    to: "/customer-support/admin/tickets",
+    to: "/shoppilot-ai/admin/tickets",
     label: "Tickets",
     icon: Ticket,
     end: true,
   },
   {
-    to: "/customer-support/admin/conversations",
+    to: "/shoppilot-ai/admin/conversations",
     label: "Conversations",
     icon: MessageSquare,
   },
   {
-    to: "/customer-support/admin/knowledge-base",
+    to: "/shoppilot-ai/admin/knowledge-base",
     label: "Knowledge Base",
     icon: BookOpen,
   },
   {
-    to: "/customer-support/admin/analytics",
+    to: "/shoppilot-ai/admin/analytics",
     label: "Analytics",
     icon: LayoutGrid,
   },

@@ -14,14 +14,14 @@ function StorefrontHeader() {
     <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white text-slate-900">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:gap-4">
         <NavLink
-          to="/customer-support"
+          to="/shoppilot-ai"
           end
           className="flex shrink-0 items-center gap-2 font-heading text-base font-semibold tracking-tight text-slate-900"
         >
           <span className="flex size-9 items-center justify-center rounded-md bg-gradient-to-br from-indigo-600 to-violet-500 text-white">
             <Store className="size-4" />
           </span>
-          ShopAssist
+          ShopPilot AI
         </NavLink>
 
         <div className="relative mx-auto hidden min-w-0 flex-1 max-w-xl md:block">
@@ -35,7 +35,7 @@ function StorefrontHeader() {
 
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
           <Button asChild variant="ghost" size="icon" className="relative">
-            <Link to="/customer-support/cart" aria-label="Cart">
+            <Link to="/shoppilot-ai/cart" aria-label="Cart">
               <ShoppingCart />
               {itemCount > 0 ? (
                 <Badge className="absolute -top-1 -right-1">
@@ -45,7 +45,7 @@ function StorefrontHeader() {
             </Link>
           </Button>
           <Button asChild variant="outline" size="sm">
-            <Link to="/customer-support/admin">
+            <Link to="/shoppilot-ai/admin">
               <LayoutGrid data-icon="inline-start" />
               Admin
             </Link>

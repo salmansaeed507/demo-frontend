@@ -35,7 +35,7 @@ export default function CartPage() {
           </CardHeader>
           <CardFooter>
             <Button asChild>
-              <Link to="/customer-support/products">Browse products</Link>
+              <Link to="/shoppilot-ai/products">Browse products</Link>
             </Button>
           </CardFooter>
         </Card>
@@ -103,7 +103,7 @@ export default function CartPage() {
             <p className="text-lg font-medium">{formatPrice(subtotal)}</p>
           </div>
           <Button asChild>
-            <Link to="/customer-support/checkout">Checkout</Link>
+            <Link to="/shoppilot-ai/checkout">Checkout</Link>
           </Button>
         </CardFooter>
       </Card>

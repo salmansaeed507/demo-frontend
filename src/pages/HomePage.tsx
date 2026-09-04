@@ -36,7 +36,7 @@ export default function HomePage() {
       <main className="container">
         <p className="error">Error: {error}</p>
         <p>
-          <Link to="/customer-support">Open Customer Support UI (static)</Link>
+          <Link to="/shoppilot-ai">Open ShopPilot AI UI (static)</Link>
         </p>
       </main>
     );
@@ -48,7 +48,7 @@ export default function HomePage() {
         <h1>Multi-Service Demo</h1>
         <p>React frontend → API Gateway → backend services</p>
         <p>
-          <Link to="/customer-support">AI Customer Support Automation UI →</Link>
+          <Link to="/shoppilot-ai">ShopPilot AI →</Link>
         </p>
       </header>
 

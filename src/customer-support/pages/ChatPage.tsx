@@ -29,7 +29,7 @@ const seedMessages: ChatMessage[] = [
   {
     id: "m1",
     role: "agent",
-    text: "Hi! I'm ShopAssist. I can help with orders, shipping, returns, and store policies.",
+    text: "Hi! I'm ShopPilot AI. I can help with orders, shipping, returns, and store policies.",
   },
   {
     id: "m2",
@@ -110,7 +110,7 @@ export default function ChatPage() {
       description={
         <>
           Signed in as {customerName}. Conversation is local-only.{" "}
-          <Link to="/customer-support/login" className="underline">
+          <Link to="/shoppilot-ai/login" className="underline">
             Switch account
           </Link>
         </>

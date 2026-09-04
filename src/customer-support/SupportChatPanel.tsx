@@ -92,7 +92,7 @@ export default function SupportChatPanel({ open, onOpenChange }: Props) {
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <SheetTitle>ShopAssist — AI Support</SheetTitle>
+                <SheetTitle>ShopPilot AI — AI Support</SheetTitle>
                 <Badge variant="secondary">Online</Badge>
               </div>
               <SheetDescription>

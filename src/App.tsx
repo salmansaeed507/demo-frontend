@@ -20,7 +20,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/customer-support" element={<CustomerSupportLayout />}>
+        <Route path="/shoppilot-ai" element={<CustomerSupportLayout />}>
           <Route index element={<SupportHomePage />} />
           <Route path="products" element={<ProductsPage />} />
           <Route path="cart" element={<CartPage />} />

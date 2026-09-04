@@ -30,7 +30,7 @@ export interface Lead {
 }
 
 export function fetchTickets(): Promise<Ticket[]> {
-  return apiFetch<Ticket[]>("/api/customer-support/tickets");
+  return apiFetch<Ticket[]>("/api/shoppilot-ai/tickets");
 }
 
 export function fetchLeads(): Promise<Lead[]> {

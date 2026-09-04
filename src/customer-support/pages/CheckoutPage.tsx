@@ -37,7 +37,7 @@ export default function CheckoutPage() {
           </CardHeader>
           <CardFooter>
             <Button asChild variant="outline">
-              <Link to="/customer-support/products">Browse products</Link>
+              <Link to="/shoppilot-ai/products">Browse products</Link>
             </Button>
           </CardFooter>
         </Card>
@@ -51,7 +51,7 @@ export default function CheckoutPage() {
     const total = subtotal;
     clear();
     navigate(
-      `/customer-support/order-confirmation?orderId=${encodeURIComponent(orderId)}&total=${total.toFixed(2)}&name=${encodeURIComponent(name)}`,
+      `/shoppilot-ai/order-confirmation?orderId=${encodeURIComponent(orderId)}&total=${total.toFixed(2)}&name=${encodeURIComponent(name)}`,
     );
   }
 
@@ -103,7 +103,7 @@ export default function CheckoutPage() {
             <CardFooter className="gap-2">
               <Button type="submit">Place order</Button>
               <Button asChild variant="ghost">
-                <Link to="/customer-support/cart">Back to cart</Link>
+                <Link to="/shoppilot-ai/cart">Back to cart</Link>
               </Button>
             </CardFooter>
           </form>

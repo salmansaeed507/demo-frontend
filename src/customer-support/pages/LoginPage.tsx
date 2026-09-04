@@ -30,7 +30,7 @@ export default function LoginPage() {
         JSON.stringify({ email, name: "Alex Rivera" }),
       );
       setError(null);
-      navigate("/customer-support/chat");
+      navigate("/shoppilot-ai/chat");
       return;
     }
     setError("Use the demo credentials shown below.");
@@ -84,7 +84,7 @@ export default function LoginPage() {
           <CardFooter className="flex flex-wrap gap-2">
             <Button type="submit">Sign in</Button>
             <Button asChild variant="ghost">
-              <Link to="/customer-support">Cancel</Link>
+              <Link to="/shoppilot-ai">Cancel</Link>
             </Button>
           </CardFooter>
         </form>

@@ -55,10 +55,10 @@ export default function OrderConfirmationPage() {
         </CardContent>
         <CardFooter className="gap-2">
           <Button asChild>
-            <Link to="/customer-support/chat">Ask support about this order</Link>
+            <Link to="/shoppilot-ai/chat">Ask support about this order</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/customer-support/products">Continue shopping</Link>
+            <Link to="/shoppilot-ai/products">Continue shopping</Link>
           </Button>
         </CardFooter>
       </Card>
