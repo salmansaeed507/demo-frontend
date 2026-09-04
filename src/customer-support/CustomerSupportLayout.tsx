@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { LayoutGrid, MessageCircle, Search, ShoppingCart, Store } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CartProvider, useCart } from "./CartContext";
 import SupportChatPanel from "./SupportChatPanel";
+
+const SHOPPILOT_TITLE = "ShopPilot AI | E-commerce & AI Support";
+const DEFAULT_TITLE = "Multi-Service Demo";
 
 function StorefrontHeader() {
   const { itemCount } = useCart();
@@ -74,6 +77,13 @@ function StorefrontShell() {
   const location = useLocation();
   const [chatOpen, setChatOpen] = useState(false);
   const isAdmin = location.pathname.includes("/admin");
+
+  useEffect(() => {
+    document.title = SHOPPILOT_TITLE;
+    return () => {
+      document.title = DEFAULT_TITLE;
+    };
+  }, []);
 
   return (
     <div className="cs-theme flex min-h-svh flex-col overflow-x-hidden bg-zinc-100 text-slate-900">
