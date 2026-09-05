@@ -38,8 +38,6 @@ export default function LoginPage() {
 
   return (
     <PageShell
-      title="Customer login"
-      description="Static demo auth — no real account service."
       contentClassName="mx-auto max-w-md px-4"
     >
       <Card>

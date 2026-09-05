@@ -105,18 +105,7 @@ export default function ChatPage() {
   }
 
   return (
-    <PageShell
-      title="Support chat"
-      description={
-        <>
-          Signed in as {customerName}. Conversation is local-only.{" "}
-          <Link to="/shoppilot-ai/login" className="underline">
-            Switch account
-          </Link>
-        </>
-      }
-      contentClassName="mx-auto max-w-2xl px-4"
-    >
+    <PageShell contentClassName="mx-auto max-w-2xl px-4">
       <Card className="flex h-[min(70vh,640px)] flex-col">
         <CardHeader className="border-b">
           <div className="flex flex-wrap items-center gap-2">
@@ -124,7 +113,10 @@ export default function ChatPage() {
             <Badge variant="secondary">AI agent · mock</Badge>
           </div>
           <CardDescription>
-            Ask about orders, returns, or policies.
+            Signed in as {customerName}. Ask about orders, returns, or policies.{" "}
+            <Link to="/shoppilot-ai/login" className="underline">
+              Switch account
+            </Link>
           </CardDescription>
         </CardHeader>
         <CardContent className="min-h-0 flex-1 p-0">

@@ -78,10 +78,7 @@ const metrics = [
 
 export default function AdminLayout() {
   return (
-    <PageShell
-      title="Support Dashboard"
-      description="Monitor the AI agent, tickets, knowledge base, and support performance."
-    >
+    <PageShell>
       <div className="space-y-8">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {metrics.map((m) => (

@@ -20,11 +20,7 @@ export default function OrderConfirmationPage() {
   const total = totalRaw ? Number(totalRaw) : 0;
 
   return (
-    <PageShell
-      title="Order confirmed"
-      description="Simulated confirmation for the demo storefront."
-      contentClassName="mx-auto max-w-lg px-4"
-    >
+    <PageShell contentClassName="mx-auto max-w-lg px-4">
       <Card>
         <CardHeader>
           <Badge variant="secondary" className="w-fit">

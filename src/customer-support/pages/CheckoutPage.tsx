@@ -25,11 +25,7 @@ export default function CheckoutPage() {
 
   if (linesWithProducts.length === 0) {
     return (
-      <PageShell
-        title="Checkout"
-        description="Your cart is empty."
-        contentClassName="mx-auto max-w-2xl px-4"
-      >
+      <PageShell contentClassName="mx-auto max-w-2xl px-4">
         <Card>
           <CardHeader>
             <CardTitle>Nothing to check out</CardTitle>
@@ -56,11 +52,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <PageShell
-      title="Checkout"
-      description="Simulated checkout — no payment is processed."
-      contentClassName="mx-auto max-w-4xl px-4"
-    >
+    <PageShell contentClassName="mx-auto max-w-4xl px-4">
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>

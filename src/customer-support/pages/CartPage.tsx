@@ -16,16 +16,11 @@ import { useCart } from "../CartContext";
 import { formatPrice } from "../mock/products";
 
 export default function CartPage() {
-  const { linesWithProducts, subtotal, setQuantity, removeItem, itemCount } =
-    useCart();
+  const { linesWithProducts, subtotal, setQuantity, removeItem } = useCart();
 
   if (linesWithProducts.length === 0) {
     return (
-      <PageShell
-        title="Cart"
-        description="Your demo cart is empty."
-        contentClassName="mx-auto max-w-2xl px-4"
-      >
+      <PageShell contentClassName="mx-auto max-w-2xl px-4">
         <Card>
           <CardHeader>
             <CardTitle>Your cart is empty</CardTitle>
@@ -44,11 +39,7 @@ export default function CartPage() {
   }
 
   return (
-    <PageShell
-      title="Cart"
-      description={`${itemCount} item${itemCount === 1 ? "" : "s"} · static demo cart`}
-      contentClassName="mx-auto max-w-2xl px-4"
-    >
+    <PageShell contentClassName="mx-auto max-w-2xl px-4">
       <Card>
         <CardContent className="space-y-4 pt-6">
           {linesWithProducts.map(({ product, quantity }, index) => (
