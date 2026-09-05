@@ -18,7 +18,7 @@ function ShopPilotNotFoundContent() {
       </h1>
       <p className="mt-3 max-w-xl text-base text-slate-600 sm:text-lg">
         That URL doesn’t match anything in this ShopPilot demo. Head back to the
-        storefront or the multi-service home.
+        storefront or the Demo Hub.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
         <Button asChild size="lg">

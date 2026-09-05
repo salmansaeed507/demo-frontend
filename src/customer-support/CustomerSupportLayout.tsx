@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { LayoutGrid, MessageCircle, Search, ShoppingCart, Store } from "lucide-react";
+import { LayoutGrid, MessageCircle, Search, ShoppingCart, Store, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,7 @@ import { formatPrice, products, type Product } from "./mock/products";
 import SupportChatPanel from "./SupportChatPanel";
 
 const SHOPPILOT_TITLE = "ShopPilot AI | E-commerce & AI Support";
-const DEFAULT_TITLE = "Multi-Service Demo";
+const DEFAULT_TITLE = "Demo Hub";
 
 function searchProducts(query: string): Product[] {
   const q = query.trim().toLowerCase();
@@ -115,37 +115,48 @@ function StorefrontHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white text-slate-900">
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:gap-4">
-        <NavLink
-          to="/shoppilot-ai"
-          end
-          className="flex shrink-0 items-center gap-2 font-heading text-base font-semibold tracking-tight text-slate-900"
+      <div className="relative">
+        <Link
+          to="/"
+          className="absolute top-0 left-0 z-10 flex h-16 items-center gap-1.5 px-4 text-sm font-medium text-slate-600 transition-colors hover:text-indigo-600 sm:px-5"
         >
-          <span className="flex size-9 items-center justify-center rounded-md bg-gradient-to-br from-indigo-600 to-violet-500 text-white">
-            <Store className="size-4" />
-          </span>
-          ShopPilot AI
-        </NavLink>
+          <ArrowLeft className="size-4" />
+          <span className="hidden sm:inline">All Demos</span>
+          <span className="sm:hidden">Demos</span>
+        </Link>
 
-        <ProductSearch />
+        <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:gap-4">
+          <NavLink
+            to="/shoppilot-ai"
+            end
+            className="flex shrink-0 items-center gap-2 font-heading text-base font-semibold tracking-tight text-slate-900"
+          >
+            <span className="flex size-9 items-center justify-center rounded-md bg-gradient-to-br from-indigo-600 to-violet-500 text-white">
+              <Store className="size-4" />
+            </span>
+            ShopPilot AI
+          </NavLink>
 
-        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-          <Button asChild variant="ghost" size="icon" className="relative">
-            <Link to="/shoppilot-ai/cart" aria-label="Cart">
-              <ShoppingCart />
-              {itemCount > 0 ? (
-                <Badge className="absolute -top-1 -right-1 size-5 justify-center rounded-full border-0 bg-indigo-600 px-0 text-[10px] text-white shadow-none hover:bg-indigo-600">
-                  {itemCount}
-                </Badge>
-              ) : null}
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <Link to="/shoppilot-ai/admin">
-              <LayoutGrid data-icon="inline-start" />
-              Admin
-            </Link>
-          </Button>
+          <ProductSearch />
+
+          <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+            <Button asChild variant="ghost" size="icon" className="relative">
+              <Link to="/shoppilot-ai/cart" aria-label="Cart">
+                <ShoppingCart />
+                {itemCount > 0 ? (
+                  <Badge className="absolute -top-1 -right-1 size-5 justify-center rounded-full border-0 bg-indigo-600 px-0 text-[10px] text-white shadow-none hover:bg-indigo-600">
+                    {itemCount}
+                  </Badge>
+                ) : null}
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/shoppilot-ai/admin">
+                <LayoutGrid data-icon="inline-start" />
+                Admin
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </header>
