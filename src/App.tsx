@@ -14,6 +14,10 @@ import ConversationsPage from "./customer-support/pages/admin/ConversationsPage"
 import TicketsPage from "./customer-support/pages/admin/TicketsPage";
 import KnowledgeBasePage from "./customer-support/pages/admin/KnowledgeBasePage";
 import AnalyticsPage from "./customer-support/pages/admin/AnalyticsPage";
+import {
+  GenericNotFoundPage,
+  ShopPilotNotFoundPage,
+} from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -37,8 +41,14 @@ function App() {
             <Route path="tickets" element={<TicketsPage />} />
             <Route path="knowledge-base" element={<KnowledgeBasePage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
+            <Route
+              path="*"
+              element={<ShopPilotNotFoundPage withShell={false} />}
+            />
           </Route>
+          <Route path="*" element={<ShopPilotNotFoundPage />} />
         </Route>
+        <Route path="*" element={<GenericNotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
