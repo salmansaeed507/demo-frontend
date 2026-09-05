@@ -6,6 +6,7 @@ import SupportHomePage from "./customer-support/SupportHomePage";
 import LoginPage from "./customer-support/pages/LoginPage";
 import ChatPage from "./customer-support/pages/ChatPage";
 import ProductsPage from "./customer-support/pages/ProductsPage";
+import ProductDetailPage from "./customer-support/pages/ProductDetailPage";
 import CartPage from "./customer-support/pages/CartPage";
 import CheckoutPage from "./customer-support/pages/CheckoutPage";
 import OrderConfirmationPage from "./customer-support/pages/OrderConfirmationPage";
@@ -23,6 +24,7 @@ function App() {
         <Route path="/shoppilot-ai" element={<CustomerSupportLayout />}>
           <Route index element={<SupportHomePage />} />
           <Route path="products" element={<ProductsPage />} />
+          <Route path="products/:id" element={<ProductDetailPage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
           <Route

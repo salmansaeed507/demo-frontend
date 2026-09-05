@@ -41,10 +41,10 @@ function ProductSearch() {
     return () => document.removeEventListener("mousedown", onPointerDown);
   }, []);
 
-  function selectProduct() {
+  function selectProduct(productId: string) {
     setOpen(false);
     setQuery("");
-    navigate("/shoppilot-ai");
+    navigate(`/shoppilot-ai/products/${productId}`);
   }
 
   return (
@@ -81,7 +81,7 @@ function ProductSearch() {
                     type="button"
                     role="option"
                     className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-zinc-50"
-                    onClick={selectProduct}
+                    onClick={() => selectProduct(product.id)}
                   >
                     <img
                       src={product.imageUrl}

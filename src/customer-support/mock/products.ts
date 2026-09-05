@@ -5,7 +5,6 @@ export type Product = {
   category: string;
   description: string;
   stock: number;
-  rating: number;
   imageUrl: string;
 };
 
@@ -18,7 +17,6 @@ export const products: Product[] = [
     description:
       "Over-ear headphones with active noise canceling, 30-hour battery, and USB-C charging.",
     stock: 24,
-    rating: 4.6,
     imageUrl:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
   },
@@ -30,7 +28,6 @@ export const products: Product[] = [
     description:
       "Adjustable color temperature and brightness with memory presets. USB-powered.",
     stock: 18,
-    rating: 4.4,
     imageUrl:
       "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
   },
@@ -42,7 +39,6 @@ export const products: Product[] = [
     description:
       "Water-resistant 20L backpack with laptop sleeve and hidden passport pocket.",
     stock: 41,
-    rating: 4.8,
     imageUrl:
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80",
   },
@@ -54,7 +50,6 @@ export const products: Product[] = [
     description:
       "24oz double-wall bottle keeps drinks cold for 24 hours or hot for 12.",
     stock: 60,
-    rating: 4.5,
     imageUrl:
       "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=800&q=80",
   },
@@ -66,7 +61,6 @@ export const products: Product[] = [
     description:
       "Quiet-click mouse with multi-device pairing and rechargeable battery.",
     stock: 33,
-    rating: 4.3,
     imageUrl:
       "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=800&q=80",
   },
@@ -78,7 +72,6 @@ export const products: Product[] = [
     description:
       "Soft unisex tees in charcoal, cream, and navy. Pre-shrunk fabric.",
     stock: 12,
-    rating: 4.7,
     imageUrl:
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80",
   },
