@@ -30,7 +30,7 @@ export default function CartPage() {
           </CardHeader>
           <CardFooter>
             <Button asChild>
-              <Link to="/shoppilot-ai/products">Browse products</Link>
+              <Link to="/shoppilot-ai">Browse products</Link>
             </Button>
           </CardFooter>
         </Card>

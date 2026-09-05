@@ -54,7 +54,7 @@ export default function OrderConfirmationPage() {
             <Link to="/shoppilot-ai/chat">Ask support about this order</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/shoppilot-ai/products">Continue shopping</Link>
+            <Link to="/shoppilot-ai">Continue shopping</Link>
           </Button>
         </CardFooter>
       </Card>

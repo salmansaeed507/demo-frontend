@@ -33,7 +33,7 @@ export default function CheckoutPage() {
           </CardHeader>
           <CardFooter>
             <Button asChild variant="outline">
-              <Link to="/shoppilot-ai/products">Browse products</Link>
+              <Link to="/shoppilot-ai">Browse products</Link>
             </Button>
           </CardFooter>
         </Card>
