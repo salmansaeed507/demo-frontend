@@ -181,7 +181,7 @@ function StorefrontShell() {
   return (
     <div className="cs-theme flex min-h-svh flex-col overflow-x-hidden bg-zinc-100 text-slate-900">
       <StorefrontHeader />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:py-8">
+      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-6 sm:py-8">
         <Outlet />
       </main>
       {!isAdmin ? (
