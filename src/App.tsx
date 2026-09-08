@@ -7,7 +7,6 @@ import CustomerSupportLayout from "./customer-support/CustomerSupportLayout";
 import AdminLayout from "./customer-support/AdminLayout";
 import SupportHomePage from "./customer-support/SupportHomePage";
 import SupportLoginPage from "./customer-support/pages/LoginPage";
-import ChatPage from "./customer-support/pages/ChatPage";
 import ProductDetailPage from "./customer-support/pages/ProductDetailPage";
 import CartPage from "./customer-support/pages/CartPage";
 import CheckoutPage from "./customer-support/pages/CheckoutPage";
@@ -40,7 +39,6 @@ function App() {
                 element={<OrderConfirmationPage />}
               />
               <Route path="login" element={<SupportLoginPage />} />
-              <Route path="chat" element={<ChatPage />} />
               <Route path="admin" element={<AdminLayout />}>
                 <Route index element={<AdminOverviewPage />} />
                 <Route path="conversations" element={<ConversationsPage />} />

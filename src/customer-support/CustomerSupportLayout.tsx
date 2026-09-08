@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { LayoutGrid, MessageCircle, Search, ShoppingCart, Store, ArrowLeft } from "lucide-react";
+import { LayoutGrid, MessageCircle, Search, ShoppingCart, Store, ArrowLeft, Bot } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -165,15 +165,26 @@ function StorefrontHeader() {
 
 function FloatingChatButton({ onOpen }: { onOpen: () => void }) {
   return (
-    <Button
+    <button
       type="button"
-      size="icon"
-      className="fixed right-5 bottom-5 z-40"
       onClick={onOpen}
       aria-label="Open AI support chat"
+      className="group fixed right-5 bottom-5 z-40 flex items-center gap-2 rounded-full bg-gradient-to-br from-indigo-600 to-violet-500 py-3.5 pr-4 pl-3.5 text-white shadow-lg shadow-indigo-600/30 ring-1 ring-white/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-600/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
     >
-      <MessageCircle />
-    </Button>
+      <span className="relative flex size-9 items-center justify-center rounded-full bg-white/15">
+        <span className="absolute inset-0 animate-ping rounded-full bg-white/20 [animation-duration:2.5s]" />
+        <Bot className="relative size-5" />
+      </span>
+      <span className="hidden pr-1 text-left sm:block">
+        <span className="block text-sm font-semibold leading-tight">
+          ShopPilot AI
+        </span>
+        <span className="block text-[11px] font-medium text-white/80 leading-tight">
+          Ask support
+        </span>
+      </span>
+      <MessageCircle className="size-4 opacity-80 sm:hidden" />
+    </button>
   );
 }
 

@@ -30,7 +30,7 @@ export default function LoginPage() {
         JSON.stringify({ email, name: "Alex Rivera" }),
       );
       setError(null);
-      navigate("/shoppilot-ai/chat");
+      navigate("/shoppilot-ai");
       return;
     }
     setError("Use the demo credentials shown below.");
@@ -44,7 +44,7 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle>Sign in</CardTitle>
           <CardDescription>
-            Use the prefilled credentials to continue to support chat.
+            Use the prefilled credentials to continue to the storefront.
           </CardDescription>
         </CardHeader>
         <form onSubmit={onSubmit}>

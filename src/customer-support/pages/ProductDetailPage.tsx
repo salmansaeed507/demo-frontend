@@ -21,8 +21,8 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <PageShell contentClassName="mx-auto max-w-lg px-4">
-        <Card>
+      <PageShell>
+        <Card className="mx-auto max-w-lg">
           <CardHeader>
             <CardTitle>Product not found</CardTitle>
             <CardDescription>
@@ -40,7 +40,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <PageShell contentClassName="mx-auto max-w-4xl px-4">
+    <PageShell>
       <div className="grid gap-8 md:grid-cols-2">
         <div className="aspect-[4/3] overflow-hidden rounded-md bg-muted">
           <img

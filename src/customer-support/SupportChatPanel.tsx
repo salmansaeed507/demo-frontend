@@ -1,5 +1,5 @@
-import { FormEvent, useState } from "react";
-import { Bot, Send } from "lucide-react";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { Bot, FileText, Send, Sparkles, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,6 +35,13 @@ type Props = {
 export default function SupportChatPanel({ open, onOpenChange }: Props) {
   const [messages, setMessages] = useState<Msg[]>(seed);
   const [draft, setDraft] = useState("");
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const el = listRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [messages, open]);
 
   function send(text: string) {
     const trimmed = text.trim();
@@ -83,74 +90,99 @@ export default function SupportChatPanel({ open, onOpenChange }: Props) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="flex w-full flex-col gap-0 p-0 sm:max-w-md"
+        className="flex w-full flex-col gap-0 border-l border-zinc-200 p-0 sm:max-w-md"
       >
-        <SheetHeader className="border-b p-4 text-left">
-          <div className="flex items-center gap-2 pr-8">
-            <div className="flex size-9 items-center justify-center rounded-md bg-muted">
-              <Bot className="size-4" />
+        <SheetHeader className="space-y-0 border-b border-zinc-200 bg-gradient-to-r from-indigo-600 to-violet-500 p-4 text-left text-white">
+          <div className="flex items-center gap-3 pr-8">
+            <div className="flex size-10 items-center justify-center rounded-md bg-white/15 ring-1 ring-white/25">
+              <Bot className="size-5 text-white" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <SheetTitle>ShopPilot AI — AI Support</SheetTitle>
-                <Badge variant="secondary">Online</Badge>
+                <SheetTitle className="text-base text-white">
+                  ShopPilot AI
+                </SheetTitle>
+                <Badge className="border-0 bg-white/20 text-white hover:bg-white/20">
+                  <span className="mr-1.5 size-1.5 rounded-full bg-emerald-300" />
+                  Online
+                </Badge>
               </div>
-              <SheetDescription>
-                Powered by knowledge base + order API
+              <SheetDescription className="text-white/80">
+                Support · knowledge base + order API
               </SheetDescription>
             </div>
           </div>
         </SheetHeader>
 
-        <div className="flex min-h-0 flex-1 flex-col bg-background">
-          <div className="flex-1 space-y-3 overflow-y-auto p-4">
-            {messages.map((msg, i) => (
-              <div
-                key={`${msg.role}-${i}`}
-                className={cn(
-                  "flex",
-                  msg.role === "user" ? "justify-end" : "justify-start",
-                )}
-              >
+        <div className="flex min-h-0 flex-1 flex-col bg-zinc-50">
+          <div ref={listRef} className="flex-1 space-y-4 overflow-y-auto p-4">
+            {messages.map((msg, i) => {
+              const isUser = msg.role === "user";
+              return (
                 <div
+                  key={`${msg.role}-${i}`}
                   className={cn(
-                    "max-w-[85%] rounded-md px-3 py-2 text-sm",
-                    msg.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-foreground",
+                    "flex gap-2",
+                    isUser ? "flex-row-reverse" : "flex-row",
                   )}
                 >
-                  {msg.tool ? (
-                    <code className="mb-2 block rounded-md bg-background/80 px-2 py-1 font-mono text-[11px] text-muted-foreground">
-                      {msg.tool}
-                    </code>
-                  ) : null}
-                  <p>
-                    {msg.text}
-                    {msg.source ? (
-                      <span className="text-muted-foreground">
-                        {" "}
-                        (Source: {msg.source})
-                      </span>
+                  <div
+                    className={cn(
+                      "mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md",
+                      isUser
+                        ? "bg-slate-200 text-slate-700"
+                        : "bg-gradient-to-br from-indigo-600 to-violet-500 text-white",
+                    )}
+                  >
+                    {isUser ? (
+                      <User className="size-3.5" />
+                    ) : (
+                      <Bot className="size-3.5" />
+                    )}
+                  </div>
+                  <div
+                    className={cn(
+                      "max-w-[80%] space-y-2 rounded-lg px-3.5 py-2.5 text-sm shadow-sm",
+                      isUser
+                        ? "bg-indigo-600 text-white"
+                        : "border border-zinc-200 bg-white text-slate-900",
+                    )}
+                  >
+                    {msg.tool ? (
+                      <div className="flex items-start gap-1.5 rounded-md bg-indigo-50 px-2 py-1.5 font-mono text-[11px] text-indigo-700">
+                        <Sparkles className="mt-0.5 size-3 shrink-0" />
+                        <span className="break-all">{msg.tool}</span>
+                      </div>
                     ) : null}
-                  </p>
+                    <p className="leading-relaxed">{msg.text}</p>
+                    {msg.source ? (
+                      <p
+                        className={cn(
+                          "flex items-center gap-1.5 text-xs",
+                          isUser ? "text-white/80" : "text-muted-foreground",
+                        )}
+                      >
+                        <FileText className="size-3 shrink-0" />
+                        Source: {msg.source}
+                      </p>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          <div className="space-y-3 border-t p-4">
+          <div className="space-y-3 border-t border-zinc-200 bg-white p-4">
             <div className="flex flex-wrap gap-2">
               {suggestions.map((s) => (
-                <Button
+                <button
                   key={s}
                   type="button"
-                  variant="outline"
-                  size="sm"
                   onClick={() => send(s)}
+                  className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-left text-xs font-medium text-slate-700 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700"
                 >
                   {s}
-                </Button>
+                </button>
               ))}
             </div>
             <form onSubmit={onSubmit} className="flex items-center gap-2">
@@ -158,9 +190,14 @@ export default function SupportChatPanel({ open, onOpenChange }: Props) {
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder="Ask about orders, returns..."
-                className="flex-1"
+                className="flex-1 border-zinc-200 bg-zinc-50 focus-visible:bg-white"
               />
-              <Button type="submit" size="icon" aria-label="Send">
+              <Button
+                type="submit"
+                size="icon"
+                className="bg-indigo-600 hover:bg-indigo-600/90"
+                aria-label="Send"
+              >
                 <Send />
               </Button>
             </form>
