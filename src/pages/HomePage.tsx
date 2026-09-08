@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 import SiteFooter from "../components/SiteFooter";
 
 const demos = [
@@ -16,9 +17,17 @@ const demos = [
 ] as const;
 
 export default function HomePage() {
+  const { session, logout } = useAuth();
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.title = "Demo Hub";
   }, []);
+
+  function onLogout() {
+    logout();
+    navigate("/login", { replace: true });
+  }
 
   return (
     <div
@@ -32,6 +41,21 @@ export default function HomePage() {
           aria-hidden
         />
         <div className="relative z-10 mx-auto max-w-[1140px] px-6">
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-white/75">
+              Signed in as{" "}
+              <span className="font-semibold text-white">
+                {session?.fullName}
+              </span>
+            </p>
+            <button
+              type="button"
+              onClick={onLogout}
+              className="rounded-full border border-white/40 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-white/10"
+            >
+              Sign out
+            </button>
+          </div>
           <p className="text-[0.8rem] font-semibold tracking-[3px] text-[#fbbf24] uppercase">
             Live examples
           </p>
