@@ -58,7 +58,7 @@ export default function AdminLayout() {
             size="sm"
             className="bg-white px-2.5 font-semibold text-slate-900 shadow-sm hover:bg-teal-50 hover:text-teal-800 sm:px-3"
           >
-            <Link to="/shoppilot-ai">
+            <Link to="/shoppilot-ai" target="_blank" rel="noopener noreferrer">
               <Store className="size-4" />
               <span className="ml-1.5">Storefront</span>
             </Link>

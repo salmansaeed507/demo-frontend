@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { LayoutGrid, MessageCircle, Search, ShoppingCart, Store, ArrowLeft, Bot } from "lucide-react";
+import { MessageCircle, Search, ShoppingCart, Store, ArrowLeft, Bot } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -154,12 +154,6 @@ function StorefrontHeader() {
                     {itemCount}
                   </Badge>
                 ) : null}
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="sm" className="px-2 sm:px-3">
-              <Link to="/shoppilot-ai/admin">
-                <LayoutGrid className="size-4" />
-                <span className="ml-1.5 hidden sm:inline">Admin</span>
               </Link>
             </Button>
           </div>
