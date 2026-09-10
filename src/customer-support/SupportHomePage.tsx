@@ -1,8 +1,10 @@
 import ProductCard from "./ProductCard";
 import PageShell from "./PageShell";
-import { products } from "./mock/products";
+import { useShopPilot } from "./store/ShopPilotStore";
 
 export default function SupportHomePage() {
+  const { products } = useShopPilot();
+
   return (
     <PageShell>
       <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">

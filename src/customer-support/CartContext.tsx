@@ -6,7 +6,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { getProduct, type Product } from "./mock/products";
+import type { Product } from "./mock/products";
+import { useShopPilot } from "./store/ShopPilotStore";
 
 export type CartLine = {
   productId: string;
@@ -32,6 +33,7 @@ const initialLines: CartLine[] = [
 ];
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { getProduct } = useShopPilot();
   const [lines, setLines] = useState<CartLine[]>(initialLines);
 
   const addItem = useCallback((productId: string, quantity = 1) => {
@@ -86,7 +88,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         0,
       ),
     };
-  }, [lines, addItem, setQuantity, removeItem, clear]);
+  }, [lines, addItem, setQuantity, removeItem, clear, getProduct]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

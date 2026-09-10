@@ -11,11 +11,6 @@ import ProductDetailPage from "./customer-support/pages/ProductDetailPage";
 import CartPage from "./customer-support/pages/CartPage";
 import CheckoutPage from "./customer-support/pages/CheckoutPage";
 import OrderConfirmationPage from "./customer-support/pages/OrderConfirmationPage";
-import AdminOverviewPage from "./customer-support/pages/admin/AdminOverviewPage";
-import ConversationsPage from "./customer-support/pages/admin/ConversationsPage";
-import TicketsPage from "./customer-support/pages/admin/TicketsPage";
-import KnowledgeBasePage from "./customer-support/pages/admin/KnowledgeBasePage";
-import AnalyticsPage from "./customer-support/pages/admin/AnalyticsPage";
 import {
   GenericNotFoundPage,
   ShopPilotNotFoundPage,
@@ -39,17 +34,7 @@ function App() {
                 element={<OrderConfirmationPage />}
               />
               <Route path="login" element={<SupportLoginPage />} />
-              <Route path="admin" element={<AdminLayout />}>
-                <Route index element={<AdminOverviewPage />} />
-                <Route path="conversations" element={<ConversationsPage />} />
-                <Route path="tickets" element={<TicketsPage />} />
-                <Route path="knowledge-base" element={<KnowledgeBasePage />} />
-                <Route path="analytics" element={<AnalyticsPage />} />
-                <Route
-                  path="*"
-                  element={<ShopPilotNotFoundPage withShell={false} />}
-                />
-              </Route>
+              <Route path="admin" element={<AdminLayout />} />
               <Route path="*" element={<ShopPilotNotFoundPage />} />
             </Route>
             <Route path="*" element={<GenericNotFoundPage />} />

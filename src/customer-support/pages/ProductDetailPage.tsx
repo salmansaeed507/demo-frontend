@@ -12,10 +12,12 @@ import {
 } from "@/components/ui/card";
 import { useCart } from "../CartContext";
 import PageShell from "../PageShell";
-import { formatPrice, getProduct } from "../mock/products";
+import { formatPrice } from "../mock/products";
+import { useShopPilot } from "../store/ShopPilotStore";
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { getProduct } = useShopPilot();
   const product = id ? getProduct(id) : undefined;
   const { addItem } = useCart();
 

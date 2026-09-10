@@ -1,6 +1,11 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import HubBrand from "../components/HubBrand";
+
+/** Same key the gateway / demo stack expects (see VITE_API_KEY). */
+const PROVIDED_LOGIN_TOKEN =
+  import.meta.env.VITE_API_KEY || "dev-api-key-change-me";
 
 export default function HubLoginPage() {
   const { isAuthenticated, login } = useAuth();
@@ -29,7 +34,11 @@ export default function HubLoginPage() {
     const name = fullName.trim();
     const loginToken = token.trim();
     if (!name || !loginToken) {
-      setError("Enter your full name and a login token.");
+      setError("Enter your full name and the provided login token.");
+      return;
+    }
+    if (loginToken !== PROVIDED_LOGIN_TOKEN) {
+      setError("Use your full name and the provided login token shown below.");
       return;
     }
     setError(null);
@@ -49,6 +58,9 @@ export default function HubLoginPage() {
           aria-hidden
         />
         <div className="relative z-10 mx-auto max-w-[1140px] px-6">
+          <div className="mb-10">
+            <HubBrand variant="light" />
+          </div>
           <p className="text-[0.8rem] font-semibold tracking-[3px] text-[#fbbf24] uppercase">
             Demo Hub
           </p>
@@ -56,8 +68,7 @@ export default function HubLoginPage() {
             Sign in
           </h1>
           <p className="mt-3 max-w-md text-base text-white/80">
-            Access all demos with your full name and a login token. Any non-empty
-            token works in this demo.
+            Access all demos with your full name and the provided login token.
           </p>
         </div>
       </section>
@@ -82,7 +93,7 @@ export default function HubLoginPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-full rounded-lg border border-[#e5e7eb] bg-white px-3.5 py-2.5 text-sm text-[#1f2937] outline-none transition focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/25"
-                placeholder="Alex Rivera"
+                placeholder="Your full name"
               />
             </div>
             <div>
@@ -100,9 +111,15 @@ export default function HubLoginPage() {
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
                 className="w-full rounded-lg border border-[#e5e7eb] bg-white px-3.5 py-2.5 text-sm text-[#1f2937] outline-none transition focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/25"
-                placeholder="Enter any token"
+                placeholder="Provided login token"
               />
             </div>
+            <p className="rounded-lg bg-[#f5f3ff] px-3.5 py-3 text-xs leading-relaxed text-[#4b5563]">
+              Use your full name and this provided login token:{" "}
+              <code className="font-semibold text-[#7c3aed]">
+                {PROVIDED_LOGIN_TOKEN}
+              </code>
+            </p>
             {error ? (
               <p className="text-sm font-medium text-red-600" role="alert">
                 {error}

@@ -17,13 +17,21 @@ export type SupportTicket = {
   createdAgo: string;
 };
 
+export type EmbeddingStatus = "ready" | "pending" | "indexing" | "failed";
+
 export type KnowledgeDoc = {
   id: string;
   name: string;
   type: string;
   sizeKb: number;
+  /** Convenience: true when embeddingStatus === "ready" */
   indexed: boolean;
   uploadedAt: string;
+  chunkCount: number;
+  lastIndexedAt: string | null;
+  embeddingStatus: EmbeddingStatus;
+  collection: string;
+  tags: string[];
 };
 
 export const conversations: Conversation[] = [
@@ -109,6 +117,11 @@ export const knowledgeDocs: KnowledgeDoc[] = [
     sizeKb: 240,
     indexed: true,
     uploadedAt: "2026-08-20",
+    chunkCount: 48,
+    lastIndexedAt: "2026-09-02T14:10:00.000Z",
+    embeddingStatus: "ready",
+    collection: "policies",
+    tags: ["shipping", "fulfillment"],
   },
   {
     id: "doc-2",
@@ -117,6 +130,11 @@ export const knowledgeDocs: KnowledgeDoc[] = [
     sizeKb: 18,
     indexed: true,
     uploadedAt: "2026-08-22",
+    chunkCount: 22,
+    lastIndexedAt: "2026-09-08T09:42:00.000Z",
+    embeddingStatus: "ready",
+    collection: "policies",
+    tags: ["returns", "refunds"],
   },
   {
     id: "doc-3",
@@ -125,6 +143,11 @@ export const knowledgeDocs: KnowledgeDoc[] = [
     sizeKb: 96,
     indexed: false,
     uploadedAt: "2026-09-01",
+    chunkCount: 0,
+    lastIndexedAt: null,
+    embeddingStatus: "pending",
+    collection: "catalog",
+    tags: ["faq", "products"],
   },
   {
     id: "doc-4",
@@ -133,6 +156,11 @@ export const knowledgeDocs: KnowledgeDoc[] = [
     sizeKb: 64,
     indexed: true,
     uploadedAt: "2026-09-01",
+    chunkCount: 31,
+    lastIndexedAt: "2026-09-01T18:05:00.000Z",
+    embeddingStatus: "ready",
+    collection: "policies",
+    tags: ["warranty"],
   },
 ];
 

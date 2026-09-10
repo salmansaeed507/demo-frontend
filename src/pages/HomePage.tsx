@@ -1,18 +1,20 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import HubBrand from "../components/HubBrand";
 import SiteFooter from "../components/SiteFooter";
 
 const demos = [
   {
     id: "shoppilot-ai",
-    title: "ShopPilot AI",
+    pill: "ShopPilot AI",
+    title: "Customer Support Agent",
     description:
       "An AI agent that answers questions, tracks orders, and opens tickets — wired to a knowledge base and order API behind the demo gateway.",
-    to: "/shoppilot-ai",
+    to: "/shoppilot-ai/admin",
     image:
       "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
-    stack: ["React", "FastAPI", "Gateway"],
+    stack: ["AI Agent", "RAG", "FastAPI", "React"],
   },
 ] as const;
 
@@ -21,7 +23,7 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "Demo Hub";
+    document.title = "Demo Hub | Salman Saeed";
   }, []);
 
   function onLogout() {
@@ -34,38 +36,40 @@ export default function HomePage() {
       className="flex min-h-svh flex-col bg-white text-[#4b5563]"
       style={{ fontFamily: '"Poppins", sans-serif' }}
     >
-      <section className="relative overflow-hidden bg-[#1a1a4b] pt-14 pb-16 sm:pt-16 sm:pb-20">
+      <section className="relative overflow-hidden bg-[#1a1a4b] pt-8 pb-8 sm:pt-10 sm:pb-10">
         <div
           className="pointer-events-none absolute inset-0 bg-[#1a1a4b]"
           style={{ clipPath: "ellipse(120% 85% at 30% 0%)" }}
           aria-hidden
         />
         <div className="relative z-10 mx-auto max-w-[1140px] px-6">
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-white/75">
-              Signed in as{" "}
-              <span className="font-semibold text-white">
-                {session?.fullName}
-              </span>
-            </p>
-            <button
-              type="button"
-              onClick={onLogout}
-              className="rounded-full border border-white/40 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-white/10"
-            >
-              Sign out
-            </button>
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <HubBrand variant="light" />
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-sm text-white/75">
+                Welcome{" "}
+                <span className="font-semibold text-white">
+                  {session?.fullName}
+                </span>
+              </p>
+              <button
+                type="button"
+                onClick={onLogout}
+                className="rounded-full border border-white/40 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-white/10"
+              >
+                Sign out
+              </button>
+            </div>
           </div>
-          <p className="text-[0.8rem] font-semibold tracking-[3px] text-[#fbbf24] uppercase">
+          <p className="text-[0.75rem] font-semibold tracking-[3px] text-[#fbbf24] uppercase">
             Live examples
           </p>
-          <h1 className="mt-3 max-w-2xl text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-[3.25rem]">
+          <h1 className="mt-2 max-w-2xl text-2xl font-extrabold leading-tight text-white sm:text-3xl">
             Demo Hub
           </h1>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-white/80 sm:text-[1rem]">
-            Hands-on examples of AI agents, workflow automation, and microservice
-            architecture — React frontend through an API gateway to independent
-            backend services.
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/80 sm:text-[0.95rem]">
+            Hands-on examples of AI agents and workflow automation by Salman
+            Saeed — interactive demos you can explore end to end.
           </p>
         </div>
       </section>
@@ -78,12 +82,8 @@ export default function HomePage() {
           <h2 className="mt-2 text-center text-2xl font-bold text-[#1f2937] sm:text-[2rem]">
             Demos
           </h2>
-          <p className="mx-auto mt-3 mb-8 max-w-xl text-center text-[0.95rem] leading-relaxed text-[#6b7280]">
-            Open a demo to explore the full UI. More services from this stack will
-            appear here as they get frontends.
-          </p>
 
-          <div className="mx-auto grid max-w-md gap-6 sm:max-w-none sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto mt-8 grid max-w-md gap-6 sm:max-w-none sm:grid-cols-2 lg:grid-cols-3">
             {demos.map((demo) => (
               <Link
                 key={demo.id}
@@ -99,6 +99,9 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="flex flex-1 flex-col px-7 pt-6 pb-7">
+                  <span className="mb-2 w-fit rounded-full bg-[#f5f3ff] px-2.5 py-1 text-xs font-semibold text-[#7c3aed]">
+                    {demo.pill}
+                  </span>
                   <h3 className="text-[1.15rem] font-bold text-[#1f2937]">
                     {demo.title}
                   </h3>

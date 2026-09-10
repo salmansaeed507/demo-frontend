@@ -5,16 +5,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CartProvider, useCart } from "./CartContext";
-import { formatPrice, products, type Product } from "./mock/products";
+import { formatPrice, type Product } from "./mock/products";
+import { ShopPilotProvider, useShopPilot } from "./store/ShopPilotStore";
 import SupportChatPanel from "./SupportChatPanel";
 
 const SHOPPILOT_TITLE = "ShopPilot AI | E-commerce & AI Support";
 const DEFAULT_TITLE = "Demo Hub";
 
-function searchProducts(query: string): Product[] {
+function searchProducts(list: Product[], query: string): Product[] {
   const q = query.trim().toLowerCase();
   if (!q) return [];
-  return products.filter(
+  return list.filter(
     (p) =>
       p.name.toLowerCase().includes(q) ||
       p.category.toLowerCase().includes(q) ||
@@ -24,11 +25,15 @@ function searchProducts(query: string): Product[] {
 
 function ProductSearch() {
   const navigate = useNavigate();
+  const { products } = useShopPilot();
   const rootRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
 
-  const results = useMemo(() => searchProducts(query), [query]);
+  const results = useMemo(
+    () => searchProducts(products, query),
+    [products, query],
+  );
   const showPanel = open && query.trim().length > 0;
 
   useEffect(() => {
@@ -48,7 +53,7 @@ function ProductSearch() {
   }
 
   return (
-    <div ref={rootRef} className="relative mx-auto hidden min-w-0 flex-1 max-w-xl md:block">
+    <div ref={rootRef} className="relative mx-auto min-w-0 flex-1 max-w-xl">
       <Search className="pointer-events-none absolute top-1/2 left-3 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         value={query}
@@ -115,31 +120,32 @@ function StorefrontHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white text-slate-900">
-      <div className="relative">
-        <Link
-          to="/"
-          className="absolute top-0 left-0 z-10 flex h-16 items-center gap-1.5 px-4 text-sm font-medium text-slate-600 transition-colors hover:text-indigo-600 sm:px-5"
-        >
-          <ArrowLeft className="size-4" />
-          <span className="hidden sm:inline">All Demos</span>
-          <span className="sm:hidden">Demos</span>
-        </Link>
+      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-3 py-2 sm:px-4 sm:py-0">
+        <div className="flex h-12 items-center gap-2 sm:h-16 sm:gap-4">
+          <Link
+            to="/"
+            className="flex shrink-0 items-center gap-1 text-sm font-medium text-slate-600 transition-colors hover:text-indigo-600"
+          >
+            <ArrowLeft className="size-4" />
+            <span className="hidden sm:inline">All Demos</span>
+          </Link>
 
-        <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:gap-4">
           <NavLink
             to="/shoppilot-ai"
             end
-            className="flex shrink-0 items-center gap-2 font-heading text-base font-semibold tracking-tight text-slate-900"
+            className="flex min-w-0 shrink items-center gap-2 font-heading text-sm font-semibold tracking-tight text-slate-900 sm:text-base"
           >
-            <span className="flex size-9 items-center justify-center rounded-md bg-gradient-to-br from-indigo-600 to-violet-500 text-white">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-indigo-600 to-violet-500 text-white sm:size-9">
               <Store className="size-4" />
             </span>
-            ShopPilot AI
+            <span className="truncate">ShopPilot AI</span>
           </NavLink>
 
-          <ProductSearch />
+          <div className="ml-auto hidden min-w-0 flex-1 md:block">
+            <ProductSearch />
+          </div>
 
-          <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2 md:ml-0">
             <Button asChild variant="ghost" size="icon" className="relative">
               <Link to="/shoppilot-ai/cart" aria-label="Cart">
                 <ShoppingCart />
@@ -150,13 +156,17 @@ function StorefrontHeader() {
                 ) : null}
               </Link>
             </Button>
-            <Button asChild variant="outline" size="sm">
+            <Button asChild variant="outline" size="sm" className="px-2 sm:px-3">
               <Link to="/shoppilot-ai/admin">
-                <LayoutGrid data-icon="inline-start" />
-                Admin
+                <LayoutGrid className="size-4" />
+                <span className="ml-1.5 hidden sm:inline">Admin</span>
               </Link>
             </Button>
           </div>
+        </div>
+
+        <div className="pb-1 md:hidden">
+          <ProductSearch />
         </div>
       </div>
     </header>
@@ -169,7 +179,7 @@ function FloatingChatButton({ onOpen }: { onOpen: () => void }) {
       type="button"
       onClick={onOpen}
       aria-label="Open AI support chat"
-      className="group fixed right-5 bottom-5 z-40 flex items-center gap-2 rounded-full bg-gradient-to-br from-indigo-600 to-violet-500 py-3.5 pr-4 pl-3.5 text-white shadow-lg shadow-indigo-600/30 ring-1 ring-white/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-600/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+      className="group fixed right-4 bottom-4 z-40 flex items-center gap-2 rounded-full bg-gradient-to-br from-indigo-600 to-violet-500 py-3 pr-3.5 pl-3 text-white shadow-lg shadow-indigo-600/30 ring-1 ring-white/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-600/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 sm:right-5 sm:bottom-5 sm:py-3.5 sm:pr-4 sm:pl-3.5"
     >
       <span className="relative flex size-9 items-center justify-center rounded-full bg-white/15">
         <span className="absolute inset-0 animate-ping rounded-full bg-white/20 [animation-duration:2.5s]" />
@@ -194,11 +204,17 @@ function StorefrontShell() {
   const isAdmin = location.pathname.includes("/admin");
 
   useEffect(() => {
-    document.title = SHOPPILOT_TITLE;
+    document.title = isAdmin
+      ? "Customer Support Agent | ShopPilot AI"
+      : SHOPPILOT_TITLE;
     return () => {
       document.title = DEFAULT_TITLE;
     };
-  }, []);
+  }, [isAdmin]);
+
+  if (isAdmin) {
+    return <Outlet />;
+  }
 
   return (
     <div className="cs-theme flex min-h-svh flex-col overflow-x-hidden bg-zinc-100 text-slate-900">
@@ -206,20 +222,18 @@ function StorefrontShell() {
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-6 sm:py-8">
         <Outlet />
       </main>
-      {!isAdmin ? (
-        <>
-          <FloatingChatButton onOpen={() => setChatOpen(true)} />
-          <SupportChatPanel open={chatOpen} onOpenChange={setChatOpen} />
-        </>
-      ) : null}
+      <FloatingChatButton onOpen={() => setChatOpen(true)} />
+      <SupportChatPanel open={chatOpen} onOpenChange={setChatOpen} />
     </div>
   );
 }
 
 export default function CustomerSupportLayout() {
   return (
-    <CartProvider>
-      <StorefrontShell />
-    </CartProvider>
+    <ShopPilotProvider>
+      <CartProvider>
+        <StorefrontShell />
+      </CartProvider>
+    </ShopPilotProvider>
   );
 }
