@@ -1,6 +1,6 @@
 # Multi-Service Demo — Frontend
 
-React + Vite SPA for the multi-service demos (customer support UI, gateway home).
+React + Vite SPA for the multi-service demos (customer support UI, api-gateway home).
 
 ## Local development
 
@@ -42,7 +42,7 @@ Add these secrets on `salmansaeed507/demo-frontend` (Settings → Secrets → Ac
 | `VPS_USER` | SSH user that can write `/var/www/demo` |
 | `VPS_SSH_KEY` | Private key for that user |
 | `VITE_API_URL` | e.g. `https://demo.salmansaeed507.com` (or leave empty until the API is up) |
-| `VITE_API_KEY` | Same key the gateway expects |
+| `VITE_API_KEY` | Same key the api-gateway expects |
 
 `VITE_*` values are baked in at build time. Changing them requires a new deploy.
 
