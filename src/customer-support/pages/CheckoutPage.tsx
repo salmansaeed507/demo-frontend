@@ -5,15 +5,28 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import PageShell from "../PageShell";
-import { useCart } from "../CartContext";
+import {
+  cartLinesWithProducts,
+  cartSubtotal,
+  useCartStore,
+} from "../store/cartStore";
 import { formatPrice } from "../mock/products";
+import { useOrdersStore } from "../store/ordersStore";
+import { useProductsStore } from "../store/productsStore";
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
-  const { linesWithProducts, subtotal, clear, itemCount } = useCart();
+  const lines = useCartStore((s) => s.lines);
+  const clear = useCartStore((s) => s.clear);
+  const products = useProductsStore((s) => s.products);
+  const linesWithProducts = cartLinesWithProducts(lines, products);
+  const subtotal = cartSubtotal(linesWithProducts);
+  const checkoutOrder = useOrdersStore((s) => s.checkoutOrder);
   const [name, setName] = useState("Alex Rivera");
   const [email, setEmail] = useState("alex@example.com");
   const [address, setAddress] = useState("123 Market St, Austin, TX 78701");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (linesWithProducts.length === 0) {
     return (
@@ -38,20 +51,35 @@ export default function CheckoutPage() {
     );
   }
 
-  function onSubmit(e: FormEvent) {
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    const orderId = `ORD-${48290 + itemCount}`;
-    const total = subtotal;
-    clear();
-    navigate(
-      `/shoppilot-ai/order-confirmation?orderId=${encodeURIComponent(orderId)}&total=${total.toFixed(2)}&name=${encodeURIComponent(name)}`,
-    );
+    setSubmitting(true);
+    setError(null);
+    try {
+      const order = await checkoutOrder({
+        customer: name.trim(),
+        email: email.trim(),
+        shippingAddress: address.trim(),
+        items: linesWithProducts.map(({ product, quantity }) => ({
+          productId: product.id,
+          quantity,
+        })),
+      });
+      clear();
+      navigate(
+        `/shoppilot-ai/order-confirmation?orderId=${encodeURIComponent(order.id)}&total=${order.total.toFixed(2)}&name=${encodeURIComponent(name)}`,
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Checkout failed");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
     <PageShell>
       <form
-        onSubmit={onSubmit}
+        onSubmit={(e) => void onSubmit(e)}
         className="grid gap-8 lg:grid-cols-[320px_1fr]"
       >
         <div className="space-y-4 rounded-md border border-zinc-200 bg-white p-5 sm:p-6">
@@ -60,7 +88,7 @@ export default function CheckoutPage() {
               Shipping
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Demo form — values are not sent to a backend.
+              Submitted to the ShopPilot order API via the gateway.
             </p>
           </div>
           <Separator />
@@ -147,8 +175,11 @@ export default function CheckoutPage() {
               {formatPrice(subtotal)}
             </span>
           </div>
-          <Button type="submit" className="w-full" size="lg">
-            Place order
+          {error ? (
+            <p className="text-sm text-red-600">{error}</p>
+          ) : null}
+          <Button type="submit" className="w-full" size="lg" disabled={submitting}>
+            {submitting ? "Placing order…" : "Place order"}
           </Button>
           <Button asChild variant="outline" className="w-full">
             <Link to="/shoppilot-ai/cart">Back to cart</Link>

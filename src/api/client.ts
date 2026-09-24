@@ -1,38 +1,73 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
-const API_KEY = import.meta.env.VITE_API_KEY || "dev-api-key-change-me";
+const API_GATEWAY_URL =
+  import.meta.env.VITE_API_GATEWAY_URL || "http://localhost:5070";
+const CUSTOMER_SUPPORT_API_URL =
+  import.meta.env.VITE_CUSTOMER_SUPPORT_API_URL ||
+  `${API_GATEWAY_URL.replace(/\/$/, "")}/support`;
 
-async function apiFetch<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_URL}${path}`, {
-    headers: {
-      "X-API-Key": API_KEY,
+let authToken: string | null = null;
+
+export type ApiClient = {
+  baseUrl: string;
+  fetch: <T>(
+    path: string,
+    options?: RequestInit,
+    opts?: { requireAuth?: boolean },
+  ) => Promise<T>;
+  setAuthToken: (token: string | null) => void;
+  getAuthToken: () => string | null;
+};
+
+function createClient(baseUrl: string): ApiClient {
+  const normalizedBase = baseUrl.replace(/\/$/, "");
+
+  return {
+    baseUrl: normalizedBase,
+    setAuthToken(token) {
+      authToken = token;
     },
-  });
+    getAuthToken() {
+      return authToken;
+    },
+    async fetch<T>(
+      path: string,
+      options: RequestInit = {},
+      { requireAuth = true }: { requireAuth?: boolean } = {},
+    ): Promise<T> {
+      const headers = new Headers(options.headers);
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`API error ${response.status}: ${text}`);
-  }
+      if (!headers.has("Content-Type") && options.body) {
+        headers.set("Content-Type", "application/json");
+      }
 
-  return response.json() as Promise<T>;
+      if (requireAuth) {
+        if (!authToken) {
+          throw new Error("Not authenticated");
+        }
+        headers.set("Authorization", `Bearer ${authToken}`);
+      }
+
+      const url = path.startsWith("http")
+        ? path
+        : `${normalizedBase}${path.startsWith("/") ? path : `/${path}`}`;
+
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`API error ${response.status}: ${text}`);
+      }
+
+      if (response.status === 204) {
+        return undefined as T;
+      }
+
+      return response.json() as Promise<T>;
+    },
+  };
 }
 
-export interface Ticket {
-  id: number;
-  subject: string;
-  status: string;
-}
-
-export interface Lead {
-  id: number;
-  name: string;
-  score: number;
-  status: string;
-}
-
-export function fetchTickets(): Promise<Ticket[]> {
-  return apiFetch<Ticket[]>("/api/shoppilot-ai/tickets");
-}
-
-export function fetchLeads(): Promise<Lead[]> {
-  return apiFetch<Lead[]>("/api/lead-qualification/leads");
-}
+export const apiGatewayClient = createClient(API_GATEWAY_URL);
+export const customerSupportApiClient = createClient(CUSTOMER_SUPPORT_API_URL);

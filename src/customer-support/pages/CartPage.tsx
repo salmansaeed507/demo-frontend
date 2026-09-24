@@ -5,11 +5,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import PageShell from "../PageShell";
-import { useCart } from "../CartContext";
+import {
+  cartLinesWithProducts,
+  cartSubtotal,
+  useCartStore,
+} from "../store/cartStore";
 import { formatPrice } from "../mock/products";
+import { useProductsStore } from "../store/productsStore";
 
 export default function CartPage() {
-  const { linesWithProducts, subtotal, setQuantity, removeItem } = useCart();
+  const lines = useCartStore((s) => s.lines);
+  const setQuantity = useCartStore((s) => s.setQuantity);
+  const removeItem = useCartStore((s) => s.removeItem);
+  const products = useProductsStore((s) => s.products);
+  const linesWithProducts = cartLinesWithProducts(lines, products);
+  const subtotal = cartSubtotal(linesWithProducts);
 
   if (linesWithProducts.length === 0) {
     return (

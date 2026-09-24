@@ -10,16 +10,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useCart } from "../CartContext";
+import { useCartStore } from "../store/cartStore";
 import PageShell from "../PageShell";
 import { formatPrice } from "../mock/products";
-import { useShopPilot } from "../store/ShopPilotStore";
+import { useProductsStore } from "../store/productsStore";
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { getProduct } = useShopPilot();
+  const getProduct = useProductsStore((s) => s.getProduct);
   const product = id ? getProduct(id) : undefined;
-  const { addItem } = useCart();
+  const addItem = useCartStore((s) => s.addItem);
 
   if (!product) {
     return (

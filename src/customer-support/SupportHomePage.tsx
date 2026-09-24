@@ -1,9 +1,9 @@
 import ProductCard from "./ProductCard";
 import PageShell from "./PageShell";
-import { useShopPilot } from "./store/ShopPilotStore";
+import { useProductsStore } from "./store/productsStore";
 
 export default function SupportHomePage() {
-  const { products } = useShopPilot();
+  const products = useProductsStore((s) => s.products);
 
   return (
     <PageShell>

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../auth/AuthContext";
+import { useAuthStore } from "../auth/authStore";
 import HubBrand from "../components/HubBrand";
 import SiteFooter from "../components/SiteFooter";
 
@@ -10,7 +10,7 @@ const demos = [
     pill: "ShopPilot AI",
     title: "Customer Support Agent",
     description:
-      "An AI agent that answers questions, tracks orders, and opens tickets — wired to a knowledge base and order API behind the demo gateway.",
+      "An AI agent that answers questions, tracks orders, and opens tickets — wired to a knowledge base and order API behind the demo api-gateway.",
     to: "/shoppilot-ai/admin",
     image:
       "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
@@ -19,15 +19,16 @@ const demos = [
 ] as const;
 
 export default function HomePage() {
-  const { session, logout } = useAuth();
+  const session = useAuthStore((s) => s.session);
+  const logout = useAuthStore((s) => s.logout);
   const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Demo Hub | Salman Saeed";
   }, []);
 
-  function onLogout() {
-    logout();
+  async function onLogout() {
+    await logout();
     navigate("/login", { replace: true });
   }
 

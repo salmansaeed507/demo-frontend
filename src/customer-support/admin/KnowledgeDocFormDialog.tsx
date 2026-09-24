@@ -1,0 +1,196 @@
+import { FormEvent, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import type { EmbeddingStatus, KnowledgeDoc } from "../store/types";
+import { useKnowledgeStore } from "../store/knowledgeStore";
+import { fieldClass } from "./styles";
+
+type FormState = {
+  name: string;
+  type: string;
+  sizeKb: string;
+  collection: string;
+  tags: string;
+  embeddingStatus: EmbeddingStatus;
+  chunkCount: string;
+};
+
+const empty: FormState = {
+  name: "",
+  type: "PDF",
+  sizeKb: "32",
+  collection: "policies",
+  tags: "",
+  embeddingStatus: "pending",
+  chunkCount: "0",
+};
+
+type Props = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+export default function KnowledgeDocFormDialog({ open, onOpenChange }: Props) {
+  const createDoc = useKnowledgeStore((s) => s.createDoc);
+  const [form, setForm] = useState<FormState>(empty);
+
+  useEffect(() => {
+    if (open) setForm(empty);
+  }, [open]);
+
+  function parseTags(raw: string) {
+    return raw
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+  }
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    const status = form.embeddingStatus;
+    const sizeKb = Number(form.sizeKb) || 0;
+    const chunkCount =
+      status === "ready"
+        ? Number(form.chunkCount) || Math.max(4, Math.round(sizeKb / 4))
+        : Number(form.chunkCount) || 0;
+
+    const payload: Omit<KnowledgeDoc, "id"> = {
+      name: form.name.trim(),
+      type: form.type.trim() || "PDF",
+      sizeKb,
+      embeddingStatus: status,
+      indexed: status === "ready",
+      uploadedAt: new Date().toISOString().slice(0, 10),
+      chunkCount,
+      lastIndexedAt: status === "ready" ? new Date().toISOString() : null,
+      collection: form.collection.trim() || "support",
+      tags: parseTags(form.tags),
+    };
+    if (!payload.name) return;
+    await createDoc(payload);
+    onOpenChange(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] w-[calc(100%-1.5rem)] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Add document</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={onSubmit} className="space-y-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="doc-name">File name</Label>
+            <input
+              id="doc-name"
+              className={fieldClass()}
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="returns-policy.pdf"
+              required
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="doc-type">Type</Label>
+              <input
+                id="doc-type"
+                className={fieldClass()}
+                value={form.type}
+                onChange={(e) => setForm({ ...form, type: e.target.value })}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="doc-size">Size (KB)</Label>
+              <input
+                id="doc-size"
+                type="number"
+                min={0}
+                className={fieldClass()}
+                value={form.sizeKb}
+                onChange={(e) => setForm({ ...form, sizeKb: e.target.value })}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="doc-collection">Collection</Label>
+              <input
+                id="doc-collection"
+                className={fieldClass()}
+                value={form.collection}
+                onChange={(e) =>
+                  setForm({ ...form, collection: e.target.value })
+                }
+                placeholder="policies"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="doc-status">Embedding status</Label>
+              <select
+                id="doc-status"
+                className={fieldClass()}
+                value={form.embeddingStatus}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    embeddingStatus: e.target.value as EmbeddingStatus,
+                  })
+                }
+              >
+                <option value="ready">ready</option>
+                <option value="pending">pending</option>
+                <option value="indexing">indexing</option>
+                <option value="failed">failed</option>
+              </select>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="doc-chunks">Chunk count</Label>
+            <input
+              id="doc-chunks"
+              type="number"
+              min={0}
+              className={fieldClass()}
+              value={form.chunkCount}
+              onChange={(e) =>
+                setForm({ ...form, chunkCount: e.target.value })
+              }
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="doc-tags">Tags (comma-separated)</Label>
+            <input
+              id="doc-tags"
+              className={fieldClass()}
+              value={form.tags}
+              onChange={(e) => setForm({ ...form, tags: e.target.value })}
+              placeholder="returns, refunds"
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="bg-teal-800 text-white hover:bg-teal-700"
+            >
+              Create
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}

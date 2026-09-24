@@ -1,14 +1,12 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../auth/AuthContext";
+import { useAuthStore } from "../auth/authStore";
 import HubBrand from "../components/HubBrand";
 
-/** Same key the gateway / demo stack expects (see VITE_API_KEY). */
-const PROVIDED_LOGIN_TOKEN =
-  import.meta.env.VITE_API_KEY || "dev-api-key-change-me";
-
 export default function HubLoginPage() {
-  const { isAuthenticated, login } = useAuth();
+  const session = useAuthStore((s) => s.session);
+  const login = useAuthStore((s) => s.login);
+  const isAuthenticated = session !== null;
   const navigate = useNavigate();
   const location = useLocation();
   const from =
@@ -20,6 +18,7 @@ export default function HubLoginPage() {
   const [fullName, setFullName] = useState("");
   const [token, setToken] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     document.title = "Sign in | Demo Hub";
@@ -29,7 +28,7 @@ export default function HubLoginPage() {
     return <Navigate to={from} replace />;
   }
 
-  function onSubmit(e: FormEvent) {
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
     const name = fullName.trim();
     const loginToken = token.trim();
@@ -37,13 +36,21 @@ export default function HubLoginPage() {
       setError("Enter your full name and the provided login token.");
       return;
     }
-    if (loginToken !== PROVIDED_LOGIN_TOKEN) {
-      setError("Use your full name and the provided login token shown below.");
-      return;
-    }
+
     setError(null);
-    login(name, loginToken);
-    navigate(from, { replace: true });
+    setSubmitting(true);
+    try {
+      await login(name, loginToken);
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Sign in failed. Check your name and login token.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -92,6 +99,7 @@ export default function HubLoginPage() {
                 autoComplete="name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
+                disabled={submitting}
                 className="w-full rounded-lg border border-[#e5e7eb] bg-white px-3.5 py-2.5 text-sm text-[#1f2937] outline-none transition focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/25"
                 placeholder="Your full name"
               />
@@ -110,16 +118,11 @@ export default function HubLoginPage() {
                 autoComplete="off"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
+                disabled={submitting}
                 className="w-full rounded-lg border border-[#e5e7eb] bg-white px-3.5 py-2.5 text-sm text-[#1f2937] outline-none transition focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/25"
                 placeholder="Provided login token"
               />
             </div>
-            <p className="rounded-lg bg-[#f5f3ff] px-3.5 py-3 text-xs leading-relaxed text-[#4b5563]">
-              Use your full name and this provided login token:{" "}
-              <code className="font-semibold text-[#7c3aed]">
-                {PROVIDED_LOGIN_TOKEN}
-              </code>
-            </p>
             {error ? (
               <p className="text-sm font-medium text-red-600" role="alert">
                 {error}
@@ -127,9 +130,10 @@ export default function HubLoginPage() {
             ) : null}
             <button
               type="submit"
-              className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-br from-[#7c3aed] to-[#6366f1] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(124,58,237,0.35)]"
+              disabled={submitting}
+              className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-br from-[#7c3aed] to-[#6366f1] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(124,58,237,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Sign in
+              {submitting ? "Signing in…" : "Sign in"}
             </button>
           </div>
         </form>

@@ -1,11 +1,22 @@
+import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { useAuthStore } from "./authStore";
 
 export default function RequireAuth() {
-  const { isAuthenticated } = useAuth();
+  const session = useAuthStore((s) => s.session);
+  const [hydrated, setHydrated] = useState(() =>
+    useAuthStore.persist.hasHydrated(),
+  );
   const location = useLocation();
 
-  if (!isAuthenticated) {
+  useEffect(() => {
+    setHydrated(useAuthStore.persist.hasHydrated());
+    return useAuthStore.persist.onFinishHydration(() => setHydrated(true));
+  }, []);
+
+  if (!hydrated) return null;
+
+  if (!session) {
     return (
       <Navigate to="/login" replace state={{ from: location.pathname }} />
     );

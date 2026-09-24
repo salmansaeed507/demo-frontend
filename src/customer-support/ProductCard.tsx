@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useCart } from "./CartContext";
+import { useCartStore } from "./store/cartStore";
 import { formatPrice, type Product } from "./mock/products";
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export default function ProductCard({ product }: Props) {
-  const { addItem } = useCart();
+  const addItem = useCartStore((s) => s.addItem);
   const detailTo = `/shoppilot-ai/products/${product.id}`;
 
   return (

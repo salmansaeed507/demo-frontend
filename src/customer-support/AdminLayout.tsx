@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import {
   ArrowLeft,
   BookOpen,
@@ -12,27 +12,25 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useShopPilot } from "./store/ShopPilotStore";
+import { reloadVisitedDomains } from "./store/shopPilotMetaStore";
 import AgentChatPanel from "./admin/AgentChatPanel";
-import OrdersPanel from "./admin/OrdersPanel";
-import ProductsPanel from "./admin/ProductsPanel";
-import RagPanel from "./admin/RagPanel";
-import TicketsPanel from "./admin/TicketsPanel";
 
 const tabs = [
-  { id: "rag", label: "RAG / Knowledge", short: "RAG", icon: BookOpen },
-  { id: "tickets", label: "Tickets", short: "Tickets", icon: Ticket },
-  { id: "orders", label: "Orders", short: "Orders", icon: Package },
-  { id: "products", label: "Products", short: "Products", icon: ShoppingBag },
+  {
+    to: "knowledge",
+    label: "RAG / Knowledge",
+    short: "RAG",
+    icon: BookOpen,
+  },
+  { to: "tickets", label: "Tickets", short: "Tickets", icon: Ticket },
+  { to: "orders", label: "Orders", short: "Orders", icon: Package },
+  { to: "products", label: "Products", short: "Products", icon: ShoppingBag },
 ] as const;
 
-type TabId = (typeof tabs)[number]["id"];
 type MobilePane = "manage" | "chat";
 
 export default function AdminLayout() {
-  const [active, setActive] = useState<TabId>("rag");
   const [mobilePane, setMobilePane] = useState<MobilePane>("manage");
-  const { resetDemoData } = useShopPilot();
 
   return (
     <div className="flex h-svh flex-col overflow-hidden bg-zinc-100 text-slate-900">
@@ -58,7 +56,7 @@ export default function AdminLayout() {
             size="sm"
             className="bg-white px-2.5 font-semibold text-slate-900 shadow-sm hover:bg-teal-50 hover:text-teal-800 sm:px-3"
           >
-            <Link to="/shoppilot-ai" target="_blank" rel="noopener noreferrer">
+            <Link to="/shoppilot-ai">
               <Store className="size-4" />
               <span className="ml-1.5">Storefront</span>
             </Link>
@@ -69,11 +67,13 @@ export default function AdminLayout() {
             variant="ghost"
             className="px-2 text-slate-400 hover:bg-white/10 hover:text-white sm:px-3"
             onClick={() => {
-              if (confirm("Reset all demo data to defaults?")) resetDemoData();
+              if (confirm("Reload visited ShopPilot data from the server?")) {
+                void reloadVisitedDomains();
+              }
             }}
           >
             <RotateCcw className="size-4" />
-            <span className="ml-1.5 hidden sm:inline">Reset data</span>
+            <span className="ml-1.5 hidden sm:inline">Reload data</span>
           </Button>
         </div>
       </header>
@@ -95,33 +95,30 @@ export default function AdminLayout() {
               Workspace
             </p>
             {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
+              <NavLink
+                key={tab.to}
+                to={tab.to}
                 role="tab"
-                aria-selected={active === tab.id}
-                onClick={() => setActive(tab.id)}
-                className={cn(
-                  "flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium transition md:w-full md:gap-2.5 md:py-2.5",
-                  active === tab.id
-                    ? "bg-teal-900/[0.08] text-teal-900 ring-1 ring-teal-800/15"
-                    : "text-slate-500 hover:bg-zinc-50 hover:text-slate-800",
-                )}
+                className={({ isActive }) =>
+                  cn(
+                    "flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium transition md:w-full md:gap-2.5 md:py-2.5",
+                    isActive
+                      ? "bg-teal-900/[0.08] text-teal-900 ring-1 ring-teal-800/15"
+                      : "text-slate-500 hover:bg-zinc-50 hover:text-slate-800",
+                  )
+                }
               >
                 <tab.icon className="size-4 shrink-0" />
                 <span className="whitespace-nowrap leading-snug md:hidden">
                   {tab.short}
                 </span>
                 <span className="hidden leading-snug md:inline">{tab.label}</span>
-              </button>
+              </NavLink>
             ))}
           </nav>
 
           <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-[#f7f8f9] p-3 pb-28 sm:p-5 md:pb-5">
-            {active === "rag" ? <RagPanel /> : null}
-            {active === "tickets" ? <TicketsPanel /> : null}
-            {active === "orders" ? <OrdersPanel /> : null}
-            {active === "products" ? <ProductsPanel /> : null}
+            <Outlet />
           </div>
 
           {/* Mobile: open chat CTA */}
