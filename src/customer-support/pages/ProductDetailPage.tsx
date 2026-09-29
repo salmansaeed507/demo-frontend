@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import ProductImage from "../ProductImage";
 import { useCartStore } from "../store/cartStore";
 import PageShell from "../PageShell";
 import { formatPrice } from "../mock/products";
@@ -45,8 +46,8 @@ export default function ProductDetailPage() {
     <PageShell>
       <div className="grid gap-8 md:grid-cols-2">
         <div className="aspect-[4/3] overflow-hidden rounded-md bg-muted">
-          <img
-            src={product.imageUrl}
+          <ProductImage
+            imageKey={product.imageUrl}
             alt={product.name}
             className="size-full object-cover"
           />

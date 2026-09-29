@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import PageShell from "../PageShell";
+import ProductImage from "../ProductImage";
 import {
   cartLinesWithProducts,
   cartSubtotal,
@@ -58,8 +59,8 @@ export default function CartPage() {
                     to={`/shoppilot-ai/products/${product.id}`}
                     className="size-20 shrink-0 overflow-hidden rounded-md bg-muted sm:size-24"
                   >
-                    <img
-                      src={product.imageUrl}
+                    <ProductImage
+                      imageKey={product.imageUrl}
                       alt={product.name}
                       className="size-full object-cover transition-opacity hover:opacity-90"
                     />

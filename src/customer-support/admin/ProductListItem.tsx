@@ -4,6 +4,7 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatPrice, type Product } from "../mock/products";
+import ProductImage from "../ProductImage";
 import { useProductsStore } from "../store/productsStore";
 
 type Props = {
@@ -27,8 +28,8 @@ export default function ProductListItem({ product, onEdit }: Props) {
 
   return (
     <li className="flex gap-3 rounded-xl border border-zinc-200/80 bg-white p-3 shadow-sm shadow-zinc-900/[0.03]">
-      <img
-        src={product.imageUrl}
+      <ProductImage
+        imageKey={product.imageUrl}
         alt=""
         className="size-16 shrink-0 rounded-lg object-cover"
       />

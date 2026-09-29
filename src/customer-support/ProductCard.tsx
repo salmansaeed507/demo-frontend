@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import ProductImage from "./ProductImage";
 import { useCartStore } from "./store/cartStore";
 import { formatPrice, type Product } from "./mock/products";
 
@@ -22,8 +23,8 @@ export default function ProductCard({ product }: Props) {
   return (
     <Card className="flex flex-col overflow-hidden">
       <Link to={detailTo} className="block aspect-[4/3] overflow-hidden bg-muted">
-        <img
-          src={product.imageUrl}
+        <ProductImage
+          imageKey={product.imageUrl}
           alt={product.name}
           className="size-full object-cover transition-opacity hover:opacity-90"
           loading="lazy"

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { formatPrice, type Product } from "./mock/products";
+import ProductImage from "./ProductImage";
 import { useProductsStore } from "./store/productsStore";
 
 function searchProducts(list: Product[], query: string): Product[] {
@@ -81,8 +82,8 @@ export default function StorefrontProductSearch() {
                     className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-zinc-50"
                     onClick={() => selectProduct(product.id)}
                   >
-                    <img
-                      src={product.imageUrl}
+                    <ProductImage
+                      imageKey={product.imageUrl}
                       alt=""
                       className="size-10 shrink-0 rounded object-cover"
                     />
