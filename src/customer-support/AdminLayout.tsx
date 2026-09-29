@@ -10,6 +10,7 @@ import {
   Store,
   Ticket,
 } from "lucide-react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { reloadVisitedDomains } from "./store/shopPilotMetaStore";
@@ -61,20 +62,24 @@ export default function AdminLayout() {
               <span className="ml-1.5">Storefront</span>
             </Link>
           </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant="ghost"
-            className="px-2 text-slate-400 hover:bg-white/10 hover:text-white sm:px-3"
-            onClick={() => {
-              if (confirm("Reload visited ShopPilot data from the server?")) {
-                void reloadVisitedDomains();
-              }
-            }}
-          >
-            <RotateCcw className="size-4" />
-            <span className="ml-1.5 hidden sm:inline">Reload data</span>
-          </Button>
+          <ConfirmDialog
+            title="Reload data"
+            description="Reload visited ShopPilot data from the server?"
+            confirmLabel="Reload"
+            destructive={false}
+            onConfirm={() => reloadVisitedDomains()}
+            trigger={
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="px-2 text-slate-400 hover:bg-white/10 hover:text-white sm:px-3"
+              >
+                <RotateCcw className="size-4" />
+                <span className="ml-1.5 hidden sm:inline">Reload data</span>
+              </Button>
+            }
+          />
         </div>
       </header>
 

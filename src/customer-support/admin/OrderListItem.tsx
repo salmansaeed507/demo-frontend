@@ -1,4 +1,6 @@
-import { Pencil, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Loader2, Pencil, Trash2 } from "lucide-react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "../mock/products";
@@ -23,6 +25,29 @@ type Props = {
 export default function OrderListItem({ order, onEdit }: Props) {
   const updateOrder = useOrdersStore((s) => s.updateOrder);
   const deleteOrder = useOrdersStore((s) => s.deleteOrder);
+  const [updating, setUpdating] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const busy = updating || deleting;
+
+  async function onStatusChange(status: OrderStatus) {
+    if (busy) return;
+    setUpdating(true);
+    try {
+      await updateOrder(order.id, { status });
+    } finally {
+      setUpdating(false);
+    }
+  }
+
+  async function onDelete() {
+    if (busy) return;
+    setDeleting(true);
+    try {
+      await deleteOrder(order.id);
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   return (
     <li className="rounded-xl border border-zinc-200/80 bg-white px-4 py-3 shadow-sm shadow-zinc-900/[0.03]">
@@ -34,12 +59,12 @@ export default function OrderListItem({ order, onEdit }: Props) {
           className={cn(
             "h-7 max-w-[9.5rem] rounded-md border px-1.5 text-xs capitalize",
             statusClass(order.status),
+            updating && "opacity-60",
           )}
           value={order.status}
+          disabled={busy}
           onChange={(e) =>
-            void updateOrder(order.id, {
-              status: e.target.value as OrderStatus,
-            })
+            void onStatusChange(e.target.value as OrderStatus)
           }
           aria-label="Status"
         >
@@ -49,6 +74,9 @@ export default function OrderListItem({ order, onEdit }: Props) {
             </option>
           ))}
         </select>
+        {updating ? (
+          <Loader2 className="size-3.5 animate-spin text-blue-500" />
+        ) : null}
         <span className="ml-auto text-sm font-semibold tabular-nums text-slate-900">
           {formatPrice(order.total)}
         </span>
@@ -58,24 +86,34 @@ export default function OrderListItem({ order, onEdit }: Props) {
           variant="ghost"
           className="size-8"
           aria-label="Edit"
+          disabled={busy}
           onClick={() => onEdit(order)}
         >
           <Pencil className="size-3.5" />
         </Button>
-        <Button
-          type="button"
-          size="icon"
-          variant="ghost"
-          className="size-8"
-          aria-label="Delete"
-          onClick={() => {
-            if (confirm(`Delete order #${order.id}?`)) {
-              void deleteOrder(order.id);
-            }
-          }}
-        >
-          <Trash2 className="size-3.5 text-rose-600" />
-        </Button>
+        <ConfirmDialog
+          title="Delete order"
+          description={`Delete order #${order.id}? This cannot be undone.`}
+          confirmLabel="Delete"
+          pending={deleting}
+          onConfirm={onDelete}
+          trigger={
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="size-8"
+              aria-label="Delete"
+              disabled={busy}
+            >
+              {deleting ? (
+                <Loader2 className="size-3.5 animate-spin text-rose-600" />
+              ) : (
+                <Trash2 className="size-3.5 text-rose-600" />
+              )}
+            </Button>
+          }
+        />
       </div>
 
       <p className="text-sm font-medium text-slate-900">{order.items}</p>

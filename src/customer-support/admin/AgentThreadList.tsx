@@ -1,4 +1,5 @@
 import { MessageSquarePlus, Pencil, Trash2, X } from "lucide-react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { ChatThread } from "../store/types";
@@ -110,16 +111,21 @@ export default function AgentThreadList({
                   >
                     <Pencil className="size-3" />
                   </button>
-                  <button
-                    type="button"
-                    className="rounded p-0.5 text-slate-400 hover:text-rose-600"
-                    aria-label="Delete thread"
-                    onClick={() => {
-                      if (confirm("Delete this thread?")) onDeleteThread(t.id);
-                    }}
-                  >
-                    <Trash2 className="size-3" />
-                  </button>
+                  <ConfirmDialog
+                    title="Delete thread"
+                    description="Delete this thread? This cannot be undone."
+                    confirmLabel="Delete"
+                    onConfirm={() => onDeleteThread(t.id)}
+                    trigger={
+                      <button
+                        type="button"
+                        className="rounded p-0.5 text-slate-400 hover:text-rose-600"
+                        aria-label="Delete thread"
+                      >
+                        <Trash2 className="size-3" />
+                      </button>
+                    }
+                  />
                 </div>
               </div>
             )}

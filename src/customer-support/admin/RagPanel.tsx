@@ -71,7 +71,6 @@ export default function RagPanel() {
         status={status}
         error={error}
         onRetry={() => void load({ force: true })}
-        loadingLabel="Loading knowledge base…"
       >
         <ul className="overflow-hidden rounded-xl border border-zinc-200/80 bg-white shadow-sm shadow-zinc-900/[0.03]">
           {knowledgeDocs.length === 0 ? (

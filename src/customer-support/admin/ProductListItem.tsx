@@ -1,4 +1,6 @@
-import { Pencil, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Loader2, Pencil, Trash2 } from "lucide-react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatPrice, type Product } from "../mock/products";
@@ -11,6 +13,17 @@ type Props = {
 
 export default function ProductListItem({ product, onEdit }: Props) {
   const deleteProduct = useProductsStore((s) => s.deleteProduct);
+  const [deleting, setDeleting] = useState(false);
+
+  async function onDelete() {
+    if (deleting) return;
+    setDeleting(true);
+    try {
+      await deleteProduct(product.id);
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   return (
     <li className="flex gap-3 rounded-xl border border-zinc-200/80 bg-white p-3 shadow-sm shadow-zinc-900/[0.03]">
@@ -45,24 +58,34 @@ export default function ProductListItem({ product, onEdit }: Props) {
           variant="ghost"
           className="size-8"
           aria-label="Edit"
+          disabled={deleting}
           onClick={() => onEdit(product)}
         >
           <Pencil className="size-3.5" />
         </Button>
-        <Button
-          type="button"
-          size="icon"
-          variant="ghost"
-          className="size-8"
-          aria-label="Delete"
-          onClick={() => {
-            if (confirm(`Delete ${product.name}?`)) {
-              void deleteProduct(product.id);
-            }
-          }}
-        >
-          <Trash2 className="size-3.5 text-rose-600" />
-        </Button>
+        <ConfirmDialog
+          title="Delete product"
+          description={`Delete “${product.name}”? This cannot be undone.`}
+          confirmLabel="Delete"
+          pending={deleting}
+          onConfirm={onDelete}
+          trigger={
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="size-8"
+              aria-label="Delete"
+              disabled={deleting}
+            >
+              {deleting ? (
+                <Loader2 className="size-3.5 animate-spin text-rose-600" />
+              ) : (
+                <Trash2 className="size-3.5 text-rose-600" />
+              )}
+            </Button>
+          }
+        />
       </div>
     </li>
   );

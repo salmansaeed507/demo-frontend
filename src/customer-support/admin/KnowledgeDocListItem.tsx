@@ -1,4 +1,6 @@
-import { FileText, RefreshCw, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { FileText, Loader2, RefreshCw, Trash2 } from "lucide-react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -37,6 +39,19 @@ export default function KnowledgeDocListItem({
   onReindex,
 }: Props) {
   const deleteDoc = useKnowledgeStore((s) => s.deleteDoc);
+  const [deleting, setDeleting] = useState(false);
+  const reindexing =
+    reindexingId === doc.id || doc.embeddingStatus === "indexing";
+
+  async function onDelete() {
+    if (deleting) return;
+    setDeleting(true);
+    try {
+      await deleteDoc(doc.id);
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   return (
     <li className="border-b border-zinc-100 px-4 py-3.5 text-sm last:border-b-0">
@@ -91,48 +106,40 @@ export default function KnowledgeDocListItem({
             size="sm"
             variant="ghost"
             className="h-8 px-2"
-            aria-label={
-              reindexingId === doc.id || doc.embeddingStatus === "indexing"
-                ? "Indexing"
-                : "Re-index"
-            }
-            disabled={
-              reindexingId === doc.id || doc.embeddingStatus === "indexing"
-            }
+            aria-label={reindexing ? "Indexing" : "Re-index"}
+            disabled={reindexing || deleting}
             onClick={() => onReindex(doc)}
           >
             <RefreshCw
-              className={cn(
-                "size-3.5",
-                (reindexingId === doc.id ||
-                  doc.embeddingStatus === "indexing") &&
-                  "animate-spin",
-              )}
+              className={cn("size-3.5", reindexing && "animate-spin")}
             />
             <span className="ml-1.5 hidden sm:inline">
-              {reindexingId === doc.id || doc.embeddingStatus === "indexing"
-                ? "Indexing…"
-                : "Re-index"}
+              {reindexing ? "Indexing…" : "Re-index"}
             </span>
           </Button>
-          <Button
-            type="button"
-            size="icon"
-            variant="ghost"
-            className="size-8 text-rose-600 hover:text-rose-700"
-            aria-label="Delete"
-            onClick={() => {
-              if (
-                confirm(
-                  `Remove “${doc.name}” from the knowledge base?\n\nIt will no longer be retrieved for agent answers until you add it again.`,
-                )
-              ) {
-                void deleteDoc(doc.id);
-              }
-            }}
-          >
-            <Trash2 className="size-3.5" />
-          </Button>
+          <ConfirmDialog
+            title="Remove document"
+            description={`Remove “${doc.name}” from the knowledge base? It will no longer be retrieved for agent answers until you add it again.`}
+            confirmLabel="Remove"
+            pending={deleting}
+            onConfirm={onDelete}
+            trigger={
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                className="size-8 text-rose-600 hover:text-rose-700"
+                aria-label="Delete"
+                disabled={deleting || reindexing}
+              >
+                {deleting ? (
+                  <Loader2 className="size-3.5 animate-spin" />
+                ) : (
+                  <Trash2 className="size-3.5" />
+                )}
+              </Button>
+            }
+          />
         </div>
       </div>
     </li>

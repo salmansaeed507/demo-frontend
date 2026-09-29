@@ -60,7 +60,6 @@ export default function TicketsPanel() {
         status={status}
         error={error}
         onRetry={() => void load({ force: true })}
-        loadingLabel="Loading tickets…"
       >
         <ul className="space-y-2">
           {tickets.length === 0 ? (

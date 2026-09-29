@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { DomainLoadStatus } from "../store/loadStatus";
 
@@ -6,7 +7,6 @@ type Props = {
   status: DomainLoadStatus;
   error: string | null;
   onRetry: () => void;
-  loadingLabel?: string;
   children: ReactNode;
 };
 
@@ -14,13 +14,12 @@ export default function DomainLoadState({
   status,
   error,
   onRetry,
-  loadingLabel = "Loading…",
   children,
 }: Props) {
   if (status === "idle" || status === "loading") {
     return (
-      <div className="flex min-h-[12rem] items-center justify-center text-sm text-slate-500">
-        {loadingLabel}
+      <div className="flex min-h-[12rem] items-center justify-center text-slate-500">
+        <Loader2 className="size-12 animate-spin text-blue-500" aria-label="Loading" />
       </div>
     );
   }

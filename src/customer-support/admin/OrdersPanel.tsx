@@ -62,7 +62,6 @@ export default function OrdersPanel() {
         status={status}
         error={error}
         onRetry={() => void load({ force: true })}
-        loadingLabel="Loading orders…"
       >
         <ul className="space-y-2">
           {orders.length === 0 ? (

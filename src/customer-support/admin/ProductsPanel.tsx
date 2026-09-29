@@ -60,7 +60,6 @@ export default function ProductsPanel() {
         status={status}
         error={error}
         onRetry={() => void load({ force: true })}
-        loadingLabel="Loading products…"
       >
         <ul className="grid gap-2.5 sm:grid-cols-2">
           {products.length === 0 ? (
