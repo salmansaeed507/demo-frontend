@@ -15,10 +15,12 @@ import type {
   ChatThread,
   KnowledgeDoc,
   Order,
+  OrderLineItem,
   RetrievalCitation,
   SupportTicket,
   AgentTraceStep,
 } from "../customer-support/store/types";
+import { orderItemsLabel } from "../customer-support/store/types";
 
 export function formatCreatedAgo(iso: string): string {
   const then = new Date(iso).getTime();
@@ -32,8 +34,35 @@ export function formatCreatedAgo(iso: string): string {
 }
 
 export function formatOrderItems(items: ApiOrderItem[]): string {
-  if (!items?.length) return "";
-  return items.map((i) => `${i.name} ×${i.quantity}`).join(", ");
+  return orderItemsLabel(
+    (items ?? []).map((i) => ({
+      id: i.id,
+      productId: i.productId,
+      name: i.name,
+      quantity: i.quantity,
+      unitPrice: i.unitPrice,
+    })),
+  );
+}
+
+export function mapOrderItems(items: ApiOrderItem[]): OrderLineItem[] {
+  return (items ?? []).map((i) => ({
+    id: i.id,
+    productId: i.productId,
+    name: i.name,
+    quantity: i.quantity,
+    unitPrice: i.unitPrice,
+  }));
+}
+
+export function toApiOrderItems(items: OrderLineItem[]) {
+  return items.map((i) => ({
+    id: i.id,
+    productId: i.productId,
+    name: i.name,
+    quantity: i.quantity,
+    unitPrice: i.unitPrice,
+  }));
 }
 
 export function mapProduct(p: ApiProduct): Product {
@@ -67,7 +96,7 @@ export function mapOrder(o: ApiOrder): Order {
     email: o.email,
     phone: o.phone,
     shippingAddress: o.shippingAddress,
-    items: formatOrderItems(o.items),
+    items: mapOrderItems(o.items),
     total: o.total,
     status: o.status,
     shippingMethod: o.shippingMethod,
@@ -137,11 +166,3 @@ export function mapThread(t: ApiChatThread): ChatThread {
   };
 }
 
-/** Convert admin "items" free-text into a single order line for the API. */
-export function itemsStringToApiItems(
-  items: string,
-  total: number,
-): Array<{ name: string; quantity: number; unitPrice: number }> {
-  const name = items.trim() || "Order items";
-  return [{ name, quantity: 1, unitPrice: total }];
-}

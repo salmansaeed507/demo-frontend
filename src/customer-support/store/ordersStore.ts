@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { Order } from "./types";
 import * as customerSupportApi from "../../api/customerSupport";
-import { itemsStringToApiItems, mapOrder } from "../../api/mappers";
+import { mapOrder, toApiOrderItems } from "../../api/mappers";
 import { useProductsStore } from "./productsStore";
 import type { DomainLoadStatus } from "./loadStatus";
 
@@ -64,7 +64,7 @@ export const useOrdersStore = create<OrdersState>((set) => ({
         email: input.email,
         phone: input.phone,
         shippingAddress: input.shippingAddress,
-        items: itemsStringToApiItems(input.items, input.total),
+        items: toApiOrderItems(input.items),
         total: input.total,
         status: input.status,
         shippingMethod: input.shippingMethod,
@@ -92,7 +92,7 @@ export const useOrdersStore = create<OrdersState>((set) => ({
       placedAt: patch.placedAt,
     };
     if (patch.items !== undefined) {
-      body.items = itemsStringToApiItems(patch.items, patch.total ?? 0);
+      body.items = toApiOrderItems(patch.items);
     }
     const updated = mapOrder(await customerSupportApi.updateOrder(id, body));
     set((s) => ({

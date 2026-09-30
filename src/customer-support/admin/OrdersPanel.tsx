@@ -3,6 +3,7 @@ import { Package, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Order } from "../store/types";
 import { useOrdersStore } from "../store/ordersStore";
+import { useProductsStore } from "../store/productsStore";
 import DomainLoadState from "./DomainLoadState";
 import OrderFormDialog from "./OrderFormDialog";
 import OrderListItem from "./OrderListItem";
@@ -13,12 +14,14 @@ export default function OrdersPanel() {
   const status = useOrdersStore((s) => s.status);
   const error = useOrdersStore((s) => s.error);
   const load = useOrdersStore((s) => s.load);
+  const loadProducts = useProductsStore((s) => s.load);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Order | null>(null);
 
   useEffect(() => {
     void load();
-  }, [load]);
+    void loadProducts();
+  }, [load, loadProducts]);
 
   function openCreate() {
     setEditing(null);

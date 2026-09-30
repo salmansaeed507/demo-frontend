@@ -16,13 +16,21 @@ export type OrderStatus =
   | "refunded"
   | "cancelled";
 
+export type OrderLineItem = {
+  id?: string;
+  productId: string | null;
+  name: string;
+  quantity: number;
+  unitPrice: number;
+};
+
 export type Order = {
   id: string;
   customer: string;
   email: string;
   phone: string;
   shippingAddress: string;
-  items: string;
+  items: OrderLineItem[];
   total: number;
   status: OrderStatus;
   shippingMethod: string;
@@ -31,6 +39,11 @@ export type Order = {
   paymentMethod: string;
   placedAt: string;
 };
+
+export function orderItemsLabel(items: OrderLineItem[]): string {
+  if (!items?.length) return "";
+  return items.map((i) => `${i.name} ×${i.quantity}`).join(", ");
+}
 
 export type AgentTraceStep = {
   tool: string;
@@ -147,9 +160,22 @@ export function createSeedState(): ShopPilotState {
         email: "sara.khan@example.com",
         phone: "+1 (512) 555-0142",
         shippingAddress: "482 Oak Ave, Apt 4B, Austin, TX 78702",
-        total: 178.99,
+        total: 174.99,
         status: "out_for_delivery",
-        items: "Aurora Headphones ×1, SoftCotton Tee Pack ×1",
+        items: [
+          {
+            productId: "p-1001",
+            name: "Aurora Wireless Headphones",
+            quantity: 1,
+            unitPrice: 129.99,
+          },
+          {
+            productId: "p-1006",
+            name: "SoftCotton Tee Pack",
+            quantity: 1,
+            unitPrice: 45.0,
+          },
+        ],
         shippingMethod: "Express",
         carrier: "UPS",
         trackingNumber: "1Z999AA10123456784",
@@ -164,7 +190,14 @@ export function createSeedState(): ShopPilotState {
         shippingAddress: "90 Mission St, San Francisco, CA 94105",
         total: 89.0,
         status: "delivered",
-        items: "TrailForge Backpack ×1",
+        items: [
+          {
+            productId: "p-1003",
+            name: "TrailForge Backpack",
+            quantity: 1,
+            unitPrice: 89.0,
+          },
+        ],
         shippingMethod: "Standard",
         carrier: "USPS",
         trackingNumber: "9400111899223344556677",
@@ -179,7 +212,14 @@ export function createSeedState(): ShopPilotState {
         shippingAddress: "1201 Pine St, Seattle, WA 98101",
         total: 49.0,
         status: "processing",
-        items: "Nimbus Desk Lamp ×1",
+        items: [
+          {
+            productId: "p-1002",
+            name: "Nimbus Desk Lamp",
+            quantity: 1,
+            unitPrice: 49.0,
+          },
+        ],
         shippingMethod: "Standard",
         carrier: "—",
         trackingNumber: "Pending",
@@ -194,7 +234,14 @@ export function createSeedState(): ShopPilotState {
         shippingAddress: "123 Market St, Austin, TX 78701",
         total: 129.99,
         status: "refunded",
-        items: "Aurora Headphones ×1",
+        items: [
+          {
+            productId: "p-1001",
+            name: "Aurora Wireless Headphones",
+            quantity: 1,
+            unitPrice: 129.99,
+          },
+        ],
         shippingMethod: "Standard",
         carrier: "FedEx",
         trackingNumber: "794612345678",
@@ -256,15 +303,48 @@ export function newDate() {
   return today();
 }
 
+function normalizeOrderItems(
+  raw: unknown,
+  fallbackTotal = 0,
+): OrderLineItem[] {
+  if (Array.isArray(raw)) {
+    return raw
+      .map((item) => {
+        const row = item as Partial<OrderLineItem>;
+        if (!row?.name?.trim()) return null;
+        return {
+          id: row.id,
+          productId: row.productId ?? null,
+          name: row.name.trim(),
+          quantity: Math.max(1, Number(row.quantity) || 1),
+          unitPrice: Number(row.unitPrice) || 0,
+        } satisfies OrderLineItem;
+      })
+      .filter((item): item is OrderLineItem => item !== null);
+  }
+  if (typeof raw === "string" && raw.trim()) {
+    return [
+      {
+        productId: null,
+        name: raw.trim(),
+        quantity: 1,
+        unitPrice: fallbackTotal,
+      },
+    ];
+  }
+  return [];
+}
+
 export function normalizeOrder(o: Partial<Order> & Pick<Order, "id">): Order {
+  const total = typeof o.total === "number" ? o.total : 0;
   return {
     id: o.id,
     customer: o.customer ?? "Unknown",
     email: o.email ?? "",
     phone: o.phone ?? "",
     shippingAddress: o.shippingAddress ?? "",
-    items: o.items ?? "",
-    total: typeof o.total === "number" ? o.total : 0,
+    items: normalizeOrderItems(o.items, total),
+    total,
     status: o.status ?? "processing",
     shippingMethod: o.shippingMethod ?? "Standard",
     carrier: o.carrier ?? "—",
@@ -363,7 +443,7 @@ export function simulateAgentTurn(
       trace.push({
         tool: "get_order",
         input: `order_id=${order.id}`,
-        output: `status=${order.status} · customer=${order.customer} · total=${order.total.toFixed(2)} · items=${order.items} · ship_to=${order.shippingAddress} · tracking=${order.trackingNumber}`,
+        output: `status=${order.status} · customer=${order.customer} · total=${order.total.toFixed(2)} · items=${orderItemsLabel(order.items)} · ship_to=${order.shippingAddress} · tracking=${order.trackingNumber}`,
         status: "ok",
       });
       trace.push({
@@ -372,7 +452,7 @@ export function simulateAgentTurn(
         status: "ok",
       });
       return {
-        text: `Order #${order.id} for ${order.customer} is ${order.status.replaceAll("_", " ")}. Items: ${order.items}. Total $${order.total.toFixed(2)}. Shipping to ${order.shippingAddress} via ${order.shippingMethod}${order.carrier && order.carrier !== "—" ? ` (${order.carrier})` : ""}${order.trackingNumber && order.trackingNumber !== "Pending" ? ` · tracking ${order.trackingNumber}` : ""}.`,
+        text: `Order #${order.id} for ${order.customer} is ${order.status.replaceAll("_", " ")}. Items: ${orderItemsLabel(order.items)}. Total $${order.total.toFixed(2)}. Shipping to ${order.shippingAddress} via ${order.shippingMethod}${order.carrier && order.carrier !== "—" ? ` (${order.carrier})` : ""}${order.trackingNumber && order.trackingNumber !== "Pending" ? ` · tracking ${order.trackingNumber}` : ""}.`,
         trace,
       };
     }
