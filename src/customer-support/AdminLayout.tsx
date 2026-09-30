@@ -152,14 +152,14 @@ export default function AdminLayout() {
         </section>
 
         {/* Chat */}
-        <div
+        {/* <div
           className={cn(
             "min-h-0 min-w-0 flex-1 flex-col md:flex",
             mobilePane === "chat" ? "flex" : "hidden",
           )}
         >
           <AgentChatPanel onMobileBack={() => setMobilePane("manage")} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

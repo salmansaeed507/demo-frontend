@@ -71,9 +71,26 @@ function putCache(data: S3ObjectData): void {
   previewCache.set(data.key, data);
 }
 
+function toObjectData(
+  key: string,
+  downloadUrl: string,
+  expiresIn: number,
+  etag = "",
+): S3ObjectData {
+  const expiresAt = expiresAtFromPresignedUrl(downloadUrl, expiresIn);
+  return {
+    key,
+    bucket: "",
+    etag,
+    location: downloadUrl,
+    url: downloadUrl,
+    expiresAt,
+  };
+}
+
 /**
- * Upload a File via gateway presign, then PUT directly to S3 (RustFS).
- * Caller owns selection and validation.
+ * Upload a File into staging via gateway presign, then PUT directly to S3 (RustFS).
+ * Caller owns selection and validation. Product save promotes staging keys server-side.
  */
 export async function upload(file: File): Promise<S3ObjectData> {
   const contentType = file.type || "application/octet-stream";
@@ -101,19 +118,12 @@ export async function upload(file: File): Promise<S3ObjectData> {
   }
 
   const etag = (putResponse.headers.get("ETag") ?? "").replaceAll('"', "");
-  const expiresAt = expiresAtFromPresignedUrl(
+  const data = toObjectData(
+    presign.key,
     presign.download_url,
     presign.expires_in,
-  );
-
-  const data: S3ObjectData = {
-    key: presign.key,
-    bucket: "",
     etag,
-    location: presign.download_url,
-    url: presign.download_url,
-    expiresAt,
-  };
+  );
   putCache(data);
   return data;
 }
@@ -134,19 +144,11 @@ export async function view(key: string): Promise<S3ObjectData> {
     },
   );
 
-  const expiresAt = expiresAtFromPresignedUrl(
+  const data = toObjectData(
+    presign.key,
     presign.download_url,
     presign.expires_in,
   );
-
-  const data: S3ObjectData = {
-    key: presign.key,
-    bucket: "",
-    etag: "",
-    location: presign.download_url,
-    url: presign.download_url,
-    expiresAt,
-  };
   putCache(data);
   return data;
 }

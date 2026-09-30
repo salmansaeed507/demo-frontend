@@ -98,6 +98,7 @@ export default function ProductFormDialog({
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!form.name.trim() || saving || uploading) return;
+
     const payload = {
       name: form.name.trim(),
       category: form.category.trim() || "General",
@@ -107,10 +108,13 @@ export default function ProductFormDialog({
       imageUrl: form.imageUrl.trim(),
     };
     setSaving(true);
+    setUploadError(null);
     try {
       if (editing) await updateProduct(editing.id, payload);
       else await createProduct(payload);
       onOpenChange(false);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Save failed");
     } finally {
       setSaving(false);
     }
