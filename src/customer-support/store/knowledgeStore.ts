@@ -67,6 +67,7 @@ export const useKnowledgeStore = create<KnowledgeState>((set) => ({
         lastIndexedAt: input.lastIndexedAt,
         collection: input.collection,
         tags: input.tags,
+        fileUrl: input.fileUrl,
       }),
     );
     set((s) => ({
@@ -88,6 +89,7 @@ export const useKnowledgeStore = create<KnowledgeState>((set) => ({
         lastIndexedAt: patch.lastIndexedAt,
         collection: patch.collection,
         tags: patch.tags,
+        fileUrl: patch.fileUrl,
       }),
     );
     set((s) => ({

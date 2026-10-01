@@ -120,6 +120,7 @@ export function mapKnowledgeDoc(d: ApiKnowledgeDoc): KnowledgeDoc {
     embeddingStatus: d.embeddingStatus,
     collection: d.collection,
     tags: d.tags ?? [],
+    fileUrl: d.fileUrl ?? "",
   };
 }
 

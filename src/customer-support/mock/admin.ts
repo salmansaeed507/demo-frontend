@@ -32,6 +32,7 @@ export type KnowledgeDoc = {
   embeddingStatus: EmbeddingStatus;
   collection: string;
   tags: string[];
+  fileUrl: string;
 };
 
 export const conversations: Conversation[] = [
@@ -122,6 +123,7 @@ export const knowledgeDocs: KnowledgeDoc[] = [
     embeddingStatus: "ready",
     collection: "policies",
     tags: ["shipping", "fulfillment"],
+    fileUrl: "",
   },
   {
     id: "doc-2",
@@ -135,6 +137,7 @@ export const knowledgeDocs: KnowledgeDoc[] = [
     embeddingStatus: "ready",
     collection: "policies",
     tags: ["returns", "refunds"],
+    fileUrl: "",
   },
   {
     id: "doc-3",
@@ -148,6 +151,7 @@ export const knowledgeDocs: KnowledgeDoc[] = [
     embeddingStatus: "pending",
     collection: "catalog",
     tags: ["faq", "products"],
+    fileUrl: "",
   },
   {
     id: "doc-4",
@@ -161,6 +165,7 @@ export const knowledgeDocs: KnowledgeDoc[] = [
     embeddingStatus: "ready",
     collection: "policies",
     tags: ["warranty"],
+    fileUrl: "",
   },
 ];
 

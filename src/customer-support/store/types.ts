@@ -121,6 +121,7 @@ export function normalizeKnowledgeDoc(
     embeddingStatus,
     collection: raw.collection ?? "support",
     tags: Array.isArray(raw.tags) ? raw.tags : [],
+    fileUrl: raw.fileUrl ?? "",
   };
 }
 

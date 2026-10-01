@@ -61,6 +61,7 @@ export type ApiKnowledgeDoc = {
   embeddingStatus: "ready" | "pending" | "indexing" | "failed";
   collection: string;
   tags: string[];
+  fileUrl?: string;
 };
 
 export type ApiTraceStep = {
