@@ -1,10 +1,8 @@
-import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 type Stat = { label: string; value: string | number };
 
 type Props = {
-  icon: LucideIcon;
   title: string;
   description: string;
   stats?: Stat[];
@@ -12,9 +10,8 @@ type Props = {
   children: ReactNode;
 };
 
-/** Shared chrome for manage tabs — header, stats, content. */
+/** Shared chrome for manage tabs — Steep admin ahead + stats. */
 export default function PanelShell({
-  icon: Icon,
   title,
   description,
   stats,
@@ -22,35 +19,28 @@ export default function PanelShell({
   children,
 }: Props) {
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex min-w-0 items-start gap-3">
-          <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-teal-900/[0.08] text-teal-800">
-            <Icon className="size-4" />
-          </span>
-          <div className="min-w-0">
-            <h2 className="text-base font-semibold tracking-tight text-slate-900">
-              {title}
-            </h2>
-            <p className="mt-0.5 text-sm text-slate-500">{description}</p>
-          </div>
+    <div className="space-y-[18px]">
+      <div className="flex flex-wrap items-end justify-between gap-3 pt-4 pb-[6px] sm:pt-5">
+        <div className="min-w-0">
+          <h1 className="font-heading text-[2rem] tracking-tight text-foreground">
+            {title}
+          </h1>
+          <p className="mt-1 text-muted-foreground">{description}</p>
         </div>
         {action}
       </div>
 
       {stats && stats.length > 0 ? (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <div className="mb-[2px] grid grid-cols-2 gap-4 sm:grid-cols-3">
           {stats.map((s) => (
             <div
               key={s.label}
-              className="rounded-lg border border-zinc-200/80 bg-white px-3 py-2.5"
+              className="rounded-2xl border border-border bg-card px-5 py-[18px]"
             >
-              <p className="text-[11px] font-medium tracking-wide text-slate-400 uppercase">
-                {s.label}
-              </p>
-              <p className="mt-0.5 text-lg font-semibold tabular-nums tracking-tight text-slate-900">
+              <p className="font-heading text-[2.1rem] leading-none tracking-tight text-foreground">
                 {s.value}
               </p>
+              <p className="mt-1 text-[0.9rem] text-muted-foreground">{s.label}</p>
             </div>
           ))}
         </div>

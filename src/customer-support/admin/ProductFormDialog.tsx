@@ -207,7 +207,7 @@ export default function ProductFormDialog({
                   />
                 ) : (
                   <div
-                    className="size-14 shrink-0 rounded-md border border-dashed border-zinc-200 bg-zinc-50"
+                    className="size-14 shrink-0 rounded-md border border-dashed border-border bg-muted"
                     aria-hidden
                   />
                 )}
@@ -232,14 +232,14 @@ export default function ProductFormDialog({
                     />
                     <button
                       type="button"
-                      className="text-indigo-600 underline-offset-2 hover:underline disabled:opacity-50"
+                      className="text-primary underline-offset-2 hover:underline disabled:opacity-50"
                       disabled={busy}
                       onClick={() => fileInputRef.current?.click()}
                     >
                       {uploading ? "Uploading…" : "Upload image"}
                     </button>
                     {uploading ? (
-                      <Loader2 className="size-3.5 animate-spin text-slate-400" />
+                      <Loader2 className="size-3.5 animate-spin text-muted-foreground" />
                     ) : null}
                     {uploadError ? (
                       <span className="text-rose-600">{uploadError}</span>
@@ -261,7 +261,7 @@ export default function ProductFormDialog({
             <Button
               type="submit"
               disabled={busy}
-              className="bg-teal-800 text-white hover:bg-teal-700"
+              className="bg-primary text-primary-foreground hover:brightness-110"
             >
               {saving ? (
                 <Loader2 className="size-4 animate-spin" />

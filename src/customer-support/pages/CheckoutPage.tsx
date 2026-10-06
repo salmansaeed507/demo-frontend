@@ -13,12 +13,14 @@ import {
 } from "../store/cartStore";
 import { formatPrice } from "../mock/products";
 import { useOrdersStore } from "../store/ordersStore";
+import { useProductQuickViewStore } from "../store/productQuickViewStore";
 import { useProductsStore } from "../store/productsStore";
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const lines = useCartStore((s) => s.lines);
   const clear = useCartStore((s) => s.clear);
+  const openQuickView = useProductQuickViewStore((s) => s.open);
   const products = useProductsStore((s) => s.products);
   const linesWithProducts = cartLinesWithProducts(lines, products);
   const subtotal = cartSubtotal(linesWithProducts);
@@ -31,15 +33,15 @@ export default function CheckoutPage() {
 
   if (linesWithProducts.length === 0) {
     return (
-      <PageShell>
+      <PageShell showHero={false}>
         <div className="flex min-h-[40vh] flex-col justify-center py-8">
-          <p className="text-sm font-medium tracking-wide text-indigo-600 uppercase">
+          <p className="text-sm font-medium tracking-wide text-primary uppercase">
             Checkout
           </p>
-          <h2 className="font-heading mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          <h2 className="font-heading mt-2 text-[clamp(1.8rem,3vw,2.6rem)] tracking-[-0.02em] text-foreground">
             Nothing to check out
           </h2>
-          <p className="mt-2 max-w-lg text-slate-600">
+          <p className="mt-2 max-w-lg text-muted-foreground">
             Your cart is empty. Add items from the catalog to continue.
           </p>
           <div className="mt-8">
@@ -78,14 +80,14 @@ export default function CheckoutPage() {
   }
 
   return (
-    <PageShell>
+    <PageShell showHero={false}>
       <form
         onSubmit={(e) => void onSubmit(e)}
         className="grid gap-8 lg:grid-cols-[320px_1fr]"
       >
-        <div className="space-y-4 rounded-md border border-zinc-200 bg-white p-5 sm:p-6">
+        <div className="space-y-4 rounded-[16px] border border-border bg-card p-5 sm:p-6">
           <div>
-            <h3 className="font-heading text-lg font-semibold text-slate-900">
+            <h3 className="font-heading text-[1.25rem] text-foreground">
               Shipping
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -125,16 +127,17 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        <aside className="h-fit space-y-4 rounded-md border border-zinc-200 bg-white p-5 lg:sticky lg:top-20">
-          <h3 className="font-heading text-lg font-semibold text-slate-900">
+        <aside className="h-fit space-y-4 rounded-[16px] border border-border bg-card p-5 lg:sticky lg:top-20">
+          <h3 className="font-heading text-[1.25rem] text-foreground">
             Order summary
           </h3>
           <Separator />
           <div className="space-y-3">
             {linesWithProducts.map(({ product, quantity }) => (
               <div key={product.id} className="flex items-center gap-3 text-sm">
-                <Link
-                  to={`/shoppilot-ai/products/${product.id}`}
+                <button
+                  type="button"
+                  onClick={() => openQuickView(product.id)}
                   className="size-12 shrink-0 overflow-hidden rounded-md bg-muted"
                 >
                   <ProductImage
@@ -142,17 +145,18 @@ export default function CheckoutPage() {
                     alt={product.name}
                     className="size-full object-cover transition-opacity hover:opacity-90"
                   />
-                </Link>
+                </button>
                 <div className="min-w-0 flex-1">
-                  <Link
-                    to={`/shoppilot-ai/products/${product.id}`}
-                    className="line-clamp-2 font-medium text-slate-900 hover:text-indigo-600 hover:underline"
+                  <button
+                    type="button"
+                    onClick={() => openQuickView(product.id)}
+                    className="line-clamp-2 text-left font-medium text-foreground hover:text-primary hover:underline"
                   >
                     {product.name}
-                  </Link>
+                  </button>
                   <p className="text-muted-foreground">× {quantity}</p>
                 </div>
-                <span className="shrink-0 font-medium text-slate-900">
+                <span className="shrink-0 font-medium text-foreground">
                   {formatPrice(product.price * quantity)}
                 </span>
               </div>
@@ -161,23 +165,23 @@ export default function CheckoutPage() {
           <Separator />
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Subtotal</span>
-            <span className="font-medium text-slate-900">
+            <span className="font-medium text-foreground">
               {formatPrice(subtotal)}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Shipping</span>
-            <span className="font-medium text-slate-900">Free (demo)</span>
+            <span className="font-medium text-foreground">Free (demo)</span>
           </div>
           <Separator />
           <div className="flex items-center justify-between">
-            <span className="font-semibold text-slate-900">Total</span>
-            <span className="text-xl font-bold text-slate-900">
+            <span className="font-semibold text-foreground">Total</span>
+            <span className="text-xl font-bold text-foreground">
               {formatPrice(subtotal)}
             </span>
           </div>
           {error ? (
-            <p className="text-sm text-red-600">{error}</p>
+            <p className="text-sm text-destructive">{error}</p>
           ) : null}
           <Button type="submit" className="w-full" size="lg" disabled={submitting}>
             {submitting ? "Placing order…" : "Place order"}

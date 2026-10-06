@@ -54,42 +54,34 @@ export default function HubLoginPage() {
   }
 
   return (
-    <div
-      className="flex min-h-svh flex-col bg-[#f9fafb] text-[#4b5563]"
-      style={{ fontFamily: '"Poppins", sans-serif' }}
-    >
-      <section className="relative overflow-hidden bg-[#1a1a4b] pt-14 pb-20 sm:pt-16 sm:pb-24">
-        <div
-          className="pointer-events-none absolute inset-0 bg-[#1a1a4b]"
-          style={{ clipPath: "ellipse(120% 85% at 30% 0%)" }}
-          aria-hidden
-        />
-        <div className="relative z-10 mx-auto max-w-[1140px] px-6">
+    <div className="flex min-h-svh flex-col bg-background text-muted-foreground">
+      <section className="relative overflow-hidden bg-sidebar pt-14 pb-20 sm:pt-16 sm:pb-24">
+        <div className="relative z-10 mx-auto max-w-[1180px] px-[clamp(16px,4vw,40px)]">
           <div className="mb-10">
             <HubBrand variant="light" />
           </div>
-          <p className="text-[0.8rem] font-semibold tracking-[3px] text-[#fbbf24] uppercase">
+          <p className="text-[0.8rem] font-semibold tracking-[3px] text-gold uppercase">
             Demo Hub
           </p>
-          <h1 className="mt-3 text-3xl font-extrabold text-white sm:text-4xl">
+          <h1 className="font-heading mt-3 text-[clamp(2rem,4vw,2.8rem)] tracking-tight text-sidebar-foreground">
             Sign in
           </h1>
-          <p className="mt-3 max-w-md text-base text-white/80">
+          <p className="mt-3 max-w-md text-base text-sidebar-foreground/72">
             Access all demos with your full name and the provided login token.
           </p>
         </div>
       </section>
 
-      <section className="relative z-10 -mt-10 flex flex-1 px-6 pb-12">
+      <section className="relative z-10 -mt-10 flex flex-1 px-[clamp(16px,4vw,40px)] pb-12">
         <form
           onSubmit={onSubmit}
-          className="mx-auto w-full max-w-md rounded-xl bg-white p-8 shadow-[0_10px_40px_rgba(26,26,75,0.12)]"
+          className="mx-auto w-full max-w-md rounded-[22px] border border-border bg-card p-[26px] shadow-[0_10px_30px_rgba(24,24,27,0.12)]"
         >
           <div className="space-y-5">
             <div>
               <label
                 htmlFor="fullName"
-                className="mb-1.5 block text-sm font-semibold text-[#1f2937]"
+                className="mb-1.5 block text-[0.92rem] font-medium text-foreground"
               >
                 Full name
               </label>
@@ -100,14 +92,14 @@ export default function HubLoginPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 disabled={submitting}
-                className="w-full rounded-lg border border-[#e5e7eb] bg-white px-3.5 py-2.5 text-sm text-[#1f2937] outline-none transition focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/25"
+                className="w-full rounded-[10px] border border-border bg-card px-3 py-2.5 text-sm text-foreground outline-none transition focus-visible:ring-[3px] focus-visible:ring-ring"
                 placeholder="Your full name"
               />
             </div>
             <div>
               <label
                 htmlFor="token"
-                className="mb-1.5 block text-sm font-semibold text-[#1f2937]"
+                className="mb-1.5 block text-[0.92rem] font-medium text-foreground"
               >
                 Login token
               </label>
@@ -119,19 +111,19 @@ export default function HubLoginPage() {
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
                 disabled={submitting}
-                className="w-full rounded-lg border border-[#e5e7eb] bg-white px-3.5 py-2.5 text-sm text-[#1f2937] outline-none transition focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/25"
+                className="w-full rounded-[10px] border border-border bg-card px-3 py-2.5 text-sm text-foreground outline-none transition focus-visible:ring-[3px] focus-visible:ring-ring"
                 placeholder="Provided login token"
               />
             </div>
             {error ? (
-              <p className="text-sm font-medium text-red-600" role="alert">
+              <p className="text-sm font-medium text-destructive" role="alert">
                 {error}
               </p>
             ) : null}
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-br from-[#7c3aed] to-[#6366f1] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(124,58,237,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center rounded-full border border-primary bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-45"
             >
               {submitting ? "Signing in…" : "Sign in"}
             </button>

@@ -1,12 +1,25 @@
-import { useEffect, useState } from "react";
-import { Plus, Ticket } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import type { SupportTicket } from "../store/types";
 import { useTicketsStore } from "../store/ticketsStore";
 import DomainLoadState from "./DomainLoadState";
 import PanelShell from "./PanelShell";
 import TicketFormDialog from "./TicketFormDialog";
-import TicketListItem from "./TicketListItem";
+import TicketTableRow from "./TicketListItem";
+
+type TicketStatus = SupportTicket["status"];
+
+const STATUSES: TicketStatus[] = ["open", "pending", "resolved"];
 
 export default function TicketsPanel() {
   const tickets = useTicketsStore((s) => s.tickets);
@@ -15,6 +28,10 @@ export default function TicketsPanel() {
   const load = useTicketsStore((s) => s.load);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<SupportTicket | null>(null);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"All" | TicketStatus>(
+    "All",
+  );
 
   useEffect(() => {
     void load();
@@ -30,24 +47,39 @@ export default function TicketsPanel() {
     setOpen(true);
   }
 
-  const openCount = tickets.filter((t) => t.status === "open").length;
-  const highCount = tickets.filter((t) => t.priority === "high").length;
+  const counts = useMemo(() => {
+    const next: Record<string, number> = { All: tickets.length };
+    for (const s of STATUSES) {
+      next[s] = tickets.filter((t) => t.status === s).length;
+    }
+    return next;
+  }, [tickets]);
+
+  const rows = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return tickets.filter((t) => {
+      const inStatus = statusFilter === "All" || t.status === statusFilter;
+      const inQ =
+        !q ||
+        `${t.id} ${t.customer} ${t.summary}`.toLowerCase().includes(q);
+      return inStatus && inQ;
+    });
+  }, [tickets, query, statusFilter]);
+
+  const openCount = counts.open ?? 0;
 
   return (
     <PanelShell
-      icon={Ticket}
       title="Tickets"
-      description="Create, update status/priority, or close tickets the agent can escalate to."
-      stats={[
-        { label: "Total", value: tickets.length },
-        { label: "Open", value: openCount },
-        { label: "High priority", value: highCount },
-      ]}
+      description={
+        status === "ready"
+          ? `${openCount} open ticket${openCount === 1 ? "" : "s"}.`
+          : "Create, update status/priority, or close tickets the agent can escalate to."
+      }
       action={
         <Button
           size="sm"
           type="button"
-          className="bg-teal-800 text-white hover:bg-teal-700"
           onClick={openCreate}
           disabled={status !== "ready"}
         >
@@ -61,17 +93,92 @@ export default function TicketsPanel() {
         error={error}
         onRetry={() => void load({ force: true })}
       >
-        <ul className="space-y-2">
-          {tickets.length === 0 ? (
-            <li className="rounded-xl border border-dashed border-zinc-200 bg-white px-4 py-10 text-center text-sm text-slate-400">
-              No tickets. Create one or ask the agent to “create ticket …”.
-            </li>
-          ) : (
-            tickets.map((t) => (
-              <TicketListItem key={t.id} ticket={t} onEdit={openEdit} />
-            ))
-          )}
-        </ul>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap gap-2">
+            {(["All", ...STATUSES] as const).map((s) => {
+              const pressed = s === statusFilter;
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  aria-pressed={pressed}
+                  onClick={() => setStatusFilter(s)}
+                  className={cn(
+                    "rounded-full border px-3.5 py-1.5 text-sm font-medium capitalize transition-colors",
+                    pressed
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-border bg-card text-foreground hover:border-foreground/40",
+                  )}
+                >
+                  {s}
+                  <span
+                    className={cn(
+                      "ml-1",
+                      pressed ? "opacity-70" : "text-muted-foreground",
+                    )}
+                  >
+                    {counts[s] ?? 0}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <Input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search tickets or customers"
+            aria-label="Search tickets"
+            className="w-full max-w-[280px]"
+          />
+        </div>
+
+        <div className="mb-12 overflow-x-auto rounded-2xl border border-border bg-card">
+          <Table className="min-w-[720px]">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                {(
+                  [
+                    "Ticket",
+                    "Customer",
+                    "Summary",
+                    "Priority",
+                    "Status",
+                    "Created",
+                    "",
+                  ] as const
+                ).map((label) => (
+                  <TableHead
+                    key={label || "actions"}
+                    className="bg-foreground/[0.03] px-4 text-[0.86rem] font-semibold whitespace-nowrap text-muted-foreground"
+                  >
+                    {label}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.length === 0 ? (
+                <TableRow className="hover:bg-transparent">
+                  <td
+                    colSpan={7}
+                    className="px-4 py-7 text-muted-foreground"
+                  >
+                    No tickets match. Try a different status or search.
+                  </td>
+                </TableRow>
+              ) : (
+                rows.map((t) => (
+                  <TicketTableRow
+                    key={t.id}
+                    ticket={t}
+                    onEdit={openEdit}
+                  />
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </DomainLoadState>
 
       <TicketFormDialog open={open} onOpenChange={setOpen} editing={editing} />

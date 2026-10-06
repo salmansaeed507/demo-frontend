@@ -1,6 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import { ArrowLeft, ShoppingCart, Store } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cartItemCount, useCartStore } from "./store/cartStore";
 import StorefrontProductSearch from "./StorefrontProductSearch";
@@ -10,50 +9,59 @@ export default function StorefrontHeader() {
   const itemCount = cartItemCount(lines);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white text-slate-900">
-      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-3 py-2 sm:px-4 sm:py-0">
-        <div className="flex h-12 items-center gap-2 sm:h-16 sm:gap-4">
+    <>
+      <div className="bg-primary text-primary-foreground">
+        <div className="relative mx-auto flex max-w-[1180px] items-center justify-center px-[clamp(16px,4vw,40px)] py-2 text-[0.88rem]">
+          <span>
+            Free shipping on demo orders. Packed to order — ask ShopPilot for
+            help anytime.
+          </span>
           <Link
-            to="/"
-            className="flex shrink-0 items-center gap-1 text-sm font-medium text-slate-600 transition-colors hover:text-indigo-600"
+            to="/shoppilot-ai/admin"
+            className="absolute right-[clamp(16px,4vw,40px)] top-1/2 hidden -translate-y-1/2 text-[0.85rem] text-inherit underline opacity-85 sm:inline"
           >
-            <ArrowLeft className="size-4" />
-            <span className="hidden sm:inline">All Demos</span>
+            Open admin
           </Link>
+        </div>
+      </div>
 
-          <NavLink
-            to="/shoppilot-ai"
-            end
-            className="flex min-w-0 shrink items-center gap-2 font-heading text-sm font-semibold tracking-tight text-slate-900 sm:text-base"
-          >
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-indigo-600 to-violet-500 text-white sm:size-9">
-              <Store className="size-4" />
-            </span>
-            <span className="truncate">ShopPilot AI</span>
-          </NavLink>
+      <header className="sticky top-0 z-40 border-b border-border bg-[color-mix(in_srgb,var(--background)_90%,transparent)] text-foreground backdrop-blur-[10px]">
+        <div className="mx-auto flex max-w-[1180px] flex-col gap-2 px-[clamp(16px,4vw,40px)] py-3 sm:flex-row sm:items-center sm:gap-7">
+          <div className="flex items-center gap-3">
+            <NavLink
+              to="/shoppilot-ai"
+              end
+              className="font-heading text-[1.7rem] tracking-[-0.02em] text-foreground sm:text-[1.9rem]"
+            >
+              ShopPilot
+            </NavLink>
+          </div>
 
-          <div className="ml-auto hidden min-w-0 flex-1 md:block">
+          <div className="hidden min-w-0 flex-1 md:block">
             <StorefrontProductSearch />
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2 md:ml-0">
-            <Button asChild variant="ghost" size="icon" className="relative">
-              <Link to="/shoppilot-ai/cart" aria-label="Cart">
-                <ShoppingCart />
-                {itemCount > 0 ? (
-                  <Badge className="absolute -top-1 -right-1 size-5 justify-center rounded-full border-0 bg-indigo-600 px-0 text-[10px] text-white shadow-none hover:bg-indigo-600">
-                    {itemCount}
-                  </Badge>
-                ) : null}
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <Button
+              asChild
+              variant="ghost"
+              className="h-auto gap-2.5 rounded-full border-foreground px-[18px] py-2 pl-3.5 font-semibold"
+            >
+              <Link to="/shoppilot-ai/cart" aria-label="Open cart">
+                <ShoppingCart className="size-5" />
+                Cart
+                <b className="inline-grid min-w-[22px] place-items-center rounded-[11px] bg-foreground px-1.5 text-[0.8rem] font-semibold text-background">
+                  {itemCount}
+                </b>
               </Link>
             </Button>
           </div>
-        </div>
 
-        <div className="pb-1 md:hidden">
-          <StorefrontProductSearch />
+          <div className="md:hidden">
+            <StorefrontProductSearch />
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }

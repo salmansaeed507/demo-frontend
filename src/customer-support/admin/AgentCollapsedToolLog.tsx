@@ -9,17 +9,17 @@ type Props = {
 export default function AgentCollapsedToolLog({ trace }: Props) {
   return (
     <details className="group mb-1.5">
-      <summary className="flex w-fit cursor-pointer list-none items-center gap-1 py-0.5 text-[13px] text-slate-500 transition hover:text-slate-700 marker:content-none [&::-webkit-details-marker]:hidden">
+      <summary className="flex w-fit cursor-pointer list-none items-center gap-1 py-0.5 text-[13px] text-muted-foreground transition hover:text-foreground/80 marker:content-none [&::-webkit-details-marker]:hidden">
         <ChevronDown className="size-3.5 shrink-0 -rotate-90 transition group-open:rotate-0" />
         <span>
           Thought for a moment
-          <span className="text-slate-400">
+          <span className="text-muted-foreground">
             {" "}
             · {trace.length} tool{trace.length === 1 ? "" : "s"}
           </span>
         </span>
       </summary>
-      <div className="mt-1.5 border-l border-zinc-200 pl-3">
+      <div className="mt-1.5 rounded-[14px] border border-border bg-card px-3.5 py-3">
         <AgentToolLogBody
           steps={trace}
           thinking={false}

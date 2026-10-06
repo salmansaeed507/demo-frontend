@@ -1,5 +1,5 @@
 type Props = {
-  /** Light text for navy heroes; dark for light backgrounds. */
+  /** Light text for dark heroes; dark for light backgrounds. */
   variant?: "light" | "dark";
 };
 
@@ -8,15 +8,15 @@ export default function HubBrand({ variant = "light" }: Props) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="flex size-11 shrink-0 items-center justify-center rounded-[10px] bg-gradient-to-br from-[#7c3aed] to-[#6366f1] text-sm font-extrabold tracking-wide text-white">
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-[10px] bg-gold font-heading text-sm font-normal tracking-wide text-gold-foreground">
         SS
       </span>
       <div className="min-w-0">
         <p
           className={
             isLight
-              ? "text-base font-bold text-white"
-              : "text-base font-bold text-[#1f2937]"
+              ? "font-heading text-base text-white"
+              : "font-heading text-base text-foreground"
           }
         >
           Salman Saeed
@@ -25,7 +25,7 @@ export default function HubBrand({ variant = "light" }: Props) {
           className={
             isLight
               ? "text-xs font-medium text-white/70"
-              : "text-xs font-medium text-[#6b7280]"
+              : "text-xs font-medium text-muted-foreground"
           }
         >
           AI Agents · Workflow Automation · Full-Stack

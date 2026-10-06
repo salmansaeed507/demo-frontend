@@ -1,12 +1,12 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
-  Bot,
   Eraser,
   MessageSquarePlus,
   PanelLeft,
   Send,
   Store,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { selectActiveThread, useChatStore } from "../store/chatStore";
@@ -17,9 +17,10 @@ import AgentThreadList from "./AgentThreadList";
 
 type Props = {
   onMobileBack?: () => void;
+  onClose?: () => void;
 };
 
-export default function AgentChatPanel({ onMobileBack }: Props) {
+export default function AgentChatPanel({ onMobileBack, onClose }: Props) {
   const threads = useChatStore((s) => s.threads);
   const activeThreadId = useChatStore((s) => s.activeThreadId);
   const activeThread = useChatStore(selectActiveThread);
@@ -134,7 +135,7 @@ export default function AgentChatPanel({ onMobileBack }: Props) {
 
   if (status === "idle" || status === "loading") {
     return (
-      <div className="flex h-full flex-1 items-center justify-center bg-white text-sm text-slate-500">
+      <div className="flex h-full flex-1 items-center justify-center bg-card text-sm text-muted-foreground">
         Loading chats…
       </div>
     );
@@ -142,8 +143,8 @@ export default function AgentChatPanel({ onMobileBack }: Props) {
 
   if (status === "error") {
     return (
-      <div className="flex h-full flex-1 flex-col items-center justify-center gap-3 bg-white px-4 text-center">
-        <p className="max-w-md text-sm text-red-600">
+      <div className="flex h-full flex-1 flex-col items-center justify-center gap-3 bg-card px-4 text-center">
+        <p className="max-w-md text-sm text-destructive">
           {error ?? "Failed to load chats"}
         </p>
         <Button
@@ -160,17 +161,17 @@ export default function AgentChatPanel({ onMobileBack }: Props) {
   const showEmpty = (activeThread?.messages.length ?? 0) === 0 && !live;
 
   return (
-    <section className="relative flex min-h-0 min-w-0 flex-1 flex-col bg-white">
+    <section className="relative flex min-h-0 min-w-0 flex-1 flex-col bg-card">
       <div className="flex min-h-0 flex-1">
         {threadsOpen ? (
           <div className="absolute inset-0 z-20 flex">
             <button
               type="button"
-              className="absolute inset-0 bg-black/40"
+              className="absolute inset-0 bg-[rgba(10,18,13,0.55)]"
               aria-label="Close threads overlay"
               onClick={() => setThreadsOpen(false)}
             />
-            <aside className="relative z-10 flex h-full w-[min(18rem,85vw)] flex-col bg-white shadow-xl">
+            <aside className="relative z-10 flex h-full w-[min(18rem,85vw)] flex-col border-r border-border bg-card">
               <AgentThreadList
                 threads={threads}
                 activeThreadId={activeThreadId}
@@ -193,84 +194,102 @@ export default function AgentChatPanel({ onMobileBack }: Props) {
         ) : null}
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <div className="flex h-12 shrink-0 items-center gap-1 border-b border-zinc-200 px-2 sm:gap-2 sm:px-4">
-            {onMobileBack ? (
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                className="md:hidden"
-                aria-label="Back to manage"
-                onClick={onMobileBack}
-              >
-                <ArrowLeft className="size-4" />
-              </Button>
-            ) : null}
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              aria-label="Open threads"
-              title="Threads"
-              onClick={() => setThreadsOpen(true)}
-            >
-              <PanelLeft className="size-4" />
-            </Button>
-            <Bot className="hidden size-4 text-teal-700 sm:block" />
-            <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-900">
-              {activeThread?.title ?? "Agent chat"}
-            </span>
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              aria-label="New thread"
-              disabled={busy}
-              onClick={() => void createThread()}
-            >
-              <MessageSquarePlus className="size-4" />
-            </Button>
-            {activeThread ? (
+          <header className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-[18px] py-4 sm:px-[22px]">
+            <div className="flex min-w-0 items-center gap-2">
+              {onMobileBack ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="md:hidden"
+                  aria-label="Back to manage"
+                  onClick={onMobileBack}
+                >
+                  <ArrowLeft className="size-4" />
+                </Button>
+              ) : null}
               <Button
                 type="button"
                 size="sm"
                 variant="ghost"
-                className="px-2 sm:px-3"
-                disabled={busy}
-                onClick={() => void clearThreadMessages(activeThread.id)}
+                aria-label="Open threads"
+                title="Threads"
+                onClick={() => setThreadsOpen(true)}
               >
-                <Eraser className="size-4" />
-                <span className="ml-1.5 hidden sm:inline">Clear</span>
+                <PanelLeft className="size-4" />
+                <span className="hidden sm:inline">Threads</span>
               </Button>
-            ) : null}
-          </div>
+              <h2 className="font-heading min-w-0 truncate text-[1.35rem] leading-tight tracking-tight text-foreground sm:text-[1.5rem]">
+                {activeThread?.title ?? "Agent chat"}
+              </h2>
+            </div>
+            <div className="flex shrink-0 items-center gap-1.5">
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                disabled={busy}
+                onClick={() => void createThread()}
+              >
+                <MessageSquarePlus className="size-4" />
+                <span className="hidden sm:inline">New</span>
+              </Button>
+              {activeThread ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  disabled={busy}
+                  onClick={() => void clearThreadMessages(activeThread.id)}
+                >
+                  <Eraser className="size-4" />
+                  <span className="hidden sm:inline">Clear</span>
+                </Button>
+              ) : null}
+              {onClose ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="hidden md:inline-flex"
+                  aria-label="Hide chat"
+                  onClick={onClose}
+                >
+                  <X className="size-4" />
+                  <span className="hidden lg:inline">Hide</span>
+                </Button>
+              ) : null}
+            </div>
+          </header>
 
           <div
             ref={listRef}
-            className="flex flex-1 flex-col overflow-y-auto overscroll-contain px-3 py-4 sm:px-5 sm:py-5"
+            className="flex flex-1 flex-col overflow-y-auto overscroll-contain bg-background px-[18px] py-5 sm:px-[22px]"
           >
             {showEmpty ? (
-              <div className="m-auto flex w-full max-w-md flex-col items-center px-2 text-center">
-                <div className="mb-4 flex items-center gap-3">
-                  <span className="flex size-12 items-center justify-center rounded-xl bg-[#0f766e] text-white shadow-md shadow-teal-900/20">
-                    <Store className="size-6" />
-                  </span>
-                  <div className="text-left">
-                    <p className="text-[11px] font-semibold tracking-[0.14em] text-teal-800/70 uppercase">
-                      ShopPilot AI
-                    </p>
-                    <p className="font-heading text-lg font-semibold tracking-tight text-slate-900">
-                      Customer Support Agent
-                    </p>
+              <div className="m-auto w-full max-w-md">
+                <div className="overflow-hidden rounded-[22px] border border-border bg-card px-6 py-7">
+                  <div className="mb-5 flex items-center gap-3">
+                    <span className="grid size-12 place-items-center rounded-full bg-primary text-primary-foreground">
+                      <Store className="size-5" />
+                    </span>
+                    <div>
+                      <p className="text-[0.78rem] font-semibold tracking-[0.08em] text-muted-foreground uppercase">
+                        ShopPilot AI
+                      </p>
+                      <p className="font-heading text-[1.35rem] leading-tight text-foreground">
+                        Customer Support Agent
+                      </p>
+                    </div>
                   </div>
+                  <h3 className="font-heading text-[1.7rem] leading-tight tracking-tight text-foreground">
+                    Hi, how can I help you?
+                  </h3>
+                  <p className="mt-3 text-[0.95rem] leading-relaxed text-muted-foreground">
+                    Probe the live stack — knowledge retrieval with sources,
+                    order lookups, and ticket tools.
+                  </p>
                 </div>
-                <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
-                  Hi, how can I help you?
-                </h2>
-                <p className="mt-3 text-sm leading-relaxed text-slate-500 sm:text-[15px]">
-                  Probe the live stack — knowledge retrieval with sources,
-                  order lookups, and ticket tools.
-                </p>
               </div>
             ) : (
               <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 sm:gap-5">
@@ -282,16 +301,16 @@ export default function AgentChatPanel({ onMobileBack }: Props) {
             )}
           </div>
 
-          <div className="shrink-0 border-t border-zinc-200 bg-white px-3 py-3 sm:px-5 sm:py-4">
+          <footer className="shrink-0 border-t border-border bg-card px-[18px] pt-4 pb-5 sm:px-[22px]">
             <div className="mx-auto w-full max-w-2xl">
-              <div className="-mx-1 mb-2.5 flex gap-2 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="-mx-1 mb-3 flex gap-2 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {AGENT_STARTER_PROMPTS.map((prompt) => (
                   <button
                     key={prompt}
                     type="button"
                     disabled={busy}
                     onClick={() => void runTurn(prompt)}
-                    className="shrink-0 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-left text-[12px] leading-snug text-slate-600 shadow-sm transition hover:border-teal-700/30 hover:bg-teal-50/60 hover:text-teal-950 disabled:opacity-40"
+                    className="shrink-0 rounded-full bg-foreground/[0.08] px-3.5 py-1.5 text-left text-[0.78rem] leading-snug font-medium text-foreground transition hover:bg-foreground/[0.12] disabled:opacity-40"
                   >
                     {prompt}
                   </button>
@@ -299,7 +318,7 @@ export default function AgentChatPanel({ onMobileBack }: Props) {
               </div>
               <form
                 onSubmit={onSubmit}
-                className="flex items-end gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 p-1.5 shadow-sm sm:p-2"
+                className="flex items-end gap-2 rounded-[14px] border border-border bg-card p-2"
               >
                 <textarea
                   value={draft}
@@ -313,19 +332,20 @@ export default function AgentChatPanel({ onMobileBack }: Props) {
                   rows={1}
                   disabled={busy}
                   placeholder="Ask about orders, products, returns…"
-                  className="max-h-32 min-h-[40px] flex-1 resize-none bg-transparent px-2 py-2 text-sm text-slate-900 outline-none placeholder:text-slate-400 disabled:opacity-60 sm:max-h-40 sm:min-h-[44px] sm:px-3 sm:py-2.5"
+                  className="max-h-32 min-h-[42px] flex-1 resize-none bg-transparent px-2.5 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:outline-none disabled:opacity-60 sm:max-h-40"
                 />
-                <button
+                <Button
                   type="submit"
+                  size="icon"
                   aria-label="Send"
-                  className="mb-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white transition hover:bg-indigo-500 disabled:opacity-40 sm:size-10"
+                  className="mb-0.5 size-10 shrink-0"
                   disabled={!draft.trim() || busy}
                 >
                   <Send className="size-4" />
-                </button>
+                </Button>
               </form>
             </div>
-          </div>
+          </footer>
         </div>
       </div>
     </section>

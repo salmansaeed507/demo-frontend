@@ -10,13 +10,13 @@ type ShopPilotProps = {
 function ShopPilotNotFoundContent() {
   return (
     <div className="flex min-h-[50vh] flex-col justify-center py-8 sm:py-12">
-      <p className="text-sm font-medium tracking-wide text-indigo-600 uppercase">
+      <p className="text-sm font-medium tracking-wide text-primary uppercase">
         404
       </p>
-      <h1 className="font-heading mt-2 max-w-2xl text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+      <h1 className="font-heading mt-2 max-w-2xl text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
         Page not found
       </h1>
-      <p className="mt-3 max-w-xl text-base text-slate-600 sm:text-lg">
+      <p className="mt-3 max-w-xl text-base text-muted-foreground sm:text-lg">
         That URL doesn’t match anything in this ShopPilot demo. Head back to the
         storefront or the Demo Hub.
       </p>
@@ -49,17 +49,17 @@ export function ShopPilotNotFoundPage({ withShell = true }: ShopPilotProps) {
 export function GenericNotFoundPage() {
   return (
     <main className="mx-auto max-w-lg px-4 py-16">
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+      <h1 className="text-2xl font-semibold tracking-tight text-foreground">
         Page not found
       </h1>
-      <p className="mt-2 text-sm text-slate-600">
+      <p className="mt-2 text-sm text-muted-foreground">
         That URL doesn’t match anything in this app.
       </p>
       <p className="mt-6 flex flex-wrap gap-4 text-sm">
-        <Link to="/" className="text-indigo-600 underline">
+        <Link to="/" className="text-primary underline">
           Go home
         </Link>
-        <Link to="/shoppilot-ai" className="text-indigo-600 underline">
+        <Link to="/shoppilot-ai" className="text-primary underline">
           ShopPilot AI
         </Link>
       </p>

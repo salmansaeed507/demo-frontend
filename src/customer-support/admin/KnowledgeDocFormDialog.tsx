@@ -144,7 +144,7 @@ export default function KnowledgeDocFormDialog({ open, onOpenChange }: Props) {
                   <FileUp data-icon="inline-start" />
                   Choose file
                 </Button>
-                <span className="truncate text-sm text-slate-600">
+                <span className="truncate text-sm text-muted-foreground">
                   {file ? file.name : "No file selected"}
                 </span>
               </div>
@@ -165,7 +165,7 @@ export default function KnowledgeDocFormDialog({ open, onOpenChange }: Props) {
             <Button
               type="submit"
               disabled={saving || !file}
-              className="bg-teal-800 text-white hover:bg-teal-700"
+              className="bg-primary text-primary-foreground hover:brightness-110"
             >
               {saving ? <Loader2 className="size-4 animate-spin" /> : "Upload"}
             </Button>

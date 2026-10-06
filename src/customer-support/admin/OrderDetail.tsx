@@ -8,10 +8,10 @@ export default function OrderDetail({
   if (!value.trim()) return null;
   return (
     <div className="min-w-0">
-      <dt className="text-[10px] font-semibold tracking-wide text-slate-400 uppercase">
+      <dt className="text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
         {label}
       </dt>
-      <dd className="mt-0.5 text-[13px] leading-snug text-slate-700">{value}</dd>
+      <dd className="mt-0.5 text-[13px] leading-snug text-foreground/80">{value}</dd>
     </div>
   );
 }

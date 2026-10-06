@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useProductsStore } from "./store/productsStore";
+import ProductQuickViewDialog from "./ProductQuickViewDialog";
 import StorefrontFloatingChatButton from "./StorefrontFloatingChatButton";
 import StorefrontHeader from "./StorefrontHeader";
 import SupportChatPanel from "./SupportChatPanel";
@@ -36,7 +37,7 @@ export default function StorefrontShell() {
 
   if (status === "idle" || status === "loading") {
     return (
-      <div className="flex min-h-svh items-center justify-center bg-zinc-100 text-sm text-slate-500">
+      <div className="flex min-h-svh items-center justify-center bg-background text-sm text-muted-foreground">
         Loading ShopPilot…
       </div>
     );
@@ -44,8 +45,8 @@ export default function StorefrontShell() {
 
   if (status === "error") {
     return (
-      <div className="flex min-h-svh flex-col items-center justify-center gap-3 bg-zinc-100 px-4 text-center">
-        <p className="max-w-md text-sm text-red-600">{error}</p>
+      <div className="flex min-h-svh flex-col items-center justify-center gap-3 bg-background px-4 text-center">
+        <p className="max-w-md text-sm text-destructive">{error}</p>
         <Button
           type="button"
           size="sm"
@@ -58,13 +59,14 @@ export default function StorefrontShell() {
   }
 
   return (
-    <div className="cs-theme flex min-h-svh flex-col overflow-x-hidden bg-zinc-100 text-slate-900">
+    <div className="flex min-h-svh flex-col overflow-x-hidden bg-background text-foreground">
       <StorefrontHeader />
-      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-6 sm:py-8">
+      <main className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col px-[clamp(16px,4vw,40px)] py-6 sm:py-8">
         <Outlet />
       </main>
       <StorefrontFloatingChatButton onOpen={() => setChatOpen(true)} />
       <SupportChatPanel open={chatOpen} onOpenChange={setChatOpen} />
+      <ProductQuickViewDialog />
     </div>
   );
 }

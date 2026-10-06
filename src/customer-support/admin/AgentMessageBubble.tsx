@@ -13,13 +13,13 @@ export default function AgentMessageBubble({ message }: Props) {
   return (
     <div
       className={cn(
-        "flex gap-2 sm:gap-3",
+        "flex gap-2.5 sm:gap-3",
         isUser ? "justify-end" : "justify-start",
       )}
     >
       {!isUser ? (
-        <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-[#0f766e] sm:size-8">
-          <Store className="size-3.5 text-white sm:size-4" />
+        <div className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground sm:size-9">
+          <Store className="size-3.5 sm:size-4" />
         </div>
       ) : null}
       <div
@@ -35,8 +35,10 @@ export default function AgentMessageBubble({ message }: Props) {
         ) : null}
         <div
           className={cn(
-            "rounded-2xl px-3 py-2.5 text-sm leading-relaxed sm:px-4 sm:py-3",
-            isUser ? "bg-indigo-600 text-white" : "bg-zinc-100 text-slate-800",
+            "rounded-[18px] px-3.5 py-2.5 text-[0.94rem] leading-relaxed sm:px-4 sm:py-3",
+            isUser
+              ? "bg-primary text-primary-foreground"
+              : "border border-border bg-card text-foreground",
           )}
         >
           {message.text}

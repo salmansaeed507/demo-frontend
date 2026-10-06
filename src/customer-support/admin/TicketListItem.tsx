@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Loader2, Pencil, Trash2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import type { SupportTicket } from "../store/types";
 import { useTicketsStore } from "../store/ticketsStore";
-import { priorityClass, statusClass } from "./styles";
 
 type Props = {
   ticket: SupportTicket;
@@ -40,15 +40,26 @@ export default function TicketListItem({ ticket, onEdit }: Props) {
   }
 
   return (
-    <li className="rounded-xl border border-zinc-200/80 bg-white px-4 py-3 shadow-sm shadow-zinc-900/[0.03]">
-      <div className="mb-1.5 flex flex-wrap items-center gap-2">
-        <span className="rounded bg-teal-900/[0.06] px-1.5 py-0.5 font-mono text-[11px] font-semibold text-teal-900/80">
+    <TableRow>
+      <TableCell className="px-4 py-3">
+        <button
+          type="button"
+          className="font-semibold text-foreground underline-offset-2 hover:underline"
+          onClick={() => onEdit(ticket)}
+        >
           {ticket.id}
-        </span>
+        </button>
+      </TableCell>
+      <TableCell className="px-4 py-3 text-[0.94rem] font-medium">
+        {ticket.customer}
+      </TableCell>
+      <TableCell className="max-w-[280px] px-4 py-3 text-[0.94rem]">
+        <span className="line-clamp-2">{ticket.summary}</span>
+      </TableCell>
+      <TableCell className="px-4 py-3">
         <select
           className={cn(
-            "h-7 rounded-md border px-2 text-xs capitalize",
-            priorityClass(ticket.priority),
+            "rounded-[10px] border border-border bg-card px-2 py-1 text-[0.9rem] capitalize",
             updating && "opacity-60",
           )}
           value={ticket.priority}
@@ -58,72 +69,75 @@ export default function TicketListItem({ ticket, onEdit }: Props) {
               priority: e.target.value as SupportTicket["priority"],
             })
           }
-          aria-label="Priority"
+          aria-label={`Priority for ${ticket.id}`}
         >
           <option value="high">high</option>
           <option value="medium">medium</option>
           <option value="low">low</option>
         </select>
-        <select
-          className={cn(
-            "h-7 rounded-md border px-2 text-xs capitalize",
-            statusClass(ticket.status),
-            updating && "opacity-60",
-          )}
-          value={ticket.status}
-          disabled={busy}
-          onChange={(e) =>
-            void onPatch({
-              status: e.target.value as SupportTicket["status"],
-            })
-          }
-          aria-label="Status"
-        >
-          <option value="open">open</option>
-          <option value="pending">pending</option>
-          <option value="resolved">resolved</option>
-        </select>
-        {updating ? (
-          <Loader2 className="size-3.5 animate-spin text-blue-500" />
-        ) : null}
-        <span className="ml-auto text-xs text-slate-400">{ticket.createdAgo}</span>
-        <Button
-          type="button"
-          size="icon"
-          variant="ghost"
-          className="size-8"
-          aria-label="Edit"
-          disabled={busy}
-          onClick={() => onEdit(ticket)}
-        >
-          <Pencil className="size-3.5" />
-        </Button>
-        <ConfirmDialog
-          title="Delete ticket"
-          description={`Delete ${ticket.id}? This cannot be undone.`}
-          confirmLabel="Delete"
-          pending={deleting}
-          onConfirm={onDelete}
-          trigger={
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="size-8"
-              aria-label="Delete"
-              disabled={busy}
-            >
-              {deleting ? (
-                <Loader2 className="size-3.5 animate-spin text-rose-600" />
-              ) : (
-                <Trash2 className="size-3.5 text-rose-600" />
-              )}
-            </Button>
-          }
-        />
-      </div>
-      <p className="text-sm font-medium text-slate-900">{ticket.summary}</p>
-      <p className="mt-0.5 text-xs text-slate-400">{ticket.customer}</p>
-    </li>
+      </TableCell>
+      <TableCell className="px-4 py-3">
+        <div className="flex items-center gap-2">
+          <select
+            className={cn(
+              "rounded-[10px] border border-border bg-card px-2 py-1 text-[0.9rem] capitalize",
+              updating && "opacity-60",
+            )}
+            value={ticket.status}
+            disabled={busy}
+            onChange={(e) =>
+              void onPatch({
+                status: e.target.value as SupportTicket["status"],
+              })
+            }
+            aria-label={`Status for ${ticket.id}`}
+          >
+            <option value="open">open</option>
+            <option value="pending">pending</option>
+            <option value="resolved">resolved</option>
+          </select>
+          {updating ? (
+            <Loader2 className="size-3.5 animate-spin text-muted-foreground" />
+          ) : null}
+        </div>
+      </TableCell>
+      <TableCell className="px-4 py-3 text-[0.94rem] whitespace-nowrap text-muted-foreground">
+        {ticket.createdAgo}
+      </TableCell>
+      <TableCell className="px-4 py-3">
+        <div className="flex justify-end gap-1.5">
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            disabled={busy}
+            onClick={() => onEdit(ticket)}
+          >
+            Edit
+          </Button>
+          <ConfirmDialog
+            title="Delete ticket"
+            description={`Delete ${ticket.id}? This cannot be undone.`}
+            confirmLabel="Delete"
+            pending={deleting}
+            onConfirm={onDelete}
+            trigger={
+              <Button
+                type="button"
+                size="sm"
+                variant="destructive"
+                disabled={busy}
+              >
+                {deleting ? (
+                  <Loader2 className="size-3.5 animate-spin" />
+                ) : (
+                  "Delete"
+                )}
+              </Button>
+            }
+          />
+        </div>
+      </TableCell>
+    </TableRow>
   );
 }

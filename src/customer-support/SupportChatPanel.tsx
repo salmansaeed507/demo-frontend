@@ -101,9 +101,9 @@ export default function SupportChatPanel({ open, onOpenChange }: Props) {
         side="right"
         className="flex w-full flex-col gap-0 p-0 sm:max-w-md"
       >
-        <SheetHeader className="border-b border-zinc-200 px-4 py-3 text-left">
+        <SheetHeader className="border-b border-border px-4 py-3 text-left">
           <div className="flex items-center gap-2">
-            <span className="flex size-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-violet-500 text-white">
+            <span className="flex size-8 items-center justify-center rounded-full bg-primary text-white">
               <Bot className="size-4" />
             </span>
             <div>
@@ -124,13 +124,13 @@ export default function SupportChatPanel({ open, onOpenChange }: Props) {
           ))}
         </div>
 
-        <div className="space-y-2 border-t border-zinc-200 px-4 py-3">
+        <div className="space-y-2 border-t border-border px-4 py-3">
           <div className="flex flex-wrap gap-1.5">
             {SUGGESTIONS.map((s) => (
               <Badge
                 key={s}
                 variant="outline"
-                className="cursor-pointer font-normal hover:bg-zinc-50"
+                className="cursor-pointer font-normal hover:bg-muted"
                 onClick={() => void send(s)}
               >
                 {s}

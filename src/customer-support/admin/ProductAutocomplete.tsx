@@ -93,7 +93,7 @@ export default function ProductAutocomplete({
       {showPanel ? (
         <div
           role="listbox"
-          className="absolute top-full right-0 left-0 z-50 mt-1 max-h-64 overflow-y-auto rounded-md border border-zinc-200 bg-white shadow-md"
+          className="absolute top-full right-0 left-0 z-50 mt-1 max-h-64 overflow-y-auto rounded-md border border-border bg-card shadow-md"
         >
           {results.length === 0 ? (
             <p className="px-3 py-3 text-sm text-muted-foreground">
@@ -106,7 +106,7 @@ export default function ProductAutocomplete({
                   <button
                     type="button"
                     role="option"
-                    className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-zinc-50"
+                    className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-muted"
                     onMouseDown={(e) => {
                       e.preventDefault();
                       selectProduct(product);
@@ -118,14 +118,14 @@ export default function ProductAutocomplete({
                       className="size-9 shrink-0 rounded object-cover"
                     />
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium text-slate-900">
+                      <span className="block truncate text-sm font-medium text-foreground">
                         {product.name}
                       </span>
                       <span className="block truncate text-xs text-muted-foreground">
                         {product.category}
                       </span>
                     </span>
-                    <span className="shrink-0 text-sm font-semibold text-slate-900">
+                    <span className="shrink-0 text-sm font-semibold text-foreground">
                       {formatPrice(product.price)}
                     </span>
                   </button>

@@ -18,7 +18,7 @@ export default function DomainLoadState({
 }: Props) {
   if (status === "idle" || status === "loading") {
     return (
-      <div className="flex min-h-[12rem] items-center justify-center text-slate-500">
+      <div className="flex min-h-[12rem] items-center justify-center text-muted-foreground">
         <Loader2 className="size-12 animate-spin text-blue-500" aria-label="Loading" />
       </div>
     );
@@ -27,7 +27,7 @@ export default function DomainLoadState({
   if (status === "error") {
     return (
       <div className="flex min-h-[12rem] flex-col items-center justify-center gap-3 px-4 text-center">
-        <p className="max-w-md text-sm text-red-600">
+        <p className="max-w-md text-sm text-destructive">
           {error ?? "Something went wrong"}
         </p>
         <Button type="button" size="sm" onClick={onRetry}>

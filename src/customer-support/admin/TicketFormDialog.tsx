@@ -158,7 +158,7 @@ export default function TicketFormDialog({
             <Button
               type="submit"
               disabled={saving}
-              className="bg-teal-800 text-white hover:bg-teal-700"
+              className="bg-primary text-primary-foreground hover:brightness-110"
             >
               {saving ? (
                 <Loader2 className="size-4 animate-spin" />

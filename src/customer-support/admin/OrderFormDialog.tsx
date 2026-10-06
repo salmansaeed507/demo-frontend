@@ -1,14 +1,11 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
-  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { formatPrice, type Product } from "../mock/products";
 import type { Order, OrderLineItem, OrderStatus } from "../store/types";
@@ -67,11 +64,39 @@ function emptyLine(): LineDraft {
   };
 }
 
+function statusLabel(s: OrderStatus) {
+  return s.replaceAll("_", " ");
+}
+
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   editing: Order | null;
 };
+
+function Field({
+  label,
+  htmlFor,
+  children,
+  className,
+}: {
+  label: string;
+  htmlFor?: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("mb-3 grid gap-1.5", className)}>
+      <label
+        htmlFor={htmlFor}
+        className="text-[0.92rem] font-medium text-foreground"
+      >
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
 
 export default function OrderFormDialog({
   open,
@@ -207,25 +232,30 @@ export default function OrderFormDialog({
         onOpenChange(next);
       }}
     >
-      <DialogContent className="flex max-h-[92vh] w-[calc(100%-1.5rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
-        <DialogHeader className="shrink-0 border-b border-zinc-100 px-5 py-4">
-          <DialogTitle>{editing ? "Edit order" : "New order"}</DialogTitle>
-        </DialogHeader>
-        <form
-          onSubmit={onSubmit}
-          className="flex min-h-0 flex-1 flex-col overflow-hidden"
-        >
-          <fieldset
-            disabled={saving}
-            className="min-h-0 flex-1 space-y-5 overflow-y-auto border-0 px-5 py-4"
-          >
-            <div className="grid gap-5 md:grid-cols-2">
-              <section className="space-y-3">
-                <h3 className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                  Order details
+      <DialogContent className="max-h-[calc(100%-24px)] w-[min(880px,calc(100%-24px))] gap-0 overflow-y-auto border-border bg-card p-[26px] sm:max-w-[880px] sm:rounded-[22px]">
+        <form onSubmit={onSubmit} className="space-y-0">
+          <fieldset disabled={saving} className="min-w-0 border-0 p-0">
+            <div className="mb-4">
+              <DialogTitle className="mb-0.5 text-[1.6rem]">
+                {editing ? `Order #${editing.id}` : "New order"}
+              </DialogTitle>
+              {editing ? (
+                <p className="text-[0.84rem] text-muted-foreground">
+                  Placed {form.placedAt}
+                </p>
+              ) : (
+                <p className="text-[0.84rem] text-muted-foreground">
+                  Create an order the agent can look up in chat.
+                </p>
+              )}
+            </div>
+
+            <div className="mt-1 grid gap-x-[18px] gap-y-4 md:grid-cols-2">
+              <div>
+                <h3 className="mb-3 font-sans text-[0.88rem] font-semibold text-muted-foreground">
+                  Customer
                 </h3>
-                <div className="space-y-1.5">
-                  <Label htmlFor="o-customer">Customer</Label>
+                <Field label="Full name" htmlFor="o-customer">
                   <input
                     id="o-customer"
                     className={fieldClass()}
@@ -235,97 +265,65 @@ export default function OrderFormDialog({
                     }
                     required
                   />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="o-email">Email</Label>
-                    <input
-                      id="o-email"
-                      type="email"
-                      className={fieldClass()}
-                      value={form.email}
-                      onChange={(e) =>
-                        setForm({ ...form, email: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="o-phone">Phone</Label>
-                    <input
-                      id="o-phone"
-                      className={fieldClass()}
-                      value={form.phone}
-                      onChange={(e) =>
-                        setForm({ ...form, phone: e.target.value })
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label>Status</Label>
-                    <select
-                      className={fieldClass()}
-                      value={form.status}
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          status: e.target.value as OrderStatus,
-                        })
-                      }
-                    >
-                      {statuses.map((s) => (
-                        <option key={s} value={s}>
-                          {s.replaceAll("_", " ")}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="o-date">Placed</Label>
-                    <input
-                      id="o-date"
-                      type="date"
-                      className={fieldClass()}
-                      value={form.placedAt}
-                      onChange={(e) =>
-                        setForm({ ...form, placedAt: e.target.value })
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="o-pay">Payment</Label>
+                </Field>
+                <Field label="Email" htmlFor="o-email">
                   <input
-                    id="o-pay"
+                    id="o-email"
+                    type="email"
                     className={fieldClass()}
-                    value={form.paymentMethod}
+                    value={form.email}
                     onChange={(e) =>
-                      setForm({ ...form, paymentMethod: e.target.value })
+                      setForm({ ...form, email: e.target.value })
                     }
-                    placeholder="Visa ···· 4242"
                   />
-                </div>
-              </section>
+                </Field>
+                <Field label="Phone" htmlFor="o-phone">
+                  <input
+                    id="o-phone"
+                    className={fieldClass()}
+                    value={form.phone}
+                    onChange={(e) =>
+                      setForm({ ...form, phone: e.target.value })
+                    }
+                  />
+                </Field>
+                <Field label="Status" htmlFor="o_status" className="mb-0">
+                  <select
+                    id="o_status"
+                    className={cn(fieldClass(), "capitalize")}
+                    value={form.status}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        status: e.target.value as OrderStatus,
+                      })
+                    }
+                  >
+                    {statuses.map((s) => (
+                      <option key={s} value={s}>
+                        {statusLabel(s)}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              </div>
 
-              <section className="space-y-3">
-                <h3 className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                  Shipping information
+              <div>
+                <h3 className="mb-3 font-sans text-[0.88rem] font-semibold text-muted-foreground">
+                  Shipping details
                 </h3>
-                <div className="space-y-1.5">
-                  <Label htmlFor="o-address">Shipping address</Label>
+                <Field label="Delivery address" htmlFor="o-address">
                   <textarea
                     id="o-address"
-                    className={cn(fieldClass(), "h-20 py-2")}
+                    className={cn(fieldClass(), "min-h-[76px] resize-y py-2")}
                     value={form.shippingAddress}
                     onChange={(e) =>
                       setForm({ ...form, shippingAddress: e.target.value })
                     }
                   />
-                </div>
+                </Field>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="o-ship">Shipping method</Label>
+                  <Field label="Method" htmlFor="o-ship">
                     <input
                       id="o-ship"
                       className={fieldClass()}
@@ -335,9 +333,8 @@ export default function OrderFormDialog({
                       }
                       placeholder="Standard"
                     />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="o-carrier">Carrier</Label>
+                  </Field>
+                  <Field label="Carrier" htmlFor="o-carrier">
                     <input
                       id="o-carrier"
                       className={fieldClass()}
@@ -347,162 +344,126 @@ export default function OrderFormDialog({
                       }
                       placeholder="UPS"
                     />
-                  </div>
+                  </Field>
                 </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="o-tracking">Tracking</Label>
+                <Field label="Placed" htmlFor="o-date" className="mb-0">
                   <input
-                    id="o-tracking"
+                    id="o-date"
+                    type="date"
                     className={fieldClass()}
-                    value={form.trackingNumber}
+                    value={form.placedAt}
                     onChange={(e) =>
-                      setForm({ ...form, trackingNumber: e.target.value })
+                      setForm({ ...form, placedAt: e.target.value })
                     }
                   />
-                </div>
-              </section>
+                </Field>
+              </div>
             </div>
 
-            <section className="space-y-3">
-              <div className="flex items-center justify-between gap-2">
-                <h3 className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                  Products
+            <div className="mt-5 border-t border-border pt-5">
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <h3 className="font-sans text-[0.88rem] font-semibold text-muted-foreground">
+                  Line items
                 </h3>
                 <Button
                   type="button"
                   size="sm"
-                  variant="outline"
+                  variant="ghost"
                   onClick={addLine}
                 >
                   <Plus data-icon="inline-start" />
-                  Add row
+                  Add item
                 </Button>
               </div>
 
-              <div className="rounded-lg border border-zinc-200">
-                <table className="w-full min-w-[36rem] text-left text-sm">
-                  <thead className="border-b border-zinc-200 bg-zinc-50/80 text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
-                    <tr>
-                      <th className="px-3 py-2 font-semibold">Product</th>
-                      <th className="w-24 px-3 py-2 font-semibold">Qty</th>
-                      <th className="w-28 px-3 py-2 font-semibold">Price</th>
-                      <th className="w-28 px-3 py-2 text-right font-semibold">
-                        Line
-                      </th>
-                      <th className="w-12 px-2 py-2" />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {lines.map((line) => (
-                      <tr
-                        key={line.key}
-                        className="border-b border-zinc-100 focus-within:relative focus-within:z-30 last:border-0"
-                      >
-                        <td className="relative z-10 px-3 py-2 align-top">
-                          <ProductAutocomplete
-                            value={line.name}
-                            disabled={saving}
-                            excludeIds={selectedProductIds.filter(
-                              (id) => id !== line.productId,
-                            )}
-                            onSelect={(product) =>
-                              selectProduct(line.key, product)
-                            }
-                          />
-                        </td>
-                        <td className="px-3 py-2 align-top">
-                          <input
-                            type="number"
-                            min={1}
-                            className={fieldClass()}
-                            value={line.quantity}
-                            onChange={(e) =>
-                              updateLine(line.key, {
-                                quantity: Math.max(
-                                  1,
-                                  Number(e.target.value) || 1,
-                                ),
-                              })
-                            }
-                          />
-                        </td>
-                        <td className="px-3 py-2 align-top">
-                          <input
-                            type="number"
-                            min={0}
-                            step="0.01"
-                            className={fieldClass()}
-                            value={line.unitPrice}
-                            onChange={(e) =>
-                              updateLine(line.key, {
-                                unitPrice: Number(e.target.value) || 0,
-                              })
-                            }
-                          />
-                        </td>
-                        <td className="px-3 py-2 text-right align-middle tabular-nums font-medium text-slate-900">
-                          {formatPrice(line.quantity * line.unitPrice)}
-                        </td>
-                        <td className="px-2 py-2 align-middle">
-                          <Button
-                            type="button"
-                            size="icon"
-                            variant="ghost"
-                            className="size-8"
-                            aria-label="Remove row"
-                            onClick={() => removeLine(line.key)}
-                          >
-                            <Trash2 className="size-3.5 text-rose-600" />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="mb-2">
+                {lines.map((line) => (
+                  <div
+                    key={line.key}
+                    className="grid grid-cols-[minmax(0,1fr)_72px_96px_auto_auto] items-center gap-3 py-2.5"
+                  >
+                    <ProductAutocomplete
+                      value={line.name}
+                      disabled={saving}
+                      excludeIds={selectedProductIds.filter(
+                        (id) => id !== line.productId,
+                      )}
+                      onSelect={(product) => selectProduct(line.key, product)}
+                    />
+                    <input
+                      type="number"
+                      min={1}
+                      aria-label="Quantity"
+                      className={fieldClass()}
+                      value={line.quantity}
+                      onChange={(e) =>
+                        updateLine(line.key, {
+                          quantity: Math.max(1, Number(e.target.value) || 1),
+                        })
+                      }
+                    />
+                    <input
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      aria-label="Unit price"
+                      className={fieldClass()}
+                      value={line.unitPrice}
+                      onChange={(e) =>
+                        updateLine(line.key, {
+                          unitPrice: Number(e.target.value) || 0,
+                        })
+                      }
+                    />
+                    <span className="min-w-[4.5rem] text-right text-sm font-semibold tabular-nums">
+                      {formatPrice(line.quantity * line.unitPrice)}
+                    </span>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      className="size-8"
+                      aria-label="Remove item"
+                      onClick={() => removeLine(line.key)}
+                    >
+                      <Trash2 className="size-3.5 text-destructive" />
+                    </Button>
+                  </div>
+                ))}
               </div>
 
-              <div className="flex justify-end">
-                <dl className="min-w-[12rem] space-y-1 text-sm">
-                  <div className="flex items-center justify-between gap-6">
-                    <dt className="text-slate-500">Subtotal</dt>
-                    <dd className="tabular-nums text-slate-700">
-                      {formatPrice(total)}
-                    </dd>
-                  </div>
-                  <div className="flex items-center justify-between gap-6 border-t border-zinc-100 pt-2">
-                    <dt className="font-semibold text-slate-900">Total</dt>
-                    <dd className="text-base font-semibold tabular-nums text-slate-900">
-                      {formatPrice(total)}
-                    </dd>
-                  </div>
-                </dl>
+              <div className="ml-auto w-full max-w-[14rem] space-y-1">
+                <div className="flex justify-between gap-6 text-[0.94rem]">
+                  <span className="text-right">Subtotal</span>
+                  <span className="tabular-nums">{formatPrice(total)}</span>
+                </div>
+                <div className="flex justify-between gap-6 text-[1.1rem] font-bold">
+                  <span className="text-right">Total</span>
+                  <span className="tabular-nums">{formatPrice(total)}</span>
+                </div>
               </div>
-            </section>
+            </div>
           </fieldset>
 
-          <DialogFooter className="shrink-0 border-t border-zinc-100 px-5 py-4">
+          <div className="mt-5 flex justify-end gap-2 border-t border-border pt-5">
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               disabled={saving}
               onClick={() => onOpenChange(false)}
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={saving}
-              className="bg-teal-800 text-white hover:bg-teal-700"
-            >
+            <Button type="submit" disabled={saving}>
               {saving ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : editing ? (
-                "Save"
+                "Save order"
               ) : (
-                "Create"
+                "Place order"
               )}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

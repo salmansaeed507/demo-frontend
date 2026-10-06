@@ -15,7 +15,7 @@ export default function AgentToolLogBody({
   calling,
 }: Props) {
   return (
-    <div className="space-y-1.5 pl-0.5 text-[13px] leading-relaxed text-slate-500">
+    <div className="space-y-1.5 pl-0.5 text-[13px] leading-relaxed text-muted-foreground">
       {thinking ? (
         <p className="flex items-center gap-1.5">
           <Loader2 className="size-3.5 animate-spin opacity-70" />
@@ -32,17 +32,17 @@ export default function AgentToolLogBody({
               ) : null}
               <span>
                 {isCalling ? "Calling" : "Called"}{" "}
-                <span className="text-slate-600">{step.tool}</span>
+                <span className="text-muted-foreground">{step.tool}</span>
                 {isCalling ? "…" : ""}
               </span>
             </p>
             {step.input ? (
-              <p className="pl-5 font-mono text-[11px] text-slate-400">
+              <p className="pl-5 font-mono text-[11px] text-muted-foreground">
                 {step.input}
               </p>
             ) : null}
             {!isCalling ? (
-              <p className="pl-5 font-mono text-[11px] text-slate-400">
+              <p className="pl-5 font-mono text-[11px] text-muted-foreground">
                 → {step.output}
               </p>
             ) : null}

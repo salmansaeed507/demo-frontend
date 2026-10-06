@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { formatPrice, type Product } from "./mock/products";
 import ProductImage from "./ProductImage";
+import { useProductQuickViewStore } from "./store/productQuickViewStore";
 import { useProductsStore } from "./store/productsStore";
 
 function searchProducts(list: Product[], query: string): Product[] {
@@ -18,8 +18,8 @@ function searchProducts(list: Product[], query: string): Product[] {
 }
 
 export default function StorefrontProductSearch() {
-  const navigate = useNavigate();
   const products = useProductsStore((s) => s.products);
+  const openQuickView = useProductQuickViewStore((s) => s.open);
   const rootRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -43,7 +43,7 @@ export default function StorefrontProductSearch() {
   function selectProduct(productId: string) {
     setOpen(false);
     setQuery("");
-    navigate(`/shoppilot-ai/products/${productId}`);
+    openQuickView(productId);
   }
 
   return (
@@ -66,7 +66,7 @@ export default function StorefrontProductSearch() {
       {showPanel ? (
         <div
           role="listbox"
-          className="absolute top-full right-0 left-0 z-50 mt-1 max-h-80 overflow-y-auto rounded-md border border-zinc-200 bg-white shadow-md"
+          className="absolute top-full right-0 left-0 z-50 mt-1 max-h-80 overflow-y-auto rounded-md border border-border bg-card shadow-md"
         >
           {results.length === 0 ? (
             <p className="px-3 py-3 text-sm text-muted-foreground">
@@ -79,7 +79,7 @@ export default function StorefrontProductSearch() {
                   <button
                     type="button"
                     role="option"
-                    className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-zinc-50"
+                    className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-muted"
                     onClick={() => selectProduct(product.id)}
                   >
                     <ProductImage
@@ -88,14 +88,14 @@ export default function StorefrontProductSearch() {
                       className="size-10 shrink-0 rounded object-cover"
                     />
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium text-slate-900">
+                      <span className="block truncate text-sm font-medium text-foreground">
                         {product.name}
                       </span>
                       <span className="block truncate text-xs text-muted-foreground">
                         {product.category}
                       </span>
                     </span>
-                    <span className="shrink-0 text-sm font-semibold text-slate-900">
+                    <span className="shrink-0 text-sm font-semibold text-foreground">
                       {formatPrice(product.price)}
                     </span>
                   </button>

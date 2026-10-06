@@ -70,8 +70,8 @@ export default function ConfirmDialog({
             disabled={busy}
             className={cn(
               destructive
-                ? "bg-rose-600 text-white hover:bg-rose-700"
-                : "bg-teal-800 text-white hover:bg-teal-700",
+                ? "border-destructive bg-transparent text-destructive hover:bg-destructive/10"
+                : "bg-primary text-primary-foreground hover:brightness-110",
             )}
             onClick={() => void handleConfirm()}
           >
