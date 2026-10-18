@@ -22,7 +22,7 @@ export default function PageShell({
           <div className="mx-auto max-w-[1180px]">
             <div className="overflow-hidden rounded-[32px] bg-[color-mix(in_srgb,var(--tint)_34%,var(--card))] px-[clamp(22px,4.5vw,56px)] py-[clamp(22px,4.5vw,48px)]">
               <h1 className="font-heading max-w-[12ch] text-[clamp(2rem,4.5vw,3.4rem)] tracking-[-0.03em] text-foreground">
-                Shop the shelf, let ShopPilot handle support
+                Shop the shelf, let Gadget Grove handle support
               </h1>
               <p className="mt-[18px] max-w-[44ch] text-[1.1rem] text-foreground/80">
                 An AI agent that answers questions, tracks orders, and opens

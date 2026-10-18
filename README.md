@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). ShopPilot AI UI: `/shoppilot-ai`.
+Open [http://localhost:3000](http://localhost:3000). Gadget Grove UI: `/gadget-grove`.
 
 ## Production (VPS + nginx)
 
@@ -28,7 +28,7 @@ sudo nginx -t && sudo systemctl reload nginx
 sudo certbot --nginx -d demo.salmansaeed507.com
 ```
 
-`try_files $uri $uri/ /index.html` is required — without it, refreshing `/shoppilot-ai` returns 404.
+`try_files $uri $uri/ /index.html` is required — without it, refreshing `/gadget-grove` returns 404.
 
 ### GitHub Actions
 

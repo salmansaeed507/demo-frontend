@@ -44,10 +44,10 @@ export default function AdminLayout() {
       <header className="sticky top-0 z-20 bg-sidebar text-sidebar-foreground">
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-center gap-x-6 gap-y-2 px-[clamp(16px,4vw,40px)] py-2.5 sm:h-[62px] sm:flex-nowrap sm:py-0">
           <Link
-            to="/shoppilot-ai/admin"
+            to="/gadget-grove/admin"
             className="font-heading mr-auto flex items-center gap-2.5 text-[1.45rem] text-inherit sm:mr-0"
           >
-            ShopPilot
+            Gadget Grove
             <span className="rounded-full bg-white/14 px-2.5 py-0.5 font-sans text-[0.75rem] font-semibold">
               Admin
             </span>
@@ -94,7 +94,7 @@ export default function AdminLayout() {
               variant="ghost"
               className="border-white/28 text-sidebar-foreground hover:border-sidebar-foreground"
             >
-              <Link to="/shoppilot-ai">View store</Link>
+              <Link to="/gadget-grove">View store</Link>
             </Button>
           </div>
         </div>

@@ -46,7 +46,7 @@ export default function CheckoutPage() {
           </p>
           <div className="mt-8">
             <Button asChild size="lg">
-              <Link to="/shoppilot-ai">Browse products</Link>
+              <Link to="/gadget-grove">Browse products</Link>
             </Button>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function CheckoutPage() {
       });
       clear();
       navigate(
-        `/shoppilot-ai/order-confirmation?orderId=${encodeURIComponent(order.id)}&total=${order.total.toFixed(2)}&name=${encodeURIComponent(name)}`,
+        `/gadget-grove/order-confirmation?orderId=${encodeURIComponent(order.id)}&total=${order.total.toFixed(2)}&name=${encodeURIComponent(name)}`,
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Checkout failed");
@@ -91,7 +91,7 @@ export default function CheckoutPage() {
               Shipping
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Submitted to the ShopPilot order API via the gateway.
+              Submitted to the Gadget Grove order API via the gateway.
             </p>
           </div>
           <Separator />
@@ -187,7 +187,7 @@ export default function CheckoutPage() {
             {submitting ? "Placing order…" : "Place order"}
           </Button>
           <Button asChild variant="outline" className="w-full">
-            <Link to="/shoppilot-ai/cart">Back to cart</Link>
+            <Link to="/gadget-grove/cart">Back to cart</Link>
           </Button>
         </aside>
       </form>

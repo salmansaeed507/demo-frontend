@@ -13,11 +13,11 @@ export default function StorefrontHeader() {
       <div className="bg-primary text-primary-foreground">
         <div className="relative mx-auto flex max-w-[1180px] items-center justify-center px-[clamp(16px,4vw,40px)] py-2 text-[0.88rem]">
           <span>
-            Free shipping on demo orders. Packed to order — ask ShopPilot for
+            Free shipping on demo orders. Packed to order — ask Gadget Grove for
             help anytime.
           </span>
           <Link
-            to="/shoppilot-ai/admin"
+            to="/gadget-grove/admin"
             className="absolute right-[clamp(16px,4vw,40px)] top-1/2 hidden -translate-y-1/2 text-[0.85rem] text-inherit underline opacity-85 sm:inline"
           >
             Open admin
@@ -29,11 +29,11 @@ export default function StorefrontHeader() {
         <div className="mx-auto flex max-w-[1180px] flex-col gap-2 px-[clamp(16px,4vw,40px)] py-3 sm:flex-row sm:items-center sm:gap-7">
           <div className="flex items-center gap-3">
             <NavLink
-              to="/shoppilot-ai"
+              to="/gadget-grove"
               end
               className="font-heading text-[1.7rem] tracking-[-0.02em] text-foreground sm:text-[1.9rem]"
             >
-              ShopPilot
+              Gadget Grove
             </NavLink>
           </div>
 
@@ -47,7 +47,7 @@ export default function StorefrontHeader() {
               variant="ghost"
               className="h-auto gap-2.5 rounded-full border-foreground px-[18px] py-2 pl-3.5 font-semibold"
             >
-              <Link to="/shoppilot-ai/cart" aria-label="Open cart">
+              <Link to="/gadget-grove/cart" aria-label="Open cart">
                 <ShoppingCart className="size-5" />
                 Cart
                 <b className="inline-grid min-w-[22px] place-items-center rounded-[11px] bg-foreground px-1.5 text-[0.8rem] font-semibold text-background">

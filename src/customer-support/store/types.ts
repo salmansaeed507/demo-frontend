@@ -50,6 +50,8 @@ export type AgentTraceStep = {
   input?: string;
   output: string;
   status: "ok" | "miss";
+  /** Tool call is still running (no result yet). */
+  pending?: boolean;
 };
 
 /** Proof that an answer was grounded in retrieved KB chunks. */
@@ -69,6 +71,8 @@ export type ChatMessage = {
   trace?: AgentTraceStep[];
   /** RAG citations when retrieve_knowledge returned chunks. */
   citations?: RetrievalCitation[];
+  /** Assistant turn is still being produced. */
+  streaming?: boolean;
 };
 
 export type ChatThread = {
@@ -79,7 +83,7 @@ export type ChatThread = {
   messages: ChatMessage[];
 };
 
-export type ShopPilotState = {
+export type GadgetGroveState = {
   products: Product[];
   knowledgeDocs: KnowledgeDoc[];
   tickets: SupportTicket[];
@@ -88,7 +92,7 @@ export type ShopPilotState = {
   activeThreadId: string;
 };
 
-export const STORAGE_KEY = "shoppilot-data-v4";
+export const STORAGE_KEY = "gadget-grove-data-v4";
 
 function estimateChunks(sizeKb: number) {
   return Math.max(4, Math.round(sizeKb / 4));
@@ -140,15 +144,15 @@ function today() {
 export function createWelcomeThread(): ChatThread {
   const createdAt = nowIso();
   return {
-    id: id("thr"),
-    title: "New chat",
+    id: crypto.randomUUID(),
+    title: "Untitled",
     createdAt,
     updatedAt: createdAt,
     messages: [],
   };
 }
 
-export function createSeedState(): ShopPilotState {
+export function createSeedState(): GadgetGroveState {
   const thread = createWelcomeThread();
   return {
     products: structuredClone(seedProducts),
@@ -255,11 +259,11 @@ export function createSeedState(): ShopPilotState {
   };
 }
 
-export function loadState(): ShopPilotState {
+export function loadState(): GadgetGroveState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return createSeedState();
-    const parsed = JSON.parse(raw) as Partial<ShopPilotState>;
+    const parsed = JSON.parse(raw) as Partial<GadgetGroveState>;
     const seed = createSeedState();
     const threads =
       Array.isArray(parsed.threads) && parsed.threads.length > 0
@@ -288,7 +292,7 @@ export function loadState(): ShopPilotState {
   }
 }
 
-export function saveState(state: ShopPilotState) {
+export function saveState(state: GadgetGroveState) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
@@ -424,7 +428,7 @@ export type AgentTurnResult = {
 
 export function simulateAgentTurn(
   text: string,
-  state: ShopPilotState,
+  state: GadgetGroveState,
 ): AgentTurnResult {
   const lower = text.toLowerCase();
   const trace: AgentTraceStep[] = [

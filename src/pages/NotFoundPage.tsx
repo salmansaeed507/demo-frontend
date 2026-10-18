@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import PageShell from "../customer-support/PageShell";
 
-type ShopPilotProps = {
+type GadgetGroveProps = {
   /** When false, content only — AdminLayout already provides PageShell. */
   withShell?: boolean;
 };
 
-function ShopPilotNotFoundContent() {
+function GadgetGroveNotFoundContent() {
   return (
     <div className="flex min-h-[50vh] flex-col justify-center py-8 sm:py-12">
       <p className="text-sm font-medium tracking-wide text-primary uppercase">
@@ -17,12 +17,12 @@ function ShopPilotNotFoundContent() {
         Page not found
       </h1>
       <p className="mt-3 max-w-xl text-base text-muted-foreground sm:text-lg">
-        That URL doesn’t match anything in this ShopPilot demo. Head back to the
+        That URL doesn’t match anything in this Gadget Grove demo. Head back to the
         storefront or the Demo Hub.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
         <Button asChild size="lg">
-          <Link to="/shoppilot-ai">Back to ShopPilot</Link>
+          <Link to="/gadget-grove">Back to Gadget Grove</Link>
         </Button>
         <Button asChild variant="outline" size="lg">
           <Link to="/">Go home</Link>
@@ -32,15 +32,15 @@ function ShopPilotNotFoundContent() {
   );
 }
 
-/** 404 inside the ShopPilot demo (uses demo chrome via layout + PageShell). */
-export function ShopPilotNotFoundPage({ withShell = true }: ShopPilotProps) {
+/** 404 inside the Gadget Grove demo (uses demo chrome via layout + PageShell). */
+export function GadgetGroveNotFoundPage({ withShell = true }: GadgetGroveProps) {
   if (!withShell) {
-    return <ShopPilotNotFoundContent />;
+    return <GadgetGroveNotFoundContent />;
   }
 
   return (
     <PageShell>
-      <ShopPilotNotFoundContent />
+      <GadgetGroveNotFoundContent />
     </PageShell>
   );
 }
@@ -59,8 +59,8 @@ export function GenericNotFoundPage() {
         <Link to="/" className="text-primary underline">
           Go home
         </Link>
-        <Link to="/shoppilot-ai" className="text-primary underline">
-          ShopPilot AI
+        <Link to="/gadget-grove" className="text-primary underline">
+          Gadget Grove
         </Link>
       </p>
     </main>

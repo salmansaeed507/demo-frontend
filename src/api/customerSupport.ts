@@ -87,6 +87,13 @@ export type ApiChatMessage = {
   citations?: ApiCitation[] | null;
 };
 
+/** Checkpointer history from GET /chat/threads/:id/messages */
+export type ApiAgentHistoryMessage = {
+  id: string;
+  role: "assistant" | "user";
+  text: string;
+};
+
 export type ApiChatThread = {
   id: string;
   title: string;
@@ -258,10 +265,9 @@ export const deleteChatThread = (id: string) =>
     },
   );
 
-export const clearChatThread = (id: string) =>
-  customerSupportApiClient.fetch<ApiChatThread>(
-    `/chat/threads/${encodeURIComponent(id)}/clear`,
-    { method: "POST" },
+export const listChatThreadMessages = (threadId: string) =>
+  customerSupportApiClient.fetch<ApiAgentHistoryMessage[]>(
+    `/chat/threads/${encodeURIComponent(threadId)}/messages`,
   );
 
 /**

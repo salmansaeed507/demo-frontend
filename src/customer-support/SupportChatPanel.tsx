@@ -10,7 +10,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { useChatStore } from "./store/chatStore";
 import SupportChatMessageBubble, {
   type SupportChatMessage,
 } from "./SupportChatMessageBubble";
@@ -20,6 +19,9 @@ const SUGGESTIONS = [
   "What's your return policy?",
   "Track my refund",
 ] as const;
+
+const STATIC_REPLY =
+  "Thanks for your message — live support chat is coming soon.";
 
 const SEED_MESSAGES: SupportChatMessage[] = [
   {
@@ -34,18 +36,10 @@ type Props = {
 };
 
 export default function SupportChatPanel({ open, onOpenChange }: Props) {
-  const beginAgentTurn = useChatStore((s) => s.beginAgentTurn);
-  const completeAgentTurn = useChatStore((s) => s.completeAgentTurn);
-  const load = useChatStore((s) => s.load);
   const [messages, setMessages] =
     useState<SupportChatMessage[]>(SEED_MESSAGES);
   const [draft, setDraft] = useState("");
-  const [busy, setBusy] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (open) void load();
-  }, [open, load]);
 
   useEffect(() => {
     if (!open) return;
@@ -53,46 +47,21 @@ export default function SupportChatPanel({ open, onOpenChange }: Props) {
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages, open]);
 
-  async function send(text: string) {
+  // Static for now: replies are canned, no agent call.
+  function send(text: string) {
     const trimmed = text.trim();
-    if (!trimmed || busy) return;
+    if (!trimmed) return;
     setDraft("");
-    setBusy(true);
-    setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
-    try {
-      const plan = await beginAgentTurn(trimmed);
-      if (!plan) return;
-      completeAgentTurn(plan);
-      const tool = plan.trace.find(
-        (s) => s.tool !== "plan" && s.tool !== "compose_reply",
-      );
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "agent",
-          text: plan.reply,
-          tool: tool
-            ? `${tool.tool}${tool.input ? `(${tool.input})` : ""}`
-            : undefined,
-          source: plan.citations?.[0]?.filename,
-        },
-      ]);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "agent",
-          text: "Sorry — I couldn't reach the support agent just now. Try again in a moment.",
-        },
-      ]);
-    } finally {
-      setBusy(false);
-    }
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", text: trimmed },
+      { role: "agent", text: STATIC_REPLY },
+    ]);
   }
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
-    void send(draft);
+    send(draft);
   }
 
   return (
@@ -107,9 +76,9 @@ export default function SupportChatPanel({ open, onOpenChange }: Props) {
               <Bot className="size-4" />
             </span>
             <div>
-              <SheetTitle className="text-base">ShopPilot support</SheetTitle>
+              <SheetTitle className="text-base">Gadget Grove support</SheetTitle>
               <SheetDescription className="text-xs">
-                Powered by the customer-support agent API
+                Live support chat coming soon
               </SheetDescription>
             </div>
           </div>
@@ -131,7 +100,7 @@ export default function SupportChatPanel({ open, onOpenChange }: Props) {
                 key={s}
                 variant="outline"
                 className="cursor-pointer font-normal hover:bg-muted"
-                onClick={() => void send(s)}
+                onClick={() => send(s)}
               >
                 {s}
               </Badge>
@@ -142,9 +111,8 @@ export default function SupportChatPanel({ open, onOpenChange }: Props) {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               placeholder="Ask about orders, returns…"
-              disabled={busy}
             />
-            <Button type="submit" size="icon" disabled={busy || !draft.trim()}>
+            <Button type="submit" size="icon" disabled={!draft.trim()}>
               <Send className="size-4" />
             </Button>
           </form>

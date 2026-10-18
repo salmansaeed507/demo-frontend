@@ -17,7 +17,7 @@ export default function StorefrontFloatingChatButton({ onOpen }: Props) {
       </span>
       <span className="hidden pr-1 text-left sm:block">
         <span className="block text-sm font-semibold leading-tight">
-          ShopPilot AI
+          Gadget Grove
         </span>
         <span className="block text-[11px] font-medium text-primary-foreground/80 leading-tight">
           Ask support

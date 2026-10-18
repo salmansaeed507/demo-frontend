@@ -39,7 +39,7 @@ export default function CartPage() {
           </p>
           <div className="mt-8">
             <Button asChild size="lg">
-              <Link to="/shoppilot-ai">Browse products</Link>
+              <Link to="/gadget-grove">Browse products</Link>
             </Button>
           </div>
         </div>
@@ -139,13 +139,13 @@ export default function CartPage() {
               </span>
             </div>
             <Button asChild className="w-full" size="lg">
-              <Link to="/shoppilot-ai/checkout">
+              <Link to="/gadget-grove/checkout">
                 <ShoppingCart data-icon="inline-start" />
                 Checkout
               </Link>
             </Button>
             <Button asChild variant="outline" className="w-full">
-              <Link to="/shoppilot-ai">Continue shopping</Link>
+              <Link to="/gadget-grove">Continue shopping</Link>
             </Button>
           </aside>
         </div>

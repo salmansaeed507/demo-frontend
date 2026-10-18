@@ -1,4 +1,5 @@
 import { FileText, Sparkles, User } from "lucide-react";
+import MarkdownContent from "@/components/MarkdownContent";
 import { cn } from "@/lib/utils";
 
 export type SupportChatMessage = {
@@ -38,7 +39,11 @@ export default function SupportChatMessageBubble({ message }: Props) {
             {message.tool}
           </p>
         ) : null}
-        <p className="leading-relaxed">{message.text}</p>
+        <MarkdownContent
+          variant={message.role === "user" ? "inverse" : "default"}
+        >
+          {message.text}
+        </MarkdownContent>
         {message.source ? (
           <p className="mt-1.5 flex items-center gap-1 text-[11px] text-muted-foreground">
             <FileText className="size-3" />

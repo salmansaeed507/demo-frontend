@@ -7,7 +7,7 @@ import StorefrontFloatingChatButton from "./StorefrontFloatingChatButton";
 import StorefrontHeader from "./StorefrontHeader";
 import SupportChatPanel from "./SupportChatPanel";
 
-const SHOPPILOT_TITLE = "ShopPilot AI | E-commerce & AI Support";
+const GADGET_GROVE_TITLE = "Gadget Grove | E-commerce & AI Support";
 const DEFAULT_TITLE = "Demo Hub";
 
 export default function StorefrontShell() {
@@ -20,8 +20,8 @@ export default function StorefrontShell() {
 
   useEffect(() => {
     document.title = isAdmin
-      ? "Customer Support Agent | ShopPilot AI"
-      : SHOPPILOT_TITLE;
+      ? "Customer Support Agent | Gadget Grove"
+      : GADGET_GROVE_TITLE;
     return () => {
       document.title = DEFAULT_TITLE;
     };
@@ -38,7 +38,7 @@ export default function StorefrontShell() {
   if (status === "idle" || status === "loading") {
     return (
       <div className="flex min-h-svh items-center justify-center bg-background text-sm text-muted-foreground">
-        Loading ShopPilot…
+        Loading Gadget Grove…
       </div>
     );
   }

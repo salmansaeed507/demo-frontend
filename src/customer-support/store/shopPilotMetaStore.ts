@@ -2,8 +2,6 @@ import { useProductsStore } from "./productsStore";
 import { useOrdersStore } from "./ordersStore";
 import { useTicketsStore } from "./ticketsStore";
 import { useKnowledgeStore } from "./knowledgeStore";
-import { useChatStore } from "./chatStore";
-
 /**
  * User-initiated refresh: force-reload only domains that were already visited
  * (status !== idle), so admin does not fetch everything up front.
@@ -21,9 +19,6 @@ export async function reloadVisitedDomains() {
   }
   if (useKnowledgeStore.getState().status !== "idle") {
     tasks.push(useKnowledgeStore.getState().load({ force: true }));
-  }
-  if (useChatStore.getState().status !== "idle") {
-    tasks.push(useChatStore.getState().load({ force: true }));
   }
   await Promise.all(tasks);
 }

@@ -5,7 +5,7 @@ export default function SiteFooter() {
     <footer className="relative left-1/2 mt-auto w-screen max-w-[100vw] -translate-x-1/2 bg-sidebar text-sidebar-foreground">
       <div className="mx-auto grid max-w-[1180px] gap-4 px-[clamp(16px,4vw,40px)] py-9 sm:grid-cols-[1.3fr_1fr] sm:items-end">
         <div>
-          <h3 className="font-heading text-[1.5rem]">ShopPilot</h3>
+          <h3 className="font-heading text-[1.5rem]">Gadget Grove</h3>
           <p className="mt-2 text-[0.94rem] text-sidebar-foreground/70">
             Demo storefront with AI support. No payment is taken.
           </p>

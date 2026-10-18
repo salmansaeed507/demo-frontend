@@ -6,12 +6,12 @@ import SiteFooter from "../components/SiteFooter";
 
 const demos = [
   {
-    id: "shoppilot-ai",
-    pill: "ShopPilot AI",
+    id: "gadget-grove",
+    pill: "Gadget Grove",
     title: "Customer Support Agent",
     description:
       "An AI agent that answers questions, tracks orders, and opens tickets — wired to a knowledge base and order API behind the demo api-gateway.",
-    to: "/shoppilot-ai/admin",
+    to: "/gadget-grove/admin",
     image:
       "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
     stack: ["AI Agent", "RAG", "FastAPI", "React"],

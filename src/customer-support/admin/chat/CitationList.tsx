@@ -1,11 +1,11 @@
-import type { RetrievalCitation } from "../store/types";
+import type { RetrievalCitation } from "../../store/types";
 import { ChevronDown } from "lucide-react";
 
 type Props = {
   citations: RetrievalCitation[];
 };
 
-export default function AgentCitationList({ citations }: Props) {
+export default function CitationList({ citations }: Props) {
   return (
     <details className="group mt-2.5">
       <summary className="flex w-fit cursor-pointer list-none items-center gap-1 py-0.5 text-[12px] text-muted-foreground transition hover:text-foreground/80 marker:content-none [&::-webkit-details-marker]:hidden">

@@ -62,16 +62,16 @@ export default function OrderConfirmationPage() {
           </h3>
           <Separator />
           <p className="text-sm text-muted-foreground">
-            Ask ShopPilot AI about this order, or keep shopping the demo catalog.
+            Ask Gadget Grove about this order, or keep shopping the demo catalog.
           </p>
           <Button asChild className="w-full" size="lg">
-            <Link to="/shoppilot-ai">
+            <Link to="/gadget-grove">
               <MessageCircle data-icon="inline-start" />
               Ask support about this order
             </Link>
           </Button>
           <Button asChild variant="outline" className="w-full">
-            <Link to="/shoppilot-ai">Continue shopping</Link>
+            <Link to="/gadget-grove">Continue shopping</Link>
           </Button>
         </aside>
       </div>
