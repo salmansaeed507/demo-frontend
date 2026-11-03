@@ -11,7 +11,7 @@ type TicketsState = {
   status: DomainLoadStatus;
   error: string | null;
   setTickets: (tickets: SupportTicket[]) => void;
-  load: (opts?: { force?: boolean }) => Promise<void>;
+  load: (opts?: { force?: boolean; silent?: boolean }) => Promise<void>;
   upsertTicket: (ticket: SupportTicket) => void;
   createTicket: (input: TicketInput) => Promise<SupportTicket>;
   updateTicket: (id: string, patch: Partial<SupportTicket>) => Promise<void>;
@@ -27,20 +27,24 @@ export const useTicketsStore = create<TicketsState>((set) => ({
   setTickets: (tickets) => set({ tickets }),
   load: async (opts) => {
     const force = opts?.force ?? false;
+    // Silent: refresh in place (no loading state, keep data on error).
+    const silent = opts?.silent ?? false;
     const { status } = useTicketsStore.getState();
     if (!force && status === "ready") return;
     if (inflight) return inflight;
 
-    set({ status: "loading", error: null });
+    if (!silent) set({ status: "loading", error: null });
     inflight = (async () => {
       try {
         const tickets = (await customerSupportApi.listTickets()).map(mapTicket);
         set({ tickets, status: "ready", error: null });
       } catch (err) {
-        set({
-          status: "error",
-          error: err instanceof Error ? err.message : "Failed to load tickets",
-        });
+        if (!silent) {
+          set({
+            status: "error",
+            error: err instanceof Error ? err.message : "Failed to load tickets",
+          });
+        }
       } finally {
         inflight = null;
       }

@@ -1,6 +1,6 @@
 import { apiGatewayClient } from "./client";
 
-export type S3ObjectData = {
+type S3ObjectData = {
   key: string;
   bucket: string;
   etag: string;
@@ -102,6 +102,7 @@ export async function upload(file: File): Promise<S3ObjectData> {
       body: JSON.stringify({
         content_type: contentType,
         filename: file.name,
+        content_length: file.size,
       }),
     },
   );

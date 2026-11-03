@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { useKnowledgeStore } from "../store/knowledgeStore";
 
 const ALLOWED_EXTENSIONS = [".txt", ".md", ".docx", ".pdf"] as const;
+const MAX_FILE_SIZE_BYTES = 1024 * 1024;
 
 const EXT_TO_TYPE: Record<(typeof ALLOWED_EXTENSIONS)[number], string> = {
   ".txt": "TXT",
@@ -70,6 +71,12 @@ export default function KnowledgeDocFormDialog({ open, onOpenChange }: Props) {
       setError("Only .txt, .md, .docx, or .pdf files are allowed.");
       return;
     }
+    if (next.size > MAX_FILE_SIZE_BYTES) {
+      setFile(null);
+      e.target.value = "";
+      setError("File is too large. Maximum size is 1 MB.");
+      return;
+    }
     setFile(next);
   }
 
@@ -78,6 +85,10 @@ export default function KnowledgeDocFormDialog({ open, onOpenChange }: Props) {
     if (!file || saving) return;
     if (!isAllowedDoc(file)) {
       setError("Only .txt, .md, .docx, or .pdf files are allowed.");
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      setError("File is too large. Maximum size is 1 MB.");
       return;
     }
 
@@ -90,11 +101,7 @@ export default function KnowledgeDocFormDialog({ open, onOpenChange }: Props) {
         name: file.name,
         type: EXT_TO_TYPE[ext],
         sizeKb: Math.max(1, Math.round(file.size / 1024)),
-        embeddingStatus: "pending",
-        indexed: false,
         uploadedAt: new Date().toISOString().slice(0, 10),
-        chunkCount: 0,
-        lastIndexedAt: null,
         collection: "support",
         tags: [],
         fileUrl: uploaded.key,
@@ -124,8 +131,8 @@ export default function KnowledgeDocFormDialog({ open, onOpenChange }: Props) {
             <div className="space-y-1.5">
               <Label htmlFor="doc-file">Document</Label>
               <p className="text-xs text-muted-foreground">
-                Upload a .txt, .md, .docx, or .pdf file. It will be stored in S3
-                and added to the knowledge base.
+                Upload a .txt, .md, .docx, or .pdf file (max 1 MB). It will be
+                stored in S3 and added to the knowledge base.
               </p>
               <input
                 ref={fileInputRef}

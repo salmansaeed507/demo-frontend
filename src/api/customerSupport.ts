@@ -64,6 +64,18 @@ export type ApiKnowledgeDoc = {
   fileUrl?: string;
 };
 
+export type ApiKnowledgeChunk = {
+  id: string;
+  docId: string;
+  chunkIndex: number;
+  content: string;
+  source: string;
+  section: string;
+  page: number | null;
+  collection: string;
+  tags: string[];
+};
+
 export type ApiTraceStep = {
   tool: string;
   input?: string | null;
@@ -87,11 +99,19 @@ export type ApiChatMessage = {
   citations?: ApiCitation[] | null;
 };
 
-/** Checkpointer history from GET /chat/threads/:id/messages */
+/** Saved chat history from GET /chat/threads/:id/messages */
 export type ApiAgentHistoryMessage = {
   id: string;
   role: "assistant" | "user";
   text: string;
+};
+
+/** Conversation totals from GET /chat/threads/:id/usage */
+export type ApiConversationUsage = {
+  threadId: string;
+  model: string;
+  totalTokens: number;
+  totalCostUsd: number;
 };
 
 export type ApiChatThread = {
@@ -100,13 +120,6 @@ export type ApiChatThread = {
   createdAt: string;
   updatedAt: string;
   messages: ApiChatMessage[];
-};
-
-export type ApiAgentTurnResponse = {
-  threadId: string;
-  userMessage: ApiChatMessage;
-  assistantMessage: ApiChatMessage;
-  ticket: ApiTicket | null;
 };
 
 function jsonBody(data: unknown): RequestInit {
@@ -202,6 +215,19 @@ export const checkout = (body: Record<string, unknown>) =>
   });
 
 /**
+ * Demo-data seeding (runs in the background after login)
+ */
+export type ApiSeedStatus = "pending" | "ready" | "failed" | "none";
+
+export const getSeedStatus = () =>
+  customerSupportApiClient.fetch<{ status: ApiSeedStatus }>("/seed-status");
+
+export const requestSeed = () =>
+  customerSupportApiClient.fetch<{ status: ApiSeedStatus }>("/internal/seed", {
+    method: "POST",
+  });
+
+/**
  * Knowledge APIs: list, create, update, delete
  */
 export const listKnowledgeDocs = () =>
@@ -233,6 +259,26 @@ export const deleteKnowledgeDoc = (id: string) =>
 export const reindexKnowledgeDoc = (id: string) =>
   customerSupportApiClient.fetch<ApiKnowledgeDoc>(
     `/knowledge-docs/${encodeURIComponent(id)}/reindex`,
+    { method: "POST" },
+  );
+
+export const listKnowledgeChunks = (id: string) =>
+  customerSupportApiClient.fetch<ApiKnowledgeChunk[]>(
+    `/knowledge-docs/${encodeURIComponent(id)}/chunks`,
+  );
+
+export type ApiSampleDoc = {
+  filename: string;
+  type: string;
+  collection: string;
+};
+
+export const listSampleKnowledgeDocs = () =>
+  customerSupportApiClient.fetch<ApiSampleDoc[]>("/knowledge-docs/samples");
+
+export const indexSampleKnowledgeDoc = (filename: string) =>
+  customerSupportApiClient.fetch<ApiKnowledgeDoc>(
+    `/knowledge-docs/sample/${encodeURIComponent(filename)}`,
     { method: "POST" },
   );
 
@@ -270,11 +316,7 @@ export const listChatThreadMessages = (threadId: string) =>
     `/chat/threads/${encodeURIComponent(threadId)}/messages`,
   );
 
-/**
- * Agent APIs: turn
- */
-export const agentTurn = (body: { text: string; threadId?: string | null }) =>
-  customerSupportApiClient.fetch<ApiAgentTurnResponse>("/agent/turn", {
-    method: "POST",
-    ...jsonBody(body),
-  });
+export const getChatThreadUsage = (threadId: string) =>
+  customerSupportApiClient.fetch<ApiConversationUsage>(
+    `/chat/threads/${encodeURIComponent(threadId)}/usage`,
+  );

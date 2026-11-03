@@ -25,7 +25,37 @@ function TypingDots() {
   );
 }
 
+function DebugBubble({ message }: Props) {
+  const label =
+    message.debugKind === "tool_call"
+      ? `tool call${message.toolName ? `: ${message.toolName}` : ""}`
+      : message.debugKind === "tool_result"
+        ? `tool result${message.toolName ? `: ${message.toolName}` : ""}${
+            message.toolCallId ? ` (${message.toolCallId})` : ""
+          }`
+        : message.debugKind || message.role;
+
+  return (
+    <div className="rounded border border-dashed border-border bg-muted/40 px-3 py-2 font-mono text-[0.75rem] leading-relaxed text-muted-foreground">
+      <div className="mb-1 font-semibold uppercase tracking-wide text-foreground/70">
+        {label}
+      </div>
+      <pre className="max-h-64 overflow-auto whitespace-pre-wrap break-words">
+        {message.text || "(empty)"}
+      </pre>
+    </div>
+  );
+}
+
 export default function MessageBubble({ message }: Props) {
+  if (
+    message.role === "tool" ||
+    message.role === "system" ||
+    message.role === "debug"
+  ) {
+    return <DebugBubble message={message} />;
+  }
+
   if (message.role === "user") {
     return (
       <div className="flex justify-end">

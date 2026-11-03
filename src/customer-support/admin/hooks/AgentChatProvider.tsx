@@ -12,12 +12,25 @@ import {
   UseAgentUpdate,
 } from "@copilotkit/react-core/v2/headless";
 import * as api from "../../../api/customerSupport";
+import type { ApiConversationUsage } from "../../../api/customerSupport";
 import { mapThread } from "../../../api/mappers";
 import { mapAgentMessages } from "../chat/mapMessages";
-import type { ChatMessage, ChatThread } from "../../store/types";
+import type {
+  ChatMessage,
+  ChatThread,
+  ConversationUsage,
+} from "../../store/types";
 
-const AGENT_ID = "default";
+/** Ids registered in App.tsx; each chat surface needs its own agent instance. */
+type ChatAgentId = "default" | "storefront";
 const UNTITLED = "Untitled";
+
+function toConversationUsage(snap: ApiConversationUsage): ConversationUsage {
+  return {
+    totalTokens: snap.totalTokens,
+    totalCostUsd: snap.totalCostUsd,
+  };
+}
 
 /* -------------------------------------------------------------------------- */
 /* Threads: list + CRUD against customer-support-agent REST                    */
@@ -149,6 +162,7 @@ function withOptimisticSend(
 }
 
 function useChatMessages(
+  agentId: ChatAgentId,
   activeThreadId: string,
   createThreadFromFirstMessage: (
     text: string,
@@ -156,7 +170,7 @@ function useChatMessages(
   ) => Promise<ChatThread>,
 ) {
   const { agent, isReady: isAgentReady } = useAgent({
-    agentId: AGENT_ID,
+    agentId,
     updates: [
       UseAgentUpdate.OnMessagesChanged,
       UseAgentUpdate.OnRunStatusChanged,
@@ -176,6 +190,23 @@ function useChatMessages(
     id: string;
     text: string;
   } | null>(null);
+  const [conversationTokenUsage, setConversationTokenUsage] = useState<
+    ConversationUsage | undefined
+  >(undefined);
+
+  function clearUsage() {
+    setConversationTokenUsage(undefined);
+  }
+
+  async function refreshUsage(threadId: string) {
+    try {
+      const snap = await api.getChatThreadUsage(threadId);
+      if (shownThreadId.current !== threadId) return;
+      setConversationTokenUsage(toConversationUsage(snap));
+    } catch (err) {
+      console.error("Failed to load conversation usage", err);
+    }
+  }
 
   // Draft (no thread id): clear the agent; do not load history yet.
   // Skip while a first message is in flight so we don't wipe optimistic UI work.
@@ -186,6 +217,7 @@ function useChatMessages(
     shownThreadId.current = "";
     current.setMessages([]);
     current.setState({});
+    clearUsage();
   }, [activeThreadId, isAgentReady, pendingUser]);
 
   // On thread switch: pin the agent and load checkpointer history from the API.
@@ -203,13 +235,17 @@ function useChatMessages(
     current.threadId = threadId;
     current.setMessages([]);
     current.setState({});
+    clearUsage();
 
     let cancelled = false;
     setIsConnecting(true);
-    api
-      .listChatThreadMessages(threadId)
-      .then((msgs) => {
+    Promise.all([
+      api.listChatThreadMessages(threadId),
+      api.getChatThreadUsage(threadId).catch(() => null),
+    ])
+      .then(([msgs, snap]) => {
         if (cancelled || shownThreadId.current !== threadId) return;
+        if (snap) setConversationTokenUsage(toConversationUsage(snap));
         current.setMessages(
           msgs.map((m) => ({ id: m.id, role: m.role, content: m.text })),
         );
@@ -256,6 +292,7 @@ function useChatMessages(
         shownThreadId.current = threadId;
         current.setMessages([]);
         current.setState({});
+        clearUsage();
         void createThreadFromFirstMessage(content, threadId).catch((err) => {
           console.error("Failed to create thread", err);
         });
@@ -264,6 +301,7 @@ function useChatMessages(
       agent.threadId = threadId;
       agent.addMessage({ id: userMsgId, role: "user", content });
       await copilotkit.runAgent({ agent });
+      await refreshUsage(threadId);
     } catch (err) {
       console.error("Failed to send message", err);
     } finally {
@@ -279,11 +317,13 @@ function useChatMessages(
     if (threadId === activeThreadId) {
       agent.setMessages([]);
       agent.setState({});
+      clearUsage();
     }
   }
 
   return {
     messages,
+    conversationTokenUsage,
     isAgentReady,
     isAgentRunning,
     isConnecting,
@@ -307,9 +347,13 @@ function useChatMessages(
 /* Provider                                                                    */
 /* -------------------------------------------------------------------------- */
 
-function useAgentChatValue() {
+function useAgentChatValue(agentId: ChatAgentId) {
   const t = useChatThreads();
-  const m = useChatMessages(t.activeThreadId, t.createThreadFromFirstMessage);
+  const m = useChatMessages(
+    agentId,
+    t.activeThreadId,
+    t.createThreadFromFirstMessage,
+  );
 
   return {
     ...t,
@@ -326,9 +370,15 @@ const AgentChatContext = createContext<ReturnType<
 > | null>(null);
 
 /** Wrap the admin chat UI in this; read everything via `useAgentChat()`. */
-export function AgentChatProvider({ children }: { children: ReactNode }) {
+export function AgentChatProvider({
+  agentId = "default",
+  children,
+}: {
+  agentId?: ChatAgentId;
+  children: ReactNode;
+}) {
   return (
-    <AgentChatContext.Provider value={useAgentChatValue()}>
+    <AgentChatContext.Provider value={useAgentChatValue(agentId)}>
       {children}
     </AgentChatContext.Provider>
   );

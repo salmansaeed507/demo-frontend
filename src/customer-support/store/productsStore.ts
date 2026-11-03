@@ -12,7 +12,7 @@ type ProductsState = {
   error: string | null;
   setProducts: (products: Product[]) => void;
   getProduct: (id: string) => Product | undefined;
-  load: (opts?: { force?: boolean }) => Promise<void>;
+  load: (opts?: { force?: boolean; silent?: boolean }) => Promise<void>;
   createProduct: (input: ProductInput) => Promise<Product>;
   updateProduct: (id: string, patch: Partial<Product>) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
@@ -28,11 +28,13 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
   getProduct: (id) => get().products.find((p) => p.id === id),
   load: async (opts) => {
     const force = opts?.force ?? false;
+    // Silent: refresh in place (no loading state, keep data on error).
+    const silent = opts?.silent ?? false;
     const { status } = get();
     if (!force && status === "ready") return;
     if (inflight) return inflight;
 
-    set({ status: "loading", error: null });
+    if (!silent) set({ status: "loading", error: null });
     inflight = (async () => {
       try {
         const products = (await customerSupportApi.listProducts()).map(
@@ -40,11 +42,13 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
         );
         set({ products, status: "ready", error: null });
       } catch (err) {
-        set({
-          status: "error",
-          error:
-            err instanceof Error ? err.message : "Failed to load products",
-        });
+        if (!silent) {
+          set({
+            status: "error",
+            error:
+              err instanceof Error ? err.message : "Failed to load products",
+          });
+        }
       } finally {
         inflight = null;
       }

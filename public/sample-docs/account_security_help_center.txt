@@ -1,0 +1,489 @@
+=====================================================================
+GADGET GROVE ACCOUNT AND SECURITY HELP CENTER
+Customer Support Knowledge Base
+=====================================================================
+
+Audience:       Customers and Customer Support Agents
+
+CONTENTS
+  1. Creating and Managing Your Account
+  2. Signing In
+  3. Password Problems
+  4. Two-Factor Authentication (2FA)
+  5. Account Security and Suspicious Activity
+  6. Identity Verification for Support Requests
+  7. Updating Profile, Address and Payment Details
+  8. Privacy, Data and Account Deletion
+  9. Notifications and Marketing Preferences
+  10. Accessibility and Language Settings
+  11. Known Issues and Error Codes
+  12. Agent Procedures
+  13. Contact Information
+
+
+=====================================================================
+1. CREATING AND MANAGING YOUR ACCOUNT
+=====================================================================
+
+1.1 Who can create an account
+-----------------------------
+Anyone aged 16 or over can create a Gadget Grove account. Customers aged
+13 to 15 may use an account only with a parent or guardian listed as
+the account holder. Accounts for children under 13 are not allowed.
+
+1.2 How to create an account
+----------------------------
+  1. Go to gadgetgrove.example or open the Gadget Grove mobile app.
+  2. Tap "Sign up".
+  3. Enter your email address or phone number.
+  4. Choose a password with at least 12 characters.
+  5. Enter the 6-digit verification code we send you.
+  6. Add your name and, optionally, a shipping address.
+
+You can also sign up using Apple, Google or Facebook. Social sign-in
+links your Gadget Grove account to that provider. You can later add a
+Gadget Grove password in Settings > Security.
+
+1.3 Guest checkout
+------------------
+You can buy without an account. Guest orders can be tracked using the
+order number and email address. Guest orders do not collect Gadget Grove
+Plus benefits, store credit, or saved addresses. You can convert a
+guest order into an account by signing up with the same email address.
+Orders from the last 90 days are linked automatically.
+
+1.4 Multiple accounts
+---------------------
+Each person may hold one account. If you created a second account by
+mistake, contact support to merge them. Merging combines order history
+and store credit. Gadget Grove Plus memberships cannot be merged; the
+membership with the later renewal date is kept and the other is
+cancelled with a prorated refund.
+
+
+=====================================================================
+2. SIGNING IN
+=====================================================================
+
+2.1 Where you can sign in
+-------------------------
+You can sign in on the website, the Android and iOS apps, and the
+in-store kiosks. A single session is kept active for 30 days on
+trusted devices and 24 hours on shared or public devices.
+
+2.2 Sign-in methods
+-------------------
+  - Email and password
+  - Phone number and one-time code
+  - Passkey (fingerprint, face or device PIN)
+  - Apple, Google or Facebook
+
+2.3 Common sign-in problems
+---------------------------
+
+Q: It says "Incorrect email or password" but I am sure they are right.
+A: Check whether your keyboard layout, caps lock, or autofill is
+   adding extra characters. Try signing in with a phone number or
+   passkey if you have set them up. If you signed up with Apple or
+   Google, use that button instead of typing a password.
+
+Q: I get "Account not found".
+A: You may have used a different email address. Try each of your
+   email addresses. Search your inbox for "Welcome to Gadget Grove" to
+   find the address you used.
+
+Q: The page keeps sending me back to the sign-in screen.
+A: Browser cookies may be blocked. Allow cookies for gadgetgrove.example,
+   clear your browser cache, or try a private window. Make sure your
+   device date and time are correct.
+
+Q: My account is locked.
+A: After 5 failed sign-in attempts the account is locked for 30
+   minutes. After 10 failed attempts in 24 hours it is locked until
+   you reset your password. See Section 3.
+
+2.4 Passkeys
+------------
+A passkey lets you sign in with your fingerprint, face, or device
+PIN, with no password. To add one, go to Settings > Security >
+Passkeys > Add a passkey. Passkeys are stored on your device or in
+your password manager and are never sent to Gadget Grove. You can
+register up to 10 passkeys.
+
+
+=====================================================================
+3. PASSWORD PROBLEMS
+=====================================================================
+
+3.1 Password requirements
+-------------------------
+  - At least 12 characters
+  - Not one of the 10,000 most common passwords
+  - Not the same as your email address or name
+  - Not a password you used in the past 5 changes
+
+We recommend using a password manager. We do not require special
+characters or periodic password changes.
+
+3.2 Resetting a forgotten password
+----------------------------------
+  1. On the sign-in page, choose "Forgot password".
+  2. Enter your email address or phone number.
+  3. Open the reset message. The link and code are valid for 30
+     minutes and can be used only once.
+  4. Choose a new password and confirm it.
+  5. You are signed out of all other devices automatically.
+
+3.3 I did not receive the reset email
+-------------------------------------
+  - Check your spam, junk and promotions folders.
+  - Search for "noreply@gadgetgrove.example".
+  - Make sure you typed the same address you registered with.
+  - Wait 5 minutes before requesting another message. Only the most
+    recent link works.
+  - Add noreply@gadgetgrove.example to your contacts.
+  - If you use a work email, your company filter may be blocking the
+    message. Ask your IT team to allow our domain.
+
+3.4 Changing your password
+--------------------------
+Go to Settings > Security > Password. You will be asked to enter
+your current password. If you signed up with social sign-in and have
+never set a password, choose "Create password" instead.
+
+3.5 Password reset by support
+-----------------------------
+Support agents cannot see, send, or set your password. An agent can
+send a reset link to the email address or phone number on file after
+verification (see Section 6). If you no longer have access to either,
+see Section 5.6, "Account recovery without access to email".
+
+
+=====================================================================
+4. TWO-FACTOR AUTHENTICATION (2FA)
+=====================================================================
+
+4.1 What 2FA does
+-----------------
+Two-factor authentication asks for a second proof of identity (a
+code or approval) in addition to your password. It protects your
+account if your password is stolen.
+
+4.2 Available 2FA methods
+-------------------------
+  Method                    Notes
+  ------------------------  ------------------------------------------
+  Authenticator app         Recommended. Works offline. Compatible with
+                            any TOTP app.
+  Passkey / security key    Strongest option. Phishing-resistant.
+  SMS code                  Convenient but vulnerable to SIM swapping.
+  Backup codes              10 single-use codes for emergencies.
+
+4.3 Turning on 2FA
+------------------
+  1. Go to Settings > Security > Two-Factor Authentication.
+  2. Select a method.
+  3. For an authenticator app, scan the QR code and enter the 6-digit
+     code shown in the app.
+  4. Download and save your backup codes.
+  5. Confirm by entering a code once.
+
+4.4 I lost my phone
+-------------------
+  - Use one of your backup codes to sign in.
+  - Then go to Settings > Security and remove the lost device.
+  - Set up 2FA again on your new phone.
+  - If you have no backup codes, you must complete account recovery
+    (see Section 5.6). This takes 3 to 5 business days for security
+    reasons.
+
+4.5 Codes not working
+---------------------
+  - Authenticator codes depend on your phone's clock. Turn on
+    automatic date and time.
+  - SMS codes expire after 10 minutes.
+  - Entering a wrong code 5 times locks 2FA for 15 minutes.
+  - Never share a code with anyone. Gadget Grove will never ask for it.
+
+4.6 Removing 2FA
+----------------
+You can turn off 2FA in Settings > Security. For accounts with
+Gadget Grove Plus or a stored payment method, you must re-enter your
+password first. A notification is sent to your email when 2FA is
+removed.
+
+
+=====================================================================
+5. ACCOUNT SECURITY AND SUSPICIOUS ACTIVITY
+=====================================================================
+
+5.1 Signs that your account may be compromised
+----------------------------------------------
+  - Orders you did not place
+  - Changed email address, phone number, or shipping address
+  - Password reset emails you did not request
+  - Sign-in alerts from unfamiliar locations or devices
+  - Gift cards or store credit that has disappeared
+
+5.2 What to do right away
+-------------------------
+  1. Reset your password from the sign-in page.
+  2. Go to Settings > Security > Devices and choose "Sign out of
+     all devices".
+  3. Turn on two-factor authentication.
+  4. Review recent orders and saved payment methods.
+  5. Contact support using the form at gadgetgrove.example/security so
+     we can freeze the account and review activity.
+  6. Contact your bank if a payment card was used.
+
+5.3 What Gadget Grove will do
+-------------------------
+When you report a compromise, we will:
+  - Temporarily lock the account to stop further changes.
+  - Cancel unshipped orders that you did not place.
+  - Refund unauthorized orders paid with your account.
+  - Restore store credit that was spent without authorization.
+  - Remove unknown devices and saved payment methods.
+
+Reviews usually finish within 2 business days. You will receive an
+email when your account is safe to use again.
+
+5.4 Phishing and scams
+----------------------
+Gadget Grove will never:
+  - Ask for your password, full card number, or 2FA code by phone,
+    email, text, or chat.
+  - Ask you to pay using gift cards, cryptocurrency, or wire transfer.
+  - Ask you to install software to "fix" an account problem.
+  - Send you to a site that does not end in gadgetgrove.example.
+
+If you get a suspicious message, forward it to
+phishing@gadgetgrove.example and delete it. If you clicked a link or
+entered your details, reset your password immediately.
+
+5.5 Sign-in alerts
+------------------
+We email you when a sign-in occurs from a new device or country.
+If it was not you, use the "This wasn't me" button in the email to
+lock the account and start a reset.
+
+5.6 Account recovery without access to email
+--------------------------------------------
+If you can no longer access the email address or phone number on
+your account:
+  1. Go to gadgetgrove.example/recover.
+  2. Provide your name, the last 4 digits of a payment card used,
+     and the shipping address from a recent order.
+  3. Upload a photo ID (it is deleted within 30 days of the review).
+  4. Wait 3 to 5 business days for our security team to respond.
+You will receive a message at the new email address you provide.
+
+5.7 Compromised payment cards
+-----------------------------
+Gadget Grove does not store full card numbers. We keep a token and the
+last 4 digits. If you believe a card was misused, contact your bank
+to block it, then remove the card from Settings > Payments.
+
+
+6. IDENTITY VERIFICATION FOR SUPPORT REQUESTS
+
+6.1 Why we verify
+-----------------
+We verify identity before sharing or changing account information to
+protect your privacy.
+
+6.2 Verification levels
+-----------------------
+
+  Level 1 (general information, order status)
+      Order number AND email address or billing ZIP code.
+
+  Level 2 (address change, cancel order, refund to new method)
+      Level 1 plus one-time code sent to the email or phone number
+      on file.
+
+  Level 3 (change email or phone, remove 2FA, account recovery)
+      Level 2 plus security questions or ID verification.
+
+6.3 What agents never ask for
+-----------------------------
+  - Passwords or one-time codes (except via the verified channel
+    process above, where the customer reads the code displayed on
+    their own device and the agent only checks that it matches)
+  - Full card numbers, CVV, or PINs
+  - Social security or national ID numbers
+  - Remote access to the customer's device
+
+
+=====================================================================
+7. UPDATING PROFILE, ADDRESS AND PAYMENT DETAILS
+=====================================================================
+
+7.1 Changing your email address
+-------------------------------
+Go to Settings > Profile > Email. A confirmation link is sent to the
+new address and a notice is sent to the old address. The change takes
+effect after you confirm. For security, you cannot change your email
+address more than twice in 30 days.
+
+7.2 Changing your phone number
+------------------------------
+Go to Settings > Profile > Phone. Enter the new number and the code
+that we send. If the number was used for 2FA, you must set up 2FA
+again.
+
+7.3 Address book
+----------------
+You can store up to 20 addresses. To edit or delete an address, go to
+Settings > Addresses. Changes do not affect orders already in
+progress. To change the address of an unshipped order, see the
+Shipping and Delivery Guide, Section 7.
+
+7.4 Payment methods
+-------------------
+You can save up to 10 payment methods. To add or remove a card, go to
+Settings > Payments. Removing a card does not cancel subscriptions
+that use it. Update the subscription's payment method first.
+
+7.5 Changing your name
+----------------------
+Your name can be edited in Settings > Profile. The name on shipping
+labels comes from the address book, not the profile.
+
+
+=====================================================================
+8. PRIVACY, DATA AND ACCOUNT DELETION
+=====================================================================
+
+8.1 What data we hold
+---------------------
+We hold order history, saved addresses, contact details, a payment
+token, support conversations, device information, and browsing
+preferences. See our Privacy Notice at gadgetgrove.example/privacy.
+
+8.2 Downloading your data
+-------------------------
+Go to Settings > Privacy > Download my data. A ZIP file will be
+emailed to you within 48 hours. The download link expires after 7
+days.
+
+8.3 Deleting your account
+-------------------------
+  1. Go to Settings > Privacy > Delete account.
+  2. Review what will be removed.
+  3. Confirm with your password and a one-time code.
+
+What happens next:
+  - Your account is deactivated immediately.
+  - You have 14 days to change your mind by signing in.
+  - After 14 days, your profile, addresses, wishlists and store
+    credit are permanently deleted.
+  - Order records are kept for 7 years for tax and legal reasons but
+    are disconnected from your personal profile where possible.
+
+Before deleting: use any remaining store credit, cancel Gadget Grove
+Plus, and complete open returns. Active subscriptions must be
+cancelled first.
+
+8.4 Regional privacy rights
+---------------------------
+Customers in the EU, UK and California have additional rights,
+including access, correction, deletion, and objection to processing.
+Requests can be made at privacy@gadgetgrove.example and are answered
+within 30 days.
+
+
+=====================================================================
+9. NOTIFICATIONS AND MARKETING PREFERENCES
+=====================================================================
+
+You control notifications under Settings > Notifications.
+
+  Type                       Can be turned off?
+  -------------------------  ----------------------------------------
+  Order and shipping         Email: no. Push and SMS: yes.
+  Security alerts            No.
+  Marketing and promotions   Yes.
+  Price drop alerts          Yes.
+  Back-in-stock alerts       Yes.
+
+To stop all marketing emails, click "Unsubscribe" at the bottom of
+any email. To stop SMS, reply STOP. It can take up to 48 hours for
+the change to apply.
+
+
+=====================================================================
+10. ACCESSIBILITY AND LANGUAGE SETTINGS
+=====================================================================
+
+  - Our website supports screen readers, keyboard navigation and
+    high-contrast mode (Settings > Display).
+  - The app supports text scaling up to 200% and voice control.
+  - Languages: English, Spanish, French, German, Portuguese, Urdu,
+    Arabic and Hindi. Change in Settings > Language.
+  - Support is available through chat, phone and email. A text-based
+    relay service is available for hearing-impaired customers.
+  - To request an accommodation, email accessibility@gadgetgrove.example.
+
+
+=====================================================================
+11. KNOWN ISSUES AND ERROR CODES
+=====================================================================
+
+  Code      Meaning                            What to do
+  --------  ---------------------------------  ------------------------
+  AUTH-101  Incorrect credentials              Reset password
+  AUTH-204  Account temporarily locked         Wait 30 min or reset
+  AUTH-308  2FA code invalid or expired        Request a new code
+  AUTH-412  Device not trusted                 Verify by email code
+  AUTH-503  Sign-in service unavailable        Try again in 10 minutes
+  ACC-210   Email address already in use       Sign in or recover
+  ACC-305   Phone number already in use        Use another or recover
+  ACC-410   Cannot delete: active orders       Wait for delivery
+  ACC-411   Cannot delete: active subscription Cancel first
+  PAY-120   Card could not be added            Check number and expiry
+  PAY-130   Card declined by bank              Contact your bank
+
+
+=====================================================================
+12. AGENT PROCEDURES
+=====================================================================
+
+12.1 Standard handling steps
+----------------------------
+  1. Greet the customer and ask for the order number and email.
+  2. Verify identity at the correct level (Section 6).
+  3. Identify whether the issue is sign-in, security, or profile.
+  4. Follow the matching section of this document.
+  5. Confirm the issue is resolved and summarize actions taken.
+  6. Tag the case with the correct code (ACC-SIGNIN, ACC-SEC,
+     ACC-PROFILE, ACC-DELETE).
+
+12.2 When to escalate
+---------------------
+  - Suspected account takeover with financial loss: Security Team
+  - Customer cannot access email or phone and has no backup codes:
+    Account Recovery Team
+  - Legal or privacy requests: Privacy Office
+  - Abusive customers: follow the Conduct Policy
+
+12.3 Do and do not
+------------------
+  DO     verify identity before disclosing information
+  DO     use the standard reset link flow
+  DO     document every security action in the case notes
+  DO NOT read out a customer's full address or full email aloud
+  DO NOT promise a time for security reviews under 2 business days
+  DO NOT disable 2FA without Level 3 verification
+
+
+=====================================================================
+13. CONTACT INFORMATION
+=====================================================================
+
+  Support email:      support@gadgetgrove.example
+  Security reports:   security@gadgetgrove.example
+  Privacy requests:   privacy@gadgetgrove.example
+  Phishing reports:   phishing@gadgetgrove.example
+  Phone:              +1-800-555-0142 (Mon-Fri, 9 AM - 6 PM Eastern)
+  Live chat:          24/7 in the Gadget Grove app and on the website

@@ -1,10 +1,13 @@
+import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { CopilotKitProvider } from "@copilotkit/react-core/v2";
 import "@copilotkit/react-core/v2/styles.css";
 
 
 import AuthBootstrap from "./auth/AuthBootstrap";
+import SeedStatusWatcher from "./customer-support/SeedStatusWatcher";
 import RequireAuth from "./auth/RequireAuth";
+import { useAuthStore } from "./auth/authStore";
 import HomePage from "./pages/HomePage";
 import HubLoginPage from "./pages/HubLoginPage";
 import CustomerSupportLayout from "./customer-support/CustomerSupportLayout";
@@ -21,25 +24,38 @@ import {
   GenericNotFoundPage,
   GadgetGroveNotFoundPage,
 } from "./pages/NotFoundPage";
-import { apiGatewayClient } from "./api/client";
+import { apiGatewayClient, customerSupportApiClient } from "./api/client";
 
 import { HttpAgent } from "@copilotkit/react-core/v2";
 
-const agent = new HttpAgent({
-  url: "http://localhost:5070/support/agent",
-});
-
 function App() {
+  const token = useAuthStore((s) => s.session?.token ?? null);
+  const agents = useMemo(() => {
+    const url = `${customerSupportApiClient.baseUrl}/agent`;
+    return { default: new HttpAgent({ url }), storefront: new HttpAgent({ url }) };
+  }, [token]);
+  const [hydrated, setHydrated] = useState(() =>
+    useAuthStore.persist.hasHydrated(),
+  );
+  useEffect(() => {
+    if (hydrated) return;
+    return useAuthStore.persist.onFinishHydration(() => setHydrated(true));
+  }, [hydrated]);
+
+  if (!hydrated) return null;
+
   return (
     <CopilotKitProvider
-      agents__unsafe_dev_only={{ default: agent }}
-      headers={() => {
-        const token = apiGatewayClient.getAuthToken();
-        return { Authorization: `Bearer ${token}` }
+      key={token ?? "anonymous"}
+      agents__unsafe_dev_only={agents}
+      headers={(): Record<string, string> => {
+        const authToken = apiGatewayClient.getAuthToken();
+        return authToken ? { Authorization: `Bearer ${authToken}` } : {};
       }}
     >
       <BrowserRouter>
         <AuthBootstrap />
+        <SeedStatusWatcher />
         <Routes>
           <Route path="/login" element={<HubLoginPage />} />
           <Route element={<RequireAuth />}>

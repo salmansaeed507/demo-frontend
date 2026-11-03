@@ -1,8 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { Bot, Send } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Bot } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -10,60 +6,76 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import SupportChatMessageBubble, {
-  type SupportChatMessage,
-} from "./SupportChatMessageBubble";
-
-const SUGGESTIONS = [
-  "Where is my order #48291?",
-  "What's your return policy?",
-  "Track my refund",
-] as const;
-
-const STATIC_REPLY =
-  "Thanks for your message — live support chat is coming soon.";
-
-const SEED_MESSAGES: SupportChatMessage[] = [
-  {
-    role: "agent",
-    text: "Ask me about your orders, shipping, returns, or refunds — or anything else and I'll create a ticket if I can't help.",
-  },
-];
+import ChatComposer from "./admin/chat/ChatComposer";
+import ChatStatus from "./admin/chat/ChatStatus";
+import MessageList from "./admin/chat/MessageList";
+import StarterPrompts from "./admin/chat/StarterPrompts";
+import {
+  AgentChatProvider,
+  useAgentChat,
+} from "./admin/hooks/AgentChatProvider";
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
+function StorefrontChatBody() {
+  const {
+    isThreadsLoading,
+    threadsError,
+    reloadThreads,
+    isConversationEmpty,
+    isConnecting,
+    messages,
+  } = useAgentChat();
+
+  if (isThreadsLoading) {
+    return (
+      <ChatStatus
+        status="loading"
+        error={null}
+        onRetry={() => reloadThreads()}
+      />
+    );
+  }
+
+  if (threadsError) {
+    return (
+      <ChatStatus
+        status="error"
+        error={threadsError}
+        onRetry={() => reloadThreads()}
+      />
+    );
+  }
+
+  const showConnectingEmpty = isConnecting && messages.length === 0;
+
+  return (
+    <>
+      {showConnectingEmpty || !isConversationEmpty ? (
+        <MessageList />
+      ) : (
+        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 bg-background px-4 py-5 text-center">
+          <h3 className="font-heading text-xl leading-tight tracking-tight text-foreground">
+            Hi, how can I help you?
+          </h3>
+          <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
+            Ask me about your orders, shipping, returns, or refunds — or
+            anything else and I&apos;ll create a ticket if I can&apos;t help.
+          </p>
+        </div>
+      )}
+      <div className="shrink-0 space-y-2 border-t border-border bg-background px-4 py-3">
+        {isConversationEmpty ? <StarterPrompts /> : null}
+        <ChatComposer />
+      </div>
+    </>
+  );
+}
+
 export default function SupportChatPanel({ open, onOpenChange }: Props) {
-  const [messages, setMessages] =
-    useState<SupportChatMessage[]>(SEED_MESSAGES);
-  const [draft, setDraft] = useState("");
-  const listRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const el = listRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
-  }, [messages, open]);
-
-  // Static for now: replies are canned, no agent call.
-  function send(text: string) {
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    setDraft("");
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", text: trimmed },
-      { role: "agent", text: STATIC_REPLY },
-    ]);
-  }
-
-  function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    send(draft);
-  }
-
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
@@ -72,51 +84,25 @@ export default function SupportChatPanel({ open, onOpenChange }: Props) {
       >
         <SheetHeader className="border-b border-border px-4 py-3 text-left">
           <div className="flex items-center gap-2">
-            <span className="flex size-8 items-center justify-center rounded-full bg-primary text-white">
+            <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
               <Bot className="size-4" />
             </span>
             <div>
-              <SheetTitle className="text-base">Gadget Grove support</SheetTitle>
+              <SheetTitle className="text-base">
+                Gadget Grove support
+              </SheetTitle>
               <SheetDescription className="text-xs">
-                Live support chat coming soon
+                Ask about orders, shipping, or returns
               </SheetDescription>
             </div>
           </div>
         </SheetHeader>
 
-        <div
-          ref={listRef}
-          className="flex-1 space-y-3 overflow-y-auto px-4 py-4"
-        >
-          {messages.map((m, i) => (
-            <SupportChatMessageBubble key={`${m.role}-${i}`} message={m} />
-          ))}
-        </div>
-
-        <div className="space-y-2 border-t border-border px-4 py-3">
-          <div className="flex flex-wrap gap-1.5">
-            {SUGGESTIONS.map((s) => (
-              <Badge
-                key={s}
-                variant="outline"
-                className="cursor-pointer font-normal hover:bg-muted"
-                onClick={() => send(s)}
-              >
-                {s}
-              </Badge>
-            ))}
+        <AgentChatProvider agentId="storefront">
+          <div className="flex min-h-0 flex-1 flex-col">
+            <StorefrontChatBody />
           </div>
-          <form onSubmit={onSubmit} className="flex gap-2">
-            <Input
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              placeholder="Ask about orders, returns…"
-            />
-            <Button type="submit" size="icon" disabled={!draft.trim()}>
-              <Send className="size-4" />
-            </Button>
-          </form>
-        </div>
+        </AgentChatProvider>
       </SheetContent>
     </Sheet>
   );

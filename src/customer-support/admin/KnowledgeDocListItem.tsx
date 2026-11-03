@@ -28,20 +28,22 @@ function formatIndexedAt(iso: string | null) {
 
 type Props = {
   doc: KnowledgeDoc;
-  reindexingId: string | null;
+  reindexPending: boolean;
   onReindex: (doc: KnowledgeDoc) => void;
+  onOpenChunks: (doc: KnowledgeDoc) => void;
 };
 
 export default function KnowledgeDocListItem({
   doc,
-  reindexingId,
+  reindexPending,
   onReindex,
+  onOpenChunks,
 }: Props) {
   const deleteDoc = useKnowledgeStore((s) => s.deleteDoc);
   const [deleting, setDeleting] = useState(false);
-  const reindexing =
-    reindexingId === doc.id || doc.embeddingStatus === "indexing";
-  const busy = reindexing || deleting;
+  const indexing = doc.embeddingStatus === "indexing";
+  const canOpenChunks = doc.chunkCount > 0;
+  const busy = reindexPending || deleting;
 
   async function onDelete() {
     if (busy) return;
@@ -68,7 +70,17 @@ export default function KnowledgeDocListItem({
         {doc.type}
       </TableCell>
       <TableCell className="px-4 py-3 text-[0.94rem] tabular-nums">
-        {doc.chunkCount}
+        {canOpenChunks ? (
+          <button
+            type="button"
+            onClick={() => onOpenChunks(doc)}
+            className="rounded-md text-left font-medium text-foreground underline-offset-2 hover:underline"
+          >
+            {doc.chunkCount}
+          </button>
+        ) : (
+          <span className="text-muted-foreground">{doc.chunkCount}</span>
+        )}
       </TableCell>
       <TableCell className="px-4 py-3">
         <span
@@ -89,13 +101,15 @@ export default function KnowledgeDocListItem({
             type="button"
             size="sm"
             variant="ghost"
-            disabled={busy}
+            disabled={busy || indexing}
             onClick={() => onReindex(doc)}
           >
-            <RefreshCw
-              className={cn("size-3.5", reindexing && "animate-spin")}
-            />
-            {reindexing ? "Indexing…" : "Re-index"}
+            {reindexPending ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <RefreshCw className="size-3.5" />
+            )}
+            Re-index
           </Button>
           <ConfirmDialog
             title="Remove document"

@@ -10,6 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AgentChatPanel from "./admin/AgentChatPanel";
+import SeedSetupState from "./SeedSetupState";
+import { useSeedStatusStore } from "./store/seedStatusStore";
 
 const tabs = [
   {
@@ -28,6 +30,9 @@ type MobilePane = "manage" | "chat";
 export default function AdminLayout() {
   const [mobilePane, setMobilePane] = useState<MobilePane>("manage");
   const [chatOpen, setChatOpen] = useState(false);
+  const seedStatus = useSeedStatusStore((s) => s.status);
+  const seedState =
+    seedStatus === "pending" || seedStatus === "failed" ? seedStatus : null;
 
   function openChat() {
     setChatOpen(true);
@@ -100,73 +105,80 @@ export default function AdminLayout() {
         </div>
       </header>
 
-      <div className="relative flex min-h-0 flex-1 flex-col md:flex-row">
-        <section
-          className={cn(
-            "min-h-0 min-w-0 flex-1 flex-col",
-            mobilePane === "chat" ? "max-md:hidden" : "flex",
-            "md:flex",
-          )}
-        >
-          <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-background p-3 sm:p-5">
-            <div className="mx-auto max-w-[1180px]">
-              {!chatOpen ? (
-                <button
-                  type="button"
-                  onClick={openChat}
-                  className="relative mb-3 flex w-full items-center gap-3.5 overflow-hidden rounded-[16px] border border-border bg-[color-mix(in_srgb,var(--tint)_34%,var(--card))] px-3.5 py-3 text-left transition hover:brightness-[0.98] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring sm:gap-4 sm:px-4"
-                >
-                  <span
-                    className="pointer-events-none absolute -top-6 -right-4 size-20 rounded-full bg-gold/25 blur-xl"
-                    aria-hidden
-                  />
-                  <span className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <MessageSquare className="size-4" />
-                    <span className="absolute -top-0.5 -right-0.5 flex size-2.5">
-                      <span className="absolute inline-flex size-full animate-ping rounded-full bg-gold opacity-70" />
-                      <span className="relative inline-flex size-2.5 rounded-full bg-gold ring-2 ring-primary" />
-                    </span>
-                  </span>
-                  <span className="relative min-w-0 flex-1">
-                    <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                      <span className="font-heading text-[1.15rem] leading-none tracking-tight text-foreground sm:text-[1.25rem]">
-                        Test your agent live here
-                      </span>
-                      <span className="inline-flex items-center rounded-full bg-primary px-2 py-0.5 text-[0.68rem] font-bold tracking-[0.06em] text-primary-foreground uppercase">
-                        Live
-                      </span>
-                    </span>
-                    <span className="mt-1 block truncate text-[0.82rem] text-foreground/70">
-                      Try orders, knowledge, or tickets in real time.
-                    </span>
-                  </span>
-                  <span className="relative hidden shrink-0 rounded-full bg-primary px-3.5 py-2 text-sm font-semibold text-primary-foreground sm:inline-flex">
-                    Open chat
-                  </span>
-                  <span className="relative shrink-0 text-lg font-semibold text-foreground/65 sm:hidden">
-                    →
-                  </span>
-                </button>
-              ) : null}
-              <Outlet />
-            </div>
-          </div>
-        </section>
-
-        {chatOpen ? (
-          <div
+      {seedState ? (
+        // Header/nav stays usable; sections and chat wait for the demo data.
+        <div className="min-h-0 flex-1 overflow-y-auto bg-background p-3 sm:p-5">
+          <SeedSetupState status={seedState} />
+        </div>
+      ) : (
+        <div className="relative flex min-h-0 flex-1 flex-col md:flex-row">
+          <section
             className={cn(
-              "flex min-h-0 w-full min-w-0 flex-1 flex-col bg-card md:absolute md:inset-y-0 md:right-0 md:z-30 md:w-[min(720px,72vw)] md:flex-none md:border-l md:border-border md:shadow-[-12px_0_40px_rgba(24,24,27,0.12)]",
-              mobilePane === "manage" && "max-md:hidden",
+              "min-h-0 min-w-0 flex-1 flex-col",
+              mobilePane === "chat" ? "max-md:hidden" : "flex",
+              "md:flex",
             )}
           >
-            <AgentChatPanel
-              onMobileBack={closeChat}
-              onClose={closeChat}
-            />
-          </div>
-        ) : null}
-      </div>
+            <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-background p-3 sm:p-5">
+              <div className="mx-auto max-w-[1180px]">
+                {!chatOpen ? (
+                  <button
+                    type="button"
+                    onClick={openChat}
+                    className="relative mb-3 flex w-full items-center gap-3.5 overflow-hidden rounded-[16px] border border-border bg-[color-mix(in_srgb,var(--tint)_34%,var(--card))] px-3.5 py-3 text-left transition hover:brightness-[0.98] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring sm:gap-4 sm:px-4"
+                  >
+                    <span
+                      className="pointer-events-none absolute -top-6 -right-4 size-20 rounded-full bg-gold/25 blur-xl"
+                      aria-hidden
+                    />
+                    <span className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                      <MessageSquare className="size-4" />
+                      <span className="absolute -top-0.5 -right-0.5 flex size-2.5">
+                        <span className="absolute inline-flex size-full animate-ping rounded-full bg-gold opacity-70" />
+                        <span className="relative inline-flex size-2.5 rounded-full bg-gold ring-2 ring-primary" />
+                      </span>
+                    </span>
+                    <span className="relative min-w-0 flex-1">
+                      <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                        <span className="font-heading text-[1.15rem] leading-none tracking-tight text-foreground sm:text-[1.25rem]">
+                          Test your agent live here
+                        </span>
+                        <span className="inline-flex items-center rounded-full bg-primary px-2 py-0.5 text-[0.68rem] font-bold tracking-[0.06em] text-primary-foreground uppercase">
+                          Live
+                        </span>
+                      </span>
+                      <span className="mt-1 block truncate text-[0.82rem] text-foreground/70">
+                        Try orders, knowledge, or tickets in real time.
+                      </span>
+                    </span>
+                    <span className="relative hidden shrink-0 rounded-full bg-primary px-3.5 py-2 text-sm font-semibold text-primary-foreground sm:inline-flex">
+                      Open chat
+                    </span>
+                    <span className="relative shrink-0 text-lg font-semibold text-foreground/65 sm:hidden">
+                      →
+                    </span>
+                  </button>
+                ) : null}
+                <Outlet />
+              </div>
+            </div>
+          </section>
+
+          {chatOpen ? (
+            <div
+              className={cn(
+                "flex min-h-0 w-full min-w-0 flex-1 flex-col bg-card md:absolute md:inset-y-0 md:right-0 md:z-30 md:w-[min(720px,72vw)] md:flex-none md:border-l md:border-border md:shadow-[-12px_0_40px_rgba(24,24,27,0.12)]",
+                mobilePane === "manage" && "max-md:hidden",
+              )}
+            >
+              <AgentChatPanel
+                onMobileBack={closeChat}
+                onClose={closeChat}
+              />
+            </div>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, PanelLeft, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAgentChat } from "../hooks/AgentChatProvider";
+import TokenUsageBadge from "./TokenUsageBadge";
 
 type Props = {
   onMobileBack?: () => void;
@@ -22,6 +23,7 @@ export default function ChatHeader({
   const {
     activeThreadId,
     activeThreadTitle,
+    conversationTokenUsage,
     isChatBusy,
     createThread,
   } = useAgentChat();
@@ -89,14 +91,20 @@ export default function ChatHeader({
         >
           <PanelLeft className="size-4" />
         </Button>
-        <h2 className="font-heading min-w-0 truncate text-[1.15rem] leading-tight tracking-tight text-foreground sm:text-[1.25rem]">
-          {displayTitle}
-          {isTyping ? (
-            <span className="ml-0.5 inline-block w-[0.55ch] animate-pulse bg-foreground/70 align-baseline">
-              &nbsp;
-            </span>
-          ) : null}
-        </h2>
+        <div className="min-w-0">
+          <h2 className="font-heading min-w-0 truncate text-[1.15rem] leading-tight tracking-tight text-foreground sm:text-[1.25rem]">
+            {displayTitle}
+            {isTyping ? (
+              <span className="ml-0.5 inline-block w-[0.55ch] animate-pulse bg-foreground/70 align-baseline">
+                &nbsp;
+              </span>
+            ) : null}
+          </h2>
+          <TokenUsageBadge
+            totalTokens={conversationTokenUsage?.totalTokens}
+            totalCostUsd={conversationTokenUsage?.totalCostUsd}
+          />
+        </div>
       </div>
       <div className="flex shrink-0 items-center gap-1.5">
         <Button

@@ -12,7 +12,7 @@ type OrdersState = {
   status: DomainLoadStatus;
   error: string | null;
   setOrders: (orders: Order[]) => void;
-  load: (opts?: { force?: boolean }) => Promise<void>;
+  load: (opts?: { force?: boolean; silent?: boolean }) => Promise<void>;
   createOrder: (input: OrderInput) => Promise<Order>;
   updateOrder: (id: string, patch: Partial<Order>) => Promise<void>;
   deleteOrder: (id: string) => Promise<void>;
@@ -36,20 +36,24 @@ export const useOrdersStore = create<OrdersState>((set) => ({
   setOrders: (orders) => set({ orders }),
   load: async (opts) => {
     const force = opts?.force ?? false;
+    // Silent: refresh in place (no loading state, keep data on error).
+    const silent = opts?.silent ?? false;
     const { status } = useOrdersStore.getState();
     if (!force && status === "ready") return;
     if (inflight) return inflight;
 
-    set({ status: "loading", error: null });
+    if (!silent) set({ status: "loading", error: null });
     inflight = (async () => {
       try {
         const orders = (await customerSupportApi.listOrders()).map(mapOrder);
         set({ orders, status: "ready", error: null });
       } catch (err) {
-        set({
-          status: "error",
-          error: err instanceof Error ? err.message : "Failed to load orders",
-        });
+        if (!silent) {
+          set({
+            status: "error",
+            error: err instanceof Error ? err.message : "Failed to load orders",
+          });
+        }
       } finally {
         inflight = null;
       }

@@ -104,17 +104,34 @@ export default function MarkdownContent({
             </pre>
           ),
           h1: ({ children }) => (
-            <h1 className="mb-2 text-base font-semibold last:mb-0">{children}</h1>
+            <h1 className="mb-2 text-[1.35rem] font-semibold last:mb-0">
+              {children}
+            </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="mb-2 text-[0.98rem] font-semibold last:mb-0">
+            <h2 className="mb-2 text-[1.18rem] font-semibold last:mb-0">
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="mb-2 text-[0.94rem] font-semibold last:mb-0">
+            <h3 className="mb-2 text-[1.06rem] font-semibold last:mb-0">
               {children}
             </h3>
+          ),
+          h4: ({ children }) => (
+            <h4 className="mb-2 text-[0.98rem] font-semibold last:mb-0">
+              {children}
+            </h4>
+          ),
+          h5: ({ children }) => (
+            <h5 className="mb-2 text-[0.92rem] font-semibold last:mb-0">
+              {children}
+            </h5>
+          ),
+          h6: ({ children }) => (
+            <h6 className="mb-2 text-[0.85rem] font-semibold last:mb-0">
+              {children}
+            </h6>
           ),
           hr: () => (
             <hr
