@@ -54,7 +54,7 @@ function DemoCardBody({ demo }: { demo: Demo }) {
       </div>
       <div className="flex flex-1 flex-col px-[22px] pt-[22px] pb-6">
         {soon && (
-          <span className="mb-2 self-start rounded-full bg-primary/12 px-2.5 py-1 text-[0.72rem] font-bold tracking-[0.06em] text-primary uppercase">
+          <span className="mb-3.5 self-start rounded-full bg-primary/12 px-2.5 py-1 text-[0.72rem] font-bold tracking-[0.06em] text-primary uppercase">
             Coming soon
           </span>
         )}
@@ -153,7 +153,7 @@ export default function HomePage() {
             production-ready AI and automation solutions.
           </p>
 
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+          <div className="grid grid-cols-1 justify-center gap-5 lg:grid-cols-[repeat(auto-fit,minmax(280px,380px))]">
             {demos.map((demo) =>
               demo.to ? (
                 <Link
