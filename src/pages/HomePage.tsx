@@ -4,19 +4,91 @@ import { useAuthStore } from "../auth/authStore";
 import HubBrand from "../components/HubBrand";
 import SiteFooter from "../components/SiteFooter";
 
-const demos = [
+type Demo = {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  alt: string;
+  stack: string[];
+  to?: string;
+};
+
+const demos: Demo[] = [
   {
     id: "gadget-grove",
-    pill: "Gadget Grove",
-    title: "Customer Support Agent",
+    title: "AI Customer Support Agent",
     description:
-      "An AI agent that answers questions, tracks orders, and opens tickets — wired to a knowledge base and order API behind the demo api-gateway.",
+      "Answers customer questions from your own docs, with sources, and hands off to a human when it can’t. Includes the full RAG pipeline (ingestion, chunking, embeddings, retrieval) plus ticket triage and routing.",
     to: "/gadget-grove/admin",
-    image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
-    stack: ["AI Agent", "RAG", "FastAPI", "React"],
+    image: "/customer-support-demo.png",
+    alt: "AI Customer Support Agent demo",
+    stack: ["RAG", "LangChain", "Vector Search", "FastAPI", "PostgreSQL", "React"],
   },
-] as const;
+  {
+    id: "lead-qualification",
+    title: "Lead Qualification Engine",
+    description:
+      "Scores and prioritizes inbound leads using signal-based rules — a standalone qualification service integrated through the same gateway architecture.",
+    image: "https://picsum.photos/seed/lead-qualification/640/360",
+    alt: "Lead Qualification Engine demo",
+    stack: ["FastAPI", "Scoring API", "Docker"],
+  },
+];
+
+function DemoCardBody({ demo }: { demo: Demo }) {
+  const soon = !demo.to;
+  return (
+    <>
+      <div className="aspect-video overflow-hidden bg-muted">
+        <img
+          src={demo.image}
+          alt={demo.alt}
+          loading="lazy"
+          className={
+            soon
+              ? "size-full object-cover grayscale"
+              : "size-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.04]"
+          }
+        />
+      </div>
+      <div className="flex flex-1 flex-col px-[22px] pt-[22px] pb-6">
+        {soon && (
+          <span className="mb-2 self-start rounded-full bg-primary/12 px-2.5 py-1 text-[0.72rem] font-bold tracking-[0.06em] text-primary uppercase">
+            Coming soon
+          </span>
+        )}
+        <h3 className="font-heading mb-2.5 text-[1.35rem] text-foreground">
+          {demo.title}
+        </h3>
+        <p className="mb-4 flex-1 text-[0.9rem] leading-[1.65] text-muted-foreground">
+          {demo.description}
+        </p>
+        <ul className="mb-[18px] flex list-none flex-wrap gap-2 p-0">
+          {demo.stack.map((tag) => (
+            <li
+              key={tag}
+              className="rounded-full bg-foreground/8 px-2.5 py-1 text-xs font-semibold text-foreground"
+            >
+              {tag}
+            </li>
+          ))}
+        </ul>
+        {!soon && (
+          <span className="inline-flex items-center gap-1.5 text-[0.9rem] font-semibold text-primary transition-colors duration-200 group-hover:text-foreground">
+            Live demo
+            <span
+              aria-hidden
+              className="transition-transform duration-200 group-hover:translate-x-1"
+            >
+              →
+            </span>
+          </span>
+        )}
+      </div>
+    </>
+  );
+}
 
 export default function HomePage() {
   const session = useAuthStore((s) => s.session);
@@ -76,53 +148,31 @@ export default function HomePage() {
             Demos
           </h2>
 
-          <div className="mx-auto mt-8 grid max-w-md gap-6 sm:max-w-none sm:grid-cols-2 lg:grid-cols-3">
-            {demos.map((demo) => (
-              <Link
-                key={demo.id}
-                to={demo.to}
-                className="group flex flex-col overflow-hidden rounded-[20px] border border-border bg-card text-inherit no-underline transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(24,24,27,0.12)]"
-              >
-                <div className="aspect-video overflow-hidden bg-muted">
-                  <img
-                    src={demo.image}
-                    alt=""
-                    className="size-full object-cover transition duration-300 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col px-7 pt-6 pb-7">
-                  <span className="mb-2 w-fit rounded-full bg-foreground/8 px-2.5 py-1 text-xs font-semibold text-foreground">
-                    {demo.pill}
-                  </span>
-                  <h3 className="font-heading text-[1.3rem] text-foreground">
-                    {demo.title}
-                  </h3>
-                  <p className="mt-2.5 mb-4 flex-1 text-[0.9rem] leading-relaxed text-muted-foreground">
-                    {demo.description}
-                  </p>
-                  <ul className="mb-5 flex list-none flex-wrap gap-2 p-0">
-                    {demo.stack.map((tag) => (
-                      <li
-                        key={tag}
-                        className="rounded-full bg-foreground/8 px-2.5 py-1 text-xs font-semibold text-muted-foreground"
-                      >
-                        {tag}
-                      </li>
-                    ))}
-                  </ul>
-                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition group-hover:text-foreground">
-                    Open demo
-                    <span
-                      aria-hidden
-                      className="transition group-hover:translate-x-1"
-                    >
-                      →
-                    </span>
-                  </span>
-                </div>
-              </Link>
-            ))}
+          <p className="mx-auto mt-2 mb-8 max-w-[640px] text-center text-[0.98rem] leading-[1.7] text-muted-foreground">
+            Explore working demos that show how I design, integrate, and ship
+            production-ready AI and automation solutions.
+          </p>
+
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+            {demos.map((demo) =>
+              demo.to ? (
+                <Link
+                  key={demo.id}
+                  to={demo.to}
+                  className="group flex flex-col overflow-hidden rounded-[22px] border border-border bg-card text-inherit no-underline transition duration-200 hover:-translate-y-1 hover:shadow-[0_8px_28px_rgba(10,39,68,0.1)]"
+                >
+                  <DemoCardBody demo={demo} />
+                </Link>
+              ) : (
+                <article
+                  key={demo.id}
+                  aria-disabled="true"
+                  className="flex cursor-not-allowed flex-col overflow-hidden rounded-[22px] border border-dashed border-border bg-card opacity-60 select-none"
+                >
+                  <DemoCardBody demo={demo} />
+                </article>
+              ),
+            )}
           </div>
         </div>
       </section>
